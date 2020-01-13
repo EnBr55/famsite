@@ -1,26 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Navbar from './Components/Navbar/Navbar'
+import Sidebar from './Components/Sidebar/Sidebar'
 
 const App: React.FC = () => {
+  const [sidebar, setSidebar] = React.useState(false)
+  const toggleSidebar = (): void => setSidebar(!sidebar)
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar toggleSidebar={toggleSidebar} />
+      <Sidebar open={sidebar} />
+      AAAAAAAAAAAAAAAAAAA
+      AAAAAAAAAAAAAAAAAAA
+      AAAAAAAAAAAAAAAAAAA
+      AAAAAAAAAAAAAAAAAAA
     </div>
-  );
+  )
 }
 
 export default App;

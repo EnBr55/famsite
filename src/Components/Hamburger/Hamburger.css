@@ -1,0 +1,9 @@
+.hamburger:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.hamburger hr {
+  width: 1em;
+  margin-bottom: -4px;
+}
