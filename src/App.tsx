@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const [sidebar, setSidebar] = React.useState(false)
   const toggleSidebar = (): void => setSidebar(!sidebar)
 
-  const [module, setModule] = React.useState(<TodoList />)
+  const [module, setModule] = React.useState(<TodoList boardId={'oPJb7gIdzFSjU7FQswRS'} moduleId={'KwYx1joUzZbsfESRgh8o'}/>)
   return (
     <div className="App">
       <Navbar toggleSidebar={toggleSidebar} />
