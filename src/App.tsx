@@ -14,12 +14,12 @@ const App: React.FC = () => {
     <div className="App">
       <Navbar toggleSidebar={toggleSidebar} />
       <Sidebar open={sidebar} />
-      { module }
 
       AAAAAAAAAAAAAAAAAAA
       AAAAAAAAAAAAAAAAAAA
       AAAAAAAAAAAAAAAAAAA
       AAAAAAAAAAAAAAAAAAA
+      { module }
     </div>
   )
 }
