@@ -21,7 +21,7 @@ const Navbar: React.FC<props> = ({ toggleSidebar, setLogin }) => {
           Famsite
         </div>
         <div className='right padded' onClick={() => setLogin()}>
-          right
+          { user.loggedIn ? user.name : 'Login' }
         </div>
       </div>
     </div>
