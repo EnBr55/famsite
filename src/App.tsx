@@ -37,7 +37,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Navbar toggleSidebar={toggleSidebar} />
-      <Sidebar open={sidebar} />
+      <Sidebar open={sidebar} toggleSidebar={() => setSidebar(!sidebar)}/>
 
       AAAAAAAAAAAAAAAAAAA
       AAAAAAAAAAAAAAAAAAA

@@ -9,5 +9,20 @@
 .inner {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  height: 100%;
+}
+
+.padded {
+  padding: 0.5em;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.right {
+  min-width: 4em;
+}
+
+.right:hover {
+  cursor: pointer;
+  background-color: #540010;
 }

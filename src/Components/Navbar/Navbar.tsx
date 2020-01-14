@@ -10,13 +10,13 @@ const Navbar: React.FC<props> = ({ toggleSidebar }) => {
   return (
     <div className='navbar'>
       <div className='inner'>
-        <div className='left'>
+        <div className='left padded'>
           <Hamburger toggleSidebar={toggleSidebar}/>
         </div>
-        <div className='center'>
+        <div className='center padded'>
           Famsite
         </div>
-        <div className='right'>
+        <div className='right padded'>
           right
         </div>
       </div>
