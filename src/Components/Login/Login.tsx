@@ -15,8 +15,18 @@ const Login: React.FC<{open: boolean}> = ({ open }) => {
     setPassword('')
   }
 
-  const signup = () => {
-    firebaseRef.auth().createUserWithEmailAndPassword(email, password)
+  const signup = (emailRef: string, passwordRef: string, nameRef: string) => {
+    let newUID = ''
+    firebaseRef.auth().createUserWithEmailAndPassword(emailRef, passwordRef)
+      .then(newUser => {
+        if (newUser.user) {
+          firebaseRef.firestore().collection('users').doc(newUser.user.uid).set({
+            name: nameRef,
+            email: emailRef,
+            id: newUser.user.uid
+          })
+        }
+      })
       .catch(error => setError(error.message))
   }
 
@@ -29,7 +39,7 @@ const Login: React.FC<{open: boolean}> = ({ open }) => {
         opacity: registering ? '1' : '0',
         transition: 'opacity 1s ease 0.5s'
       }}>Name: <br />
-        <input onChange={e => setEmail(e.target.value)}/> <br />
+        <input onChange={e => setName(e.target.value)}/> <br />
         <br />
       </div>
 
@@ -45,7 +55,10 @@ const Login: React.FC<{open: boolean}> = ({ open }) => {
         <br />
         {!registering && <button onClick={() => submitLogin()}> Login </button>}
         {!registering && <button onClick={() => setRegistering(true)}> Register </button>}
-        {registering && <button onClick={() => signup()}> Create Account </button>}
+        {registering && <button onClick={() => {
+          if (!name) { setError('Please enter a name') }
+          else { signup(email, password, name) }
+        }}> Create Account </button>}
       </div>
       <span style={{color: 'red'}}>{error}</span>
 
