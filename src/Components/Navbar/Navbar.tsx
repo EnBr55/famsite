@@ -1,6 +1,7 @@
 import React from 'react'
 import './Navbar.css'
 import Hamburger from '../Hamburger/Hamburger'
+import { UserContext } from '../../Contexts/UserContext'
 
 type props = {
   toggleSidebar(): void
@@ -8,6 +9,8 @@ type props = {
 }
 
 const Navbar: React.FC<props> = ({ toggleSidebar, setLogin }) => {
+  const user = React.useContext(UserContext)
+  console.log(user)
   return (
     <div className='navbar'>
       <div className='inner'>
@@ -18,7 +21,7 @@ const Navbar: React.FC<props> = ({ toggleSidebar, setLogin }) => {
           Famsite
         </div>
         <div className='right padded' onClick={() => setLogin()}>
-          Login
+          right
         </div>
       </div>
     </div>

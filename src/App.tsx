@@ -5,6 +5,7 @@ import Sidebar from './Components/Sidebar/Sidebar'
 import TodoList from './Modules/TodoList/TodoList'
 import firebaseRef from './firebase' 
 import LoginDropDown from './Components/LoginDropDown/LoginDropDown'
+import { UserProvider } from './Contexts/UserContext'
 
 type user = {
   loggedIn: boolean
@@ -16,8 +17,6 @@ type user = {
 const onAuthStateChange = (setUser: (user: user) => void) => {
   return firebaseRef.auth().onAuthStateChanged(user => {
     if (user) {
-      console.log('user logged in')
-      console.log(user.email)
       let name = ''
       firebaseRef.firestore().collection('users').doc(user.uid)
         .get().then(doc => {
@@ -42,8 +41,6 @@ const App: React.FC = () => {
 
   const [module, setModule] = React.useState(<TodoList boardId={'oPJb7gIdzFSjU7FQswRS'} moduleId={'KwYx1joUzZbsfESRgh8o'}/>)
 
-  console.log(user)
-
   React.useEffect(() => {
     const unsubscribe = onAuthStateChange(setUser)
     return () => { unsubscribe() }
@@ -51,16 +48,18 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Navbar toggleSidebar={toggleSidebar} setLogin={toggleLogin}/>
-      <Sidebar open={sidebar} toggleSidebar={toggleSidebar} />
-      <LoginDropDown open={login} loggedIn={user.loggedIn} toggleLogin={toggleLogin}/>
+      <UserProvider value={user}>
+        <Navbar toggleSidebar={toggleSidebar} setLogin={toggleLogin}/>
+        <Sidebar open={sidebar} toggleSidebar={toggleSidebar} />
+        <LoginDropDown open={login} loggedIn={user.loggedIn} toggleLogin={toggleLogin}/>
 
-      AAAAAAAAAAAAAAAAAAA
-      AAAAAAAAAAAAAAAAAAA
-      AAAAAAAAAAAAAAAAAAA
-      AAAAAAAAAAAAAAAAAAA
-      { module }
-      <span>aaaa{user.id}</span>
+        AAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAA
+        { module }
+        <span>aaaa{user.id}</span>
+      </UserProvider >
     </div>
   )
 }
