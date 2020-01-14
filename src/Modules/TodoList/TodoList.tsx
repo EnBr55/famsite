@@ -1,6 +1,9 @@
 import React from 'react'
 import './TodoList.css'
 import FirebaseRef from '../../firebase'
+import Delete from '@material-ui/icons/Delete'
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
 type todo = {
   label: string
@@ -49,6 +52,12 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
     })
   }
 
+  const deleteTodo = (id: string) => {
+    ref.doc(id).delete().catch(error => {
+      console.log('Error deleting doc: '+error)
+    })
+  }
+
   const toggleTodo = (todo: todo) => {
     ref.doc(todo.id).set({
       ...todo,
@@ -59,10 +68,15 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
   return (
     <div className="TodoList" style={{ backgroundColor: 'red' }}>
       {todos.map((todo) => (
-      <div className="todo" onClick={() => toggleTodo(todo)} key={todo.id}>
-          {todo.label}{' '}
-          <div className="checkbox">{todo.checked && <span>X</span>}</div>
+      <div className="todo" key={todo.id}>
+        <div className="bin" onClick={() => deleteTodo(todo.id)} >
+          <Delete /> 
         </div>
+          {todo.label}{' '}
+        <div className="checkbox" onClick={() => toggleTodo(todo)} >
+          { todo.checked ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> } 
+        </div>
+      </div>
       ))}
 
       <input onChange={(e) => setNewTodoName(e.target.value)} />

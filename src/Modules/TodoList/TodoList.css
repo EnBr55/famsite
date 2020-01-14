@@ -2,15 +2,14 @@
   display: flex;
 }
 
-.todo:hover {
+.checkbox {
+}
+
+.checkbox:hover {
   cursor: pointer;
 }
 
-.checkbox {
-  margin-left: 0.6em;
-  border: 1px solid;
-  border-radius: 5px;
-  min-width: 1.5em;
-  min-height: 1.5em;
-  display: inline-block;
+.bin:hover {
+  cursor: pointer;
 }
+  
