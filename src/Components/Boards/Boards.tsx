@@ -6,10 +6,17 @@ import CloseIcon from '@material-ui/icons/Close'
 import firebaseRef from '../../firebase'
 import firebase from 'firebase'
 
+type board = {
+  members: string[],
+}
+
 const Boards: React.FC = () => {
   const user = React.useContext(UserContext)
   const [newBoardName, setNewBoardName] = React.useState('')
   const [addingBoard, setAddingBoard] = React.useState(false)
+  const [boards, setBoards] = React.useState<board[]>([])
+  const [isLoading, setIsLoading] = React.useState(true)
+
   const createBoard = (boardName: string) => {
     firebaseRef.firestore().collection('boards').add({
       members: [user.id],
@@ -18,6 +25,20 @@ const Boards: React.FC = () => {
     })
     )
   }
+
+  React.useEffect(() => {
+    const unsubscribe = 
+      firebaseRef.firestore().collection('boards').onSnapshot( snapshot => {
+        const boards: board[] = []
+        snapshot.forEach(doc => {
+          boards.push({members: doc.data().members})
+        }
+      )
+      setBoards(boards)
+      setIsLoading(false)
+      })
+    return unsubscribe
+  }, [isLoading])
 
   return (
     <div className='boards'>
