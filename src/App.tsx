@@ -4,6 +4,7 @@ import Navbar from './Components/Navbar/Navbar'
 import Sidebar from './Components/Sidebar/Sidebar'
 import TodoList from './Modules/TodoList/TodoList'
 import firebaseRef from './firebase' 
+import LoginDropDown from './Components/LoginDropDown/LoginDropDown'
 
 type user = {
   loggedIn: boolean
@@ -26,7 +27,11 @@ const onAuthStateChange = (setUser: (user: user) => void) => {
 const App: React.FC = () => {
   const [sidebar, setSidebar] = React.useState(false)
   const toggleSidebar = (): void => setSidebar(!sidebar)
+  const [login, setLogin] = React.useState(false)
+  const toggleLogin = (): void => setLogin(!login)
+
   const [user, setUser] = React.useState({ loggedIn: false, id: 'bbbb' })
+
   const [module, setModule] = React.useState(<TodoList boardId={'oPJb7gIdzFSjU7FQswRS'} moduleId={'KwYx1joUzZbsfESRgh8o'}/>)
 
   React.useEffect(() => {
@@ -36,8 +41,9 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Navbar toggleSidebar={toggleSidebar} />
-      <Sidebar open={sidebar} toggleSidebar={() => setSidebar(!sidebar)}/>
+      <Navbar toggleSidebar={toggleSidebar} setLogin={() => setLogin(true)}/>
+      <Sidebar open={sidebar} toggleSidebar={() => setSidebar(!sidebar)} />
+      <LoginDropDown open={login} loggedIn={user.loggedIn} toggleLogin={toggleLogin}/>
 
       AAAAAAAAAAAAAAAAAAA
       AAAAAAAAAAAAAAAAAAA

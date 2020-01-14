@@ -1,0 +1,17 @@
+.LoginDropDown {
+  background-color: white;
+  width: 10em;
+  height: 10em;
+  float: right;
+}
+
+.cross {
+  width: 2em;
+  margin: auto;
+}
+
+.cross:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+  

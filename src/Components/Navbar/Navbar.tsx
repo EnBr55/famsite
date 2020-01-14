@@ -4,9 +4,10 @@ import Hamburger from '../Hamburger/Hamburger'
 
 type props = {
   toggleSidebar(): void
+  setLogin(): void
 }
 
-const Navbar: React.FC<props> = ({ toggleSidebar }) => {
+const Navbar: React.FC<props> = ({ toggleSidebar, setLogin }) => {
   return (
     <div className='navbar'>
       <div className='inner'>
@@ -16,7 +17,7 @@ const Navbar: React.FC<props> = ({ toggleSidebar }) => {
         <div className='center padded'>
           Famsite
         </div>
-        <div className='right padded'>
+        <div className='right padded' onClick={() => setLogin()}>
           right
         </div>
       </div>
