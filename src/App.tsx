@@ -16,10 +16,10 @@ const onAuthStateChange = (setUser: (user: user) => void) => {
     if (user) {
       console.log('user logged in')
       console.log(user)
-      setUser({loggedIn: true, id: 'aaa'})
+      setUser({loggedIn: true, id: user.uid})
     } else {
       console.log('logged out')
-      setUser({loggedIn: false, id: 'aaa'})
+      setUser({loggedIn: false, id: ''})
     }
   })
 }
@@ -41,8 +41,8 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Navbar toggleSidebar={toggleSidebar} setLogin={() => setLogin(true)}/>
-      <Sidebar open={sidebar} toggleSidebar={() => setSidebar(!sidebar)} />
+      <Navbar toggleSidebar={toggleSidebar} setLogin={toggleLogin}/>
+      <Sidebar open={sidebar} toggleSidebar={toggleSidebar} />
       <LoginDropDown open={login} loggedIn={user.loggedIn} toggleLogin={toggleLogin}/>
 
       AAAAAAAAAAAAAAAAAAA
