@@ -29,8 +29,9 @@ const Boards: React.FC = () => {
   }
 
   React.useEffect(() => {
+    // TODO: only get boards that contain the user's id
     const unsubscribe = 
-      firebaseRef.firestore().collection('boards').onSnapshot( snapshot => {
+      firebaseRef.firestore().collection('boards').where("members", "array-contains", user.id).onSnapshot( snapshot => {
         const boards: board[] = []
         snapshot.forEach(doc => {
           boards.push({members: doc.data().members, name: doc.data().name})
