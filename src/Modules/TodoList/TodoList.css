@@ -1,8 +1,25 @@
+.TodoList {
+  max-width: 15em;
+}
+
 .todo {
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+  margin-bottom: 1em;
+}
+
+.label {
   display: flex;
+  word-break: break-all;
+  justify-content: flex-end;
+  max-height: 5em;
+  overflow-y: auto;
 }
 
 .checkbox {
+  padding-left: 5px;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .checkbox:hover {

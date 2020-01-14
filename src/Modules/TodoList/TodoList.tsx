@@ -72,7 +72,9 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
         <div className="bin" onClick={() => deleteTodo(todo.id)} >
           <Delete /> 
         </div>
+        <div className="label">
           {todo.label}{' '}
+        </div>
         <div className="checkbox" onClick={() => toggleTodo(todo)} >
           { todo.checked ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon /> } 
         </div>
