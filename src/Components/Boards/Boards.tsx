@@ -8,6 +8,7 @@ import firebase from 'firebase'
 
 type board = {
   members: string[],
+  name: string,
 }
 
 const Boards: React.FC = () => {
@@ -20,6 +21,7 @@ const Boards: React.FC = () => {
   const createBoard = (boardName: string) => {
     firebaseRef.firestore().collection('boards').add({
       members: [user.id],
+      name: boardName,
     }).then(board => firebaseRef.firestore().collection('users').doc(user.id).update({
       boards: firebase.firestore.FieldValue.arrayUnion(board.id)
     })
@@ -31,7 +33,7 @@ const Boards: React.FC = () => {
       firebaseRef.firestore().collection('boards').onSnapshot( snapshot => {
         const boards: board[] = []
         snapshot.forEach(doc => {
-          boards.push({members: doc.data().members})
+          boards.push({members: doc.data().members, name: doc.data().name})
         }
       )
       setBoards(boards)
@@ -42,6 +44,7 @@ const Boards: React.FC = () => {
 
   return (
     <div className='boards'>
+        { boards.map(board => <div>{board.name}<br/></div>) }
       <div className='new'>
         { addingBoard && (
         <>
