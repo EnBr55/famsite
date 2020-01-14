@@ -23,7 +23,8 @@ const Login: React.FC<{open: boolean}> = ({ open }) => {
           firebaseRef.firestore().collection('users').doc(newUser.user.uid).set({
             name: nameRef,
             email: emailRef,
-            id: newUser.user.uid
+            id: newUser.user.uid,
+            boards: []
           })
         }
       })

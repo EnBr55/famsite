@@ -16,7 +16,7 @@
 
 .visible {
   z-index: 11;
-  width: 50%;
+  width: 60%;
   height: 100%;
   background-color: #eeccef;
   transition: all 0.5s ease;

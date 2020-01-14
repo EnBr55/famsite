@@ -12,21 +12,27 @@ type user = {
   id: string
   email: string
   name: string
+  boards: string[]
 }
 
 const onAuthStateChange = (setUser: (user: user) => void) => {
   return firebaseRef.auth().onAuthStateChanged(user => {
     if (user) {
       let name = ''
+      let boards = []
       firebaseRef.firestore().collection('users').doc(user.uid)
         .get().then(doc => {
-          name=doc.data()!.name
-          setUser({loggedIn: true, id: user.uid, name: name, email: user.email!})
+          if (doc && doc.data()) {
+            name = doc.data()!.name
+            boards = doc.data()!.boards
+
+            setUser({loggedIn: true, id: user.uid, name: name, email: user.email!, boards: boards})
+          }
         })
 
     } else {
       console.log('logged out')
-      setUser({loggedIn: false, id: '', email: '', name: ''})
+      setUser({loggedIn: false, id: '', email: '', name: '', boards: []})
     }
   })
 }
@@ -37,7 +43,7 @@ const App: React.FC = () => {
   const [login, setLogin] = React.useState(false)
   const toggleLogin = (): void => setLogin(!login)
 
-  const [user, setUser] = React.useState({ loggedIn: false, id: '', email: '', name: '' })
+  const [user, setUser] = React.useState({ loggedIn: false, id: '', email: '', name: '', boards: ['']})
 
   const [module, setModule] = React.useState(<TodoList boardId={'oPJb7gIdzFSjU7FQswRS'} moduleId={'KwYx1joUzZbsfESRgh8o'}/>)
 

@@ -1,0 +1,12 @@
+.new {
+  display: flex;
+}
+
+.hoverable:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.new-board {
+  width: 50%;
+}
