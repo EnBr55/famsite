@@ -9,17 +9,25 @@ import LoginDropDown from './Components/LoginDropDown/LoginDropDown'
 type user = {
   loggedIn: boolean
   id: string
+  email: string
+  name: string
 }
 
 const onAuthStateChange = (setUser: (user: user) => void) => {
   return firebaseRef.auth().onAuthStateChanged(user => {
     if (user) {
       console.log('user logged in')
-      console.log(user)
-      setUser({loggedIn: true, id: user.uid})
+      console.log(user.email)
+      let name = ''
+      firebaseRef.firestore().collection('users').doc(user.uid)
+        .get().then(doc => {
+          name=doc.data()!.name
+          setUser({loggedIn: true, id: user.uid, name: name, email: user.email!})
+        })
+
     } else {
       console.log('logged out')
-      setUser({loggedIn: false, id: ''})
+      setUser({loggedIn: false, id: '', email: '', name: ''})
     }
   })
 }
@@ -30,9 +38,11 @@ const App: React.FC = () => {
   const [login, setLogin] = React.useState(false)
   const toggleLogin = (): void => setLogin(!login)
 
-  const [user, setUser] = React.useState({ loggedIn: false, id: 'bbbb' })
+  const [user, setUser] = React.useState({ loggedIn: false, id: '', email: '', name: '' })
 
   const [module, setModule] = React.useState(<TodoList boardId={'oPJb7gIdzFSjU7FQswRS'} moduleId={'KwYx1joUzZbsfESRgh8o'}/>)
+
+  console.log(user)
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChange(setUser)
