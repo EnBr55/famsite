@@ -6,12 +6,30 @@ import CloseIcon from '@material-ui/icons/Close'
 import firebaseRef from '../../firebase'
 import firebase from 'firebase'
 
-type board = {
-  members: string[],
-  name: string,
+type module = {
+  id: string
+  type: string
+  name: string
 }
 
-const Boards: React.FC = () => {
+type board = {
+  members: string[]
+  name: string
+  modules: module[]
+  id: string
+}
+
+type boardRef = {
+  board: string
+  module: string
+  moduleType: string
+}
+
+type props = {
+  setBoard(board: boardRef): void
+}
+
+const Boards: React.FC<props> = ({ setBoard }) => {
   const user = React.useContext(UserContext)
   const [newBoardName, setNewBoardName] = React.useState('')
   const [addingBoard, setAddingBoard] = React.useState(false)
@@ -29,23 +47,39 @@ const Boards: React.FC = () => {
   }
 
   React.useEffect(() => {
-    // TODO: only get boards that contain the user's id
     const unsubscribe = 
-      firebaseRef.firestore().collection('boards').where("members", "array-contains", user.id).onSnapshot( snapshot => {
+      firebaseRef.firestore().collection('boards').where("members", "array-contains", user.id).onSnapshot(snapshot => {
         const boards: board[] = []
         snapshot.forEach(doc => {
-          boards.push({members: doc.data().members, name: doc.data().name})
+          doc.ref.collection('modules').get().then(modulesCollection => {
+            const modules: module[] = []
+            modulesCollection.forEach(module => {
+              modules.push({ id: module.id, name: module.data().name, type: module.data().type } )
+            })
+            boards.push({
+              members: doc.data().members,
+              name: doc.data().name,
+              modules: modules,
+              id: doc.id
+            })
+          })
+          setBoards(boards)
+          setIsLoading(false)
         }
       )
-      setBoards(boards)
-      setIsLoading(false)
       })
     return unsubscribe
   }, [isLoading])
 
+
   return (
     <div className='boards'>
-        { boards.map(board => <div>{board.name}<br/></div>) }
+      { boards.map(board => <div>
+        { board.name } { board.modules.map(module => 
+        <div className='module' onClick={() => setBoard({ board: board.id, moduleType: module.type, module: module.id })}>
+          { module.name }
+        </div>) }
+      </div>) }
       <div className='new'>
         { addingBoard && (
         <>
