@@ -17,6 +17,7 @@ type board = {
   name: string
   modules: module[]
   id: string
+  dateCreated: number
 }
 
 type boardRef = {
@@ -41,6 +42,7 @@ const Boards: React.FC<props> = ({ setBoard, toggleSidebar }) => {
     firebaseRef.firestore().collection('boards').add({
       members: [user.id],
       name: boardName,
+      dateCreated: new Date().getTime()
     }).then(board => firebaseRef.firestore().collection('users').doc(user.id).update({
       boards: firebase.firestore.FieldValue.arrayUnion(board.id)
     })
@@ -67,7 +69,8 @@ const Boards: React.FC<props> = ({ setBoard, toggleSidebar }) => {
               members: doc.data().members,
               name: doc.data().name,
               modules: modules,
-              id: doc.id
+              id: doc.id,
+              dateCreated: doc.data().dateCreated
             })
             counter++
             setIsLoading(false)
@@ -80,11 +83,15 @@ const Boards: React.FC<props> = ({ setBoard, toggleSidebar }) => {
     return unsubscribe
   }, [])
 
+  const sortByBoardDates = (a: board, b: board) => {
+   return (a.dateCreated > b.dateCreated) ? 1 : ((b.dateCreated > a.dateCreated) ? -1 : 0) 
+  }
+
   return (
     <div className='boards'>
       <h1 onClick={() => setIsLoading(!isLoading)}>Boards</h1>
-      { isLoading ? 'Loading boards... ' : 'finished loading' }
-      { boards.map(board => <div key={board.id}>
+      { isLoading && 'Loading boards...' }
+      { boards.sort(sortByBoardDates).map(board => <div key={board.id}>
         { board.name } { board.modules.map(module => 
         <div className='module' key={module.id} onClick={() => {
           setBoard({ board: board.id, moduleType: module.type, module: module.id })
