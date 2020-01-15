@@ -3,6 +3,7 @@ import './Boards.css'
 import { UserContext } from '../../Contexts/UserContext'
 import AddIcon from '@material-ui/icons/Add'
 import CloseIcon from '@material-ui/icons/Close'
+import BoardTag from '../BoardTag/BoardTag'
 import firebaseRef from '../../firebase'
 import firebase from 'firebase'
 
@@ -91,15 +92,9 @@ const Boards: React.FC<props> = ({ setBoard, toggleSidebar }) => {
     <div className='boards'>
       <h1 onClick={() => setIsLoading(!isLoading)}>Boards</h1>
       { isLoading && 'Loading boards...' }
-      { boards.sort(sortByBoardDates).map(board => <div key={board.id}>
-        { board.name } { board.modules.map(module => 
-        <div className='module' key={module.id} onClick={() => {
-          setBoard({ board: board.id, moduleType: module.type, module: module.id })
-          toggleSidebar()
-        }}>
-          { module.name }
-        </div>) }
-      </div>) }
+      { boards.sort(sortByBoardDates).map(board =>
+        <BoardTag key={board.id} board={board} setBoard={setBoard} toggleSidebar={toggleSidebar} />
+      )}
       <div className='new'>
         { addingBoard && (
         <>
