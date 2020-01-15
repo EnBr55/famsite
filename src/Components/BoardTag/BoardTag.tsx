@@ -1,5 +1,6 @@
 import React from 'react'
 import './BoardTag.css'
+import firebaseRef from '../../firebase'
 
 type module = {
   id: string
@@ -26,6 +27,13 @@ type props = {
   toggleSidebar(): void
   setBoard(board: boardRef): void
   toggleSidebar(): void
+}
+
+const createModule = (board: board, newModuleName: string, newModuleType: string) => {
+  firebaseRef.firestore().collection('boards').doc(board.id).collection('modules').add({
+    name: newModuleName,
+    type: newModuleType
+  }).catch(error => console.log(error))
 }
 
 const BoardTag: React.FC<props> = ({ board, setBoard, toggleSidebar }) => {
