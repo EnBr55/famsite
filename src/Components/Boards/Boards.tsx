@@ -27,14 +27,15 @@ type boardRef = {
 
 type props = {
   setBoard(board: boardRef): void
+  toggleSidebar(): void
 }
 
-const Boards: React.FC<props> = ({ setBoard }) => {
+const Boards: React.FC<props> = ({ setBoard, toggleSidebar }) => {
   const user = React.useContext(UserContext)
   const [newBoardName, setNewBoardName] = React.useState('')
   const [addingBoard, setAddingBoard] = React.useState(false)
   const [boards, setBoards] = React.useState<board[]>([])
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const createBoard = (boardName: string) => {
     firebaseRef.firestore().collection('boards').add({
@@ -48,35 +49,47 @@ const Boards: React.FC<props> = ({ setBoard }) => {
 
   React.useEffect(() => {
     const unsubscribe = 
-      firebaseRef.firestore().collection('boards').where("members", "array-contains", user.id).onSnapshot(snapshot => {
-        const boards: board[] = []
+      firebaseRef.firestore().collection('boards').where('members', 'array-contains', user.id).onSnapshot(snapshot => {
+      const snapshotBoards: board[] = []
+        if (snapshot.size > 0) { setIsLoading(true) }
+        let counter = 0
         snapshot.forEach(doc => {
           doc.ref.collection('modules').get().then(modulesCollection => {
             const modules: module[] = []
             modulesCollection.forEach(module => {
-              modules.push({ id: module.id, name: module.data().name, type: module.data().type } )
+              modules.push({
+                id: module.id,
+                name: module.data().name,
+                type: module.data().type 
+              })
             })
-            boards.push({
+            snapshotBoards.push({
               members: doc.data().members,
               name: doc.data().name,
               modules: modules,
               id: doc.id
             })
+            counter++
+            setIsLoading(false)
+            if (counter === snapshot.size) {
+              setBoards(snapshotBoards)
+            }
           })
-          setBoards(boards)
-          setIsLoading(false)
-        }
-      )
+        })
       })
     return unsubscribe
-  }, [isLoading])
-
+  }, [])
 
   return (
     <div className='boards'>
-      { boards.map(board => <div>
+      <h1 onClick={() => setIsLoading(!isLoading)}>Boards</h1>
+      { isLoading ? 'Loading boards... ' : 'finished loading' }
+      { boards.map(board => <div key={board.id}>
         { board.name } { board.modules.map(module => 
-        <div className='module' onClick={() => setBoard({ board: board.id, moduleType: module.type, module: module.id })}>
+        <div className='module' key={module.id} onClick={() => {
+          setBoard({ board: board.id, moduleType: module.type, module: module.id })
+          toggleSidebar()
+        }}>
           { module.name }
         </div>) }
       </div>) }

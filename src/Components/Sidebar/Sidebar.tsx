@@ -21,7 +21,7 @@ const Sidebar: React.FC<props> = ({ open, toggleSidebar, setBoard }) => {
     <div className='sidebar' style={{ transform: open ? 'translateX(0)' : 'translateX(-110%)' }}>
       <div className='background' onClick={() => toggleSidebar()}>
         <div className='visible' onClick={(e) => {e.stopPropagation()}} style={{ transform: open ? 'translateX(0)' : 'translateX(-110%)' }}>
-          {user.loggedIn ? <Boards setBoard={setBoard}/> : 'You\'re not logged in.'}
+          {user.loggedIn ? <Boards setBoard={setBoard} toggleSidebar={toggleSidebar}/> : 'You\'re not logged in.'}
         </div>
       </div>
     </div>

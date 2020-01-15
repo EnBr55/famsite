@@ -10,3 +10,16 @@
 .new-board {
   width: 50%;
 }
+
+.boards h1 {
+  margin: unset;
+}
+
+.module {
+  color: green;
+}
+
+.module:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
