@@ -10,7 +10,6 @@ type props = {
 
 const Navbar: React.FC<props> = ({ toggleSidebar, setLogin }) => {
   const user = React.useContext(UserContext)
-  console.log(user)
   return (
     <div className='navbar'>
       <div className='inner'>

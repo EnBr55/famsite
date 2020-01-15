@@ -45,7 +45,18 @@ const App: React.FC = () => {
 
   const [user, setUser] = React.useState({ loggedIn: false, id: '', email: '', name: '', boards: ['']})
 
-  const [module, setModule] = React.useState(<TodoList boardId={'oPJb7gIdzFSjU7FQswRS'} moduleId={'KwYx1joUzZbsfESRgh8o'}/>)
+  const [board, setBoard] = React.useState({ board: 'aa', moduleType: 'aa', module: 'aa'})
+
+  const [module, setModule] = React.useState(<TodoList boardId={board.board} moduleId={board.module}/>)
+
+  const moduleSwitch = () => {
+    switch(board.moduleType) {
+      case 'todo':
+        return <TodoList boardId={board.board} moduleId={board.module} />
+      default:
+        return <span>No module selected</span>
+    }
+  }
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChange(setUser)
@@ -56,15 +67,9 @@ const App: React.FC = () => {
     <div className="App">
       <UserProvider value={user}>
         <Navbar toggleSidebar={toggleSidebar} setLogin={toggleLogin}/>
-        <Sidebar open={sidebar} toggleSidebar={toggleSidebar} />
+        <Sidebar open={sidebar} toggleSidebar={toggleSidebar} setBoard={setBoard} />
         <LoginDropDown open={login} loggedIn={user.loggedIn} toggleLogin={toggleLogin}/>
-
-        AAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAA
-        { module }
-        <span>aaaa{user.id}</span>
+        { moduleSwitch() }
       </UserProvider >
     </div>
   )
