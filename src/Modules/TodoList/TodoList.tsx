@@ -81,7 +81,10 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
       </div>
       ))}
       <div className="adding" >
-        <input onChange={(e) => setNewTodoName(e.target.value)} />
+        <input 
+        onKeyDown={(e) => e.key === 'Enter' && addNewTodo(newTodoName) } 
+        onChange={(e) => setNewTodoName(e.target.value)} 
+        />
         <button
           onClick={() => addNewTodo(newTodoName)}
         >
