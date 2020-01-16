@@ -66,7 +66,7 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
   }
 
   return (
-    <div className="TodoList" style={{ backgroundColor: 'red' }}>
+    <div className="TodoList" >
       {todos.map((todo) => (
       <div className="todo" key={todo.id}>
         <div className="bin" onClick={() => deleteTodo(todo.id)} >
@@ -80,13 +80,14 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
         </div>
       </div>
       ))}
-
-      <input onChange={(e) => setNewTodoName(e.target.value)} />
-      <button
-        onClick={() => addNewTodo(newTodoName)}
-      >
-        Add
-      </button>
+      <div className="adding" >
+        <input onChange={(e) => setNewTodoName(e.target.value)} />
+        <button
+          onClick={() => addNewTodo(newTodoName)}
+        >
+          Add
+        </button>
+      </div>
     </div>
   )
 }
