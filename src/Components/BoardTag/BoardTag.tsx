@@ -11,7 +11,6 @@ type module = {
 type board = {
   members: string[]
   name: string
-  modules: module[]
   id: string
   dateCreated: number
 }
@@ -29,24 +28,64 @@ type props = {
   toggleSidebar(): void
 }
 
-const createModule = (board: board, newModuleName: string, newModuleType: string) => {
-  firebaseRef.firestore().collection('boards').doc(board.id).collection('modules').add({
-    name: newModuleName,
-    type: newModuleType
-  }).catch(error => console.log(error))
+const createModule = (
+  board: board,
+  newModuleName: string,
+  newModuleType: string,
+) => {
+  firebaseRef
+    .firestore()
+    .collection('boards')
+    .doc(board.id)
+    .collection('modules')
+    .add({
+      name: newModuleName,
+      type: newModuleType,
+    })
+    .catch((error) => console.log(error))
 }
 
 const BoardTag: React.FC<props> = ({ board, setBoard, toggleSidebar }) => {
+  const [modules, setModules] = React.useState<module[]>([])
+
+  React.useEffect(() => {
+    const unsubscribe = firebaseRef
+      .firestore()
+      .collection('boards')
+      .doc(board.id)
+      .collection('modules')
+      .onSnapshot((snapshot) => {
+        const snapshotModules: module[] = []
+        snapshot.forEach((doc) => {
+          snapshotModules.push({
+            id: doc.id,
+            name: doc.data().name,
+            type: doc.data().type,
+          })
+        })
+        setModules(snapshotModules)
+      })
+  }, [])
+
   return (
-    <div className='board-tag'>
-      { board.name } { board.modules.map(module => 
-        <div className='module' key={module.id} onClick={() => {
-          setBoard({ board: board.id, moduleType: module.type, module: module.id })
-          toggleSidebar()
-        }}>
-          { module.name }
+    <div className="board-tag">
+      {board.name}{' '}
+      {modules.map((module) => (
+        <div
+          className="module"
+          key={module.id}
+          onClick={() => {
+            setBoard({
+              board: board.id,
+              moduleType: module.type,
+              module: module.id,
+            })
+            toggleSidebar()
+          }}
+        >
+          {module.name}
         </div>
-      )}
+      ))}
     </div>
   )
 }

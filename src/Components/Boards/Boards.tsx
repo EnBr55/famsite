@@ -16,7 +16,6 @@ type module = {
 type board = {
   members: string[]
   name: string
-  modules: module[]
   id: string
   dateCreated: number
 }
@@ -44,7 +43,8 @@ const Boards: React.FC<props> = ({ setBoard, toggleSidebar }) => {
       members: [user.id],
       name: boardName,
       dateCreated: new Date().getTime()
-    }).then(board => firebaseRef.firestore().collection('users').doc(user.id).update({
+    }).then(board => firebaseRef.firestore()
+      .collection('users').doc(user.id).update({
       boards: firebase.firestore.FieldValue.arrayUnion(board.id)
     })
     )
@@ -52,34 +52,21 @@ const Boards: React.FC<props> = ({ setBoard, toggleSidebar }) => {
 
   React.useEffect(() => {
     const unsubscribe = 
-      firebaseRef.firestore().collection('boards').where('members', 'array-contains', user.id).onSnapshot(snapshot => {
+      firebaseRef.firestore().collection('boards')
+      .where('members', 'array-contains', user.id)
+      .onSnapshot(snapshot => {
       const snapshotBoards: board[] = []
         if (snapshot.size > 0) { setIsLoading(true) }
-        let counter = 0
         snapshot.forEach(doc => {
-          doc.ref.collection('modules').get().then(modulesCollection => {
-            const modules: module[] = []
-            modulesCollection.forEach(module => {
-              modules.push({
-                id: module.id,
-                name: module.data().name,
-                type: module.data().type 
-              })
-            })
             snapshotBoards.push({
               members: doc.data().members,
               name: doc.data().name,
-              modules: modules,
               id: doc.id,
               dateCreated: doc.data().dateCreated
             })
-            counter++
-            setIsLoading(false)
-            if (counter === snapshot.size) {
-              setBoards(snapshotBoards)
-            }
-          })
         })
+        setIsLoading(false)
+        setBoards(snapshotBoards)
       })
     return unsubscribe
   }, [])
