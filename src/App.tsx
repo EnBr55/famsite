@@ -6,6 +6,8 @@ import TodoList from './Modules/TodoList/TodoList'
 import firebaseRef from './firebase' 
 import LoginDropDown from './Components/LoginDropDown/LoginDropDown'
 import { UserProvider } from './Contexts/UserContext'
+import { SidebarProvider } from './Contexts/SidebarContext'
+import Boards from './Components/Boards/Boards'
 
 type user = {
   loggedIn: boolean
@@ -49,6 +51,14 @@ const App: React.FC = () => {
 
   const [module, setModule] = React.useState(<TodoList boardId={board.board} moduleId={board.module}/>)
 
+  const [sidebarContext, setSidebarContext] = React.useState(
+    { sidebar: <Boards setBoard={setBoard} toggleSidebar={toggleSidebar}/>,
+      setSidebar: (sidebarElement: JSX.Element) => setSidebarContext({
+        ...sidebarContext,
+        sidebar: sidebarElement
+      })
+    })
+
   const moduleSwitch = () => {
     switch(board.moduleType) {
       case 'todo':
@@ -66,10 +76,12 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <UserProvider value={user}>
-        <Navbar toggleSidebar={toggleSidebar} setLogin={toggleLogin}/>
-        <Sidebar open={sidebar} toggleSidebar={toggleSidebar} setBoard={setBoard} />
-        <LoginDropDown open={login} loggedIn={user.loggedIn} toggleLogin={toggleLogin}/>
-        { moduleSwitch() }
+        <SidebarProvider value={sidebarContext}>
+          <Navbar toggleSidebar={toggleSidebar} setLogin={toggleLogin}/>
+          <Sidebar open={sidebar} toggleSidebar={toggleSidebar} setBoard={setBoard} />
+          <LoginDropDown open={login} loggedIn={user.loggedIn} toggleLogin={toggleLogin}/>
+          { moduleSwitch() }
+        </SidebarProvider>
       </UserProvider >
     </div>
   )
