@@ -4,11 +4,10 @@ import Hamburger from '../Hamburger/Hamburger'
 import { UserContext } from '../../Contexts/UserContext'
 
 type props = {
-  toggleSidebar(): void
   setLogin(): void
 }
 
-const Navbar: React.FC<props> = ({ toggleSidebar, setLogin }) => {
+const Navbar: React.FC<props> = ({ setLogin }) => {
   const user = React.useContext(UserContext)
   return (
     <div className='navbar'>

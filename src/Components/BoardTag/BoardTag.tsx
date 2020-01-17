@@ -24,9 +24,7 @@ type boardRef = {
 
 type props = {
   board: board
-  toggleSidebar(): void
   setBoard(board: boardRef): void
-  toggleSidebar(): void
 }
 
 const createModule = (
@@ -46,7 +44,7 @@ const createModule = (
     .catch((error) => console.log(error))
 }
 
-const BoardTag: React.FC<props> = ({ board, setBoard, toggleSidebar }) => {
+const BoardTag: React.FC<props> = ({ board, setBoard }) => {
   const [modules, setModules] = React.useState<module[]>([])
   const sidebar = React.useContext(SidebarContext)
 
@@ -79,7 +77,6 @@ const BoardTag: React.FC<props> = ({ board, setBoard, toggleSidebar }) => {
               moduleType: module.type,
               module: module.id,
             })
-            toggleSidebar()
             sidebar.setSidebar(undefined)
           }}
         >
@@ -90,7 +87,10 @@ const BoardTag: React.FC<props> = ({ board, setBoard, toggleSidebar }) => {
 
   return (
     <div className="board-tag">
-      <div onClick={() => sidebar.setSidebar(<div>{moduleList}</div>)}>
+      <div onClick={() => sidebar.setSidebar(<div>
+          <span onClick={() => sidebar.setSidebar(sidebar.default)}>back</span>
+          {moduleList}
+        </div>)}>
         {board.name} 
       </div>
     </div>

@@ -40,16 +40,11 @@ const onAuthStateChange = (setUser: (user: user) => void) => {
 }
 
 const App: React.FC = () => {
-  const [sidebar, setSidebar] = React.useState(false)
-  const toggleSidebar = (): void => setSidebar(!sidebar)
   const [login, setLogin] = React.useState(false)
   const toggleLogin = (): void => setLogin(!login)
 
   const [user, setUser] = React.useState({ loggedIn: false, id: '', email: '', name: '', boards: ['']})
-
-  const [board, setBoard] = React.useState({ board: 'aa', moduleType: 'aa', module: 'aa'})
-
-  const [module, setModule] = React.useState(<TodoList boardId={board.board} moduleId={board.module}/>)
+  const [board, setBoard] = React.useState({ board: 'a', moduleType: 'a', module: 'a'})
 
   type sidebarContextType = {
     sidebar: JSX.Element | undefined
@@ -59,7 +54,7 @@ const App: React.FC = () => {
 
     const [sidebarContext, setSidebarContext] = React.useState<sidebarContextType>({
       sidebar: undefined,
-      default: <Boards setBoard={setBoard} toggleSidebar={toggleSidebar}/>,
+      default: <Boards setBoard={setBoard} />,
       setSidebar: (sidebarElement: (JSX.Element | undefined)) => setSidebarContext({
         ...sidebarContext,
         sidebar: sidebarElement
@@ -84,8 +79,8 @@ const App: React.FC = () => {
     <div className="App">
       <UserProvider value={user}>
         <SidebarProvider value={sidebarContext}>
-          <Navbar toggleSidebar={toggleSidebar} setLogin={toggleLogin}/>
-          <Sidebar open={sidebar} toggleSidebar={toggleSidebar} setBoard={setBoard} />
+          <Navbar setLogin={toggleLogin}/>
+          <Sidebar />
           <LoginDropDown open={login} loggedIn={user.loggedIn} toggleLogin={toggleLogin}/>
           { moduleSwitch() }
         </SidebarProvider>

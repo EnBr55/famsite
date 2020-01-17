@@ -28,10 +28,9 @@ type boardRef = {
 
 type props = {
   setBoard(board: boardRef): void
-  toggleSidebar(): void
 }
 
-const Boards: React.FC<props> = ({ setBoard, toggleSidebar }) => {
+const Boards: React.FC<props> = ({ setBoard }) => {
   const user = React.useContext(UserContext)
   const [newBoardName, setNewBoardName] = React.useState('')
   const [addingBoard, setAddingBoard] = React.useState(false)
@@ -80,7 +79,7 @@ const Boards: React.FC<props> = ({ setBoard, toggleSidebar }) => {
       <h1 onClick={() => setIsLoading(!isLoading)}>Boards</h1>
       { isLoading && 'Loading boards...' }
       { boards.sort(sortByBoardDates).map(board =>
-        <BoardTag key={board.id} board={board} setBoard={setBoard} toggleSidebar={toggleSidebar} />
+        <BoardTag key={board.id} board={board} setBoard={setBoard} />
       )}
       <div className='new'>
         { addingBoard && (
