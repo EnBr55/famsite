@@ -20,6 +20,7 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
 
 
   const [todos, setTodos] = React.useState<todo[]>([])
+  const [title, setTitle] = React.useState('')
 
   const ref = 
     FirebaseRef.firestore()
@@ -30,6 +31,7 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
     .collection('data')
 
   React.useEffect(() => {
+    FirebaseRef.firestore().collection('boards').doc(boardId).collection('modules').doc(moduleId).get().then(doc => setTitle(doc.data()!.name || 'Todo List'))
     const unsubscribe = 
       ref.onSnapshot( snapshot => {
         const newTodos: todo[] = []
@@ -67,6 +69,7 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
 
   return (
     <div className="TodoList" >
+      <h1>{title}</h1>
       {todos.map((todo) => (
       <div className="todo" key={todo.id}>
         <div className="bin" onClick={() => deleteTodo(todo.id)} >
