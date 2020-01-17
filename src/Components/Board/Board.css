@@ -18,3 +18,26 @@
   background-color: rgba(0, 0, 0, 0.45);
 }
 
+.module {
+  font-size: larger;
+  background-color: rgba(190, 0, 190, 0.2);
+  transition: background-color 1s ease;
+  min-height: 3em;
+  max-width: 30em;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.module:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s linear; 
+}
+
+.type-label {
+  position: absolute;
+  right: 0.5em;
+}

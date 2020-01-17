@@ -66,6 +66,7 @@ const Board: React.FC<props> = ({ setBoard, board, modules }) => {
       }}
     >
       {module.name}
+    <div className="type-label">[{module.type}]</div>
     </div>
   ))
 
