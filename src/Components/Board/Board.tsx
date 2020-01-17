@@ -117,6 +117,7 @@ const Board: React.FC<props> = ({ setBoard, board, modules }) => {
           Module type
         </option>
         <option value="todo">Todo</option>
+        <option value="chat">Chat</option>
       </select>
       <button
         disabled={newModuleType === '' || newModuleName === ''}

@@ -3,6 +3,7 @@ import './App.css';
 import Navbar from './Components/Navbar/Navbar'
 import Sidebar from './Components/Sidebar/Sidebar'
 import TodoList from './Modules/TodoList/TodoList'
+import Chat from './Modules/Chat/Chat'
 import firebaseRef from './firebase' 
 import LoginDropDown from './Components/LoginDropDown/LoginDropDown'
 import { UserProvider } from './Contexts/UserContext'
@@ -65,6 +66,8 @@ const App: React.FC = () => {
     switch(board.moduleType) {
       case 'todo':
         return <TodoList boardId={board.board} moduleId={board.module} />
+      case 'chat':
+        return <Chat boardId={board.board} moduleId={board.module} />
       default:
         return <span>No module selected</span>
     }
