@@ -1,6 +1,7 @@
 import React from 'react'
 import './Chat.css'
 import firebaseRef from '../../firebase'
+import { UserContext } from '../../Contexts/UserContext'
 
 type props = {
   boardId: string
@@ -15,10 +16,13 @@ type message = {
 }
 
 const Chat: React.FC<props> = ({ boardId, moduleId }) => {
+  const user = React.useContext(UserContext)
   const [messages, setMessages] = React.useState<message[]>([])
   const [title, setTitle] = React.useState('')
+  const [message, setMessage] = React.useState('')
 
-  const ref = firebaseRef.firestore()
+  const ref = firebaseRef
+    .firestore()
     .collection('boards')
     .doc(boardId)
     .collection('modules')
@@ -26,7 +30,8 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
     .collection('data')
 
   React.useEffect(() => {
-    firebaseRef.firestore()
+    firebaseRef
+      .firestore()
       .collection('boards')
       .doc(boardId)
       .collection('modules')
@@ -48,20 +53,48 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
     return unsubscribe
   }, [])
 
-  console.log(messages)
+  const sendMessage = (newMessage: string) => {
+    ref.add({
+      senderName: user.name,
+      content: newMessage,
+      time: new Date().getTime(),
+    })
+  }
+
+  const sortByDate = (a: message, b: message) => {
+    return (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0) 
+  }
 
   return (
     <div className="chat">
       <h1> {title} </h1>
-      {messages.map((message) => <div key={message.id} className="message">
-        <b>{message.senderName}: </b>
-        {message.content}
-        <div className="message-date">{new Date(message.time).toUTCString()}</div>
-      </div>)}
+      <div className="messages">
+        {messages.sort(sortByDate).map((message) => (
+          <>
+          <div key={message.id} className="message">
+            <div className="message-sender">
+              <b>{message.senderName}:&nbsp;</b>
+            </div>
+            <div className="message-content">
+              {message.content}
+            </div>
+            <div className="message-date">
+              {new Date(message.time).toLocaleTimeString()}
+            </div>
+          </div>
+          <hr />
+        </>
+        ))}
+      </div>
       <br />
       <div className="sending">
-        <input />
-        <button>Send</button>
+        <input placeholder="Aa"
+          onChange={(e) => setMessage(e.target.value)} 
+          onKeyDown={(e) => e.key === 'Enter' && sendMessage(message)}
+        />
+        <button onClick={() => message !== '' && sendMessage(message)}>
+          Send
+        </button>
       </div>
     </div>
   )
