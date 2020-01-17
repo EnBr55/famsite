@@ -2,6 +2,7 @@ import React from 'react'
 import './BoardTag.css'
 import firebaseRef from '../../firebase'
 import { SidebarContext } from '../../Contexts/SidebarContext'
+import Board from '../Board/Board'
 
 type module = {
   id: string
@@ -27,23 +28,6 @@ type props = {
   setBoard(board: boardRef): void
 }
 
-const createModule = (
-  board: board,
-  newModuleName: string,
-  newModuleType: string,
-) => {
-  firebaseRef
-    .firestore()
-    .collection('boards')
-    .doc(board.id)
-    .collection('modules')
-    .add({
-      name: newModuleName,
-      type: newModuleType,
-    })
-    .catch((error) => console.log(error))
-}
-
 const BoardTag: React.FC<props> = ({ board, setBoard }) => {
   const [modules, setModules] = React.useState<module[]>([])
   const sidebar = React.useContext(SidebarContext)
@@ -67,30 +51,13 @@ const BoardTag: React.FC<props> = ({ board, setBoard }) => {
       })
   }, [])
 
-  const moduleList = modules.map((module) => (
-        <div
-          className="module"
-          key={module.id}
-          onClick={() => {
-            setBoard({
-              board: board.id,
-              moduleType: module.type,
-              module: module.id,
-            })
-            sidebar.setSidebar(undefined)
-          }}
-        >
-          {module.name}
-        </div>
-      ))
     
 
   return (
     <div className="board-tag">
-      <div onClick={() => sidebar.setSidebar(<div>
-          <span onClick={() => sidebar.setSidebar(sidebar.default)}>back</span>
-          {moduleList}
-        </div>)}>
+      <div onClick={() => sidebar.setSidebar(
+        <Board setBoard={setBoard} board={board} modules={modules}/>
+      )}>
         {board.name} 
       </div>
     </div>
