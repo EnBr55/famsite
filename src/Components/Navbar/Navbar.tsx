@@ -14,7 +14,7 @@ const Navbar: React.FC<props> = ({ toggleSidebar, setLogin }) => {
     <div className='navbar'>
       <div className='inner'>
         <div className='left padded'>
-          <Hamburger toggleSidebar={toggleSidebar}/>
+          <Hamburger />
         </div>
         <div className='center padded'>
           Famsite

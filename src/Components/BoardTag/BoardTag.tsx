@@ -1,6 +1,7 @@
 import React from 'react'
 import './BoardTag.css'
 import firebaseRef from '../../firebase'
+import { SidebarContext } from '../../Contexts/SidebarContext'
 
 type module = {
   id: string
@@ -47,6 +48,7 @@ const createModule = (
 
 const BoardTag: React.FC<props> = ({ board, setBoard, toggleSidebar }) => {
   const [modules, setModules] = React.useState<module[]>([])
+  const sidebar = React.useContext(SidebarContext)
 
   React.useEffect(() => {
     const unsubscribe = firebaseRef
@@ -67,10 +69,7 @@ const BoardTag: React.FC<props> = ({ board, setBoard, toggleSidebar }) => {
       })
   }, [])
 
-  return (
-    <div className="board-tag">
-      {board.name}{' '}
-      {modules.map((module) => (
+  const moduleList = modules.map((module) => (
         <div
           className="module"
           key={module.id}
@@ -81,11 +80,19 @@ const BoardTag: React.FC<props> = ({ board, setBoard, toggleSidebar }) => {
               module: module.id,
             })
             toggleSidebar()
+            sidebar.setSidebar(undefined)
           }}
         >
           {module.name}
         </div>
-      ))}
+      ))
+    
+
+  return (
+    <div className="board-tag">
+      <div onClick={() => sidebar.setSidebar(<div>{moduleList}</div>)}>
+        {board.name} 
+      </div>
     </div>
   )
 }

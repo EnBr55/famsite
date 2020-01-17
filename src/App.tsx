@@ -51,9 +51,16 @@ const App: React.FC = () => {
 
   const [module, setModule] = React.useState(<TodoList boardId={board.board} moduleId={board.module}/>)
 
-  const [sidebarContext, setSidebarContext] = React.useState(
-    { sidebar: <Boards setBoard={setBoard} toggleSidebar={toggleSidebar}/>,
-      setSidebar: (sidebarElement: JSX.Element) => setSidebarContext({
+  type sidebarContextType = {
+    sidebar: JSX.Element | undefined
+    default: JSX.Element
+    setSidebar(sidebarElement: JSX.Element | undefined): void
+    }
+
+    const [sidebarContext, setSidebarContext] = React.useState<sidebarContextType>({
+      sidebar: undefined,
+      default: <Boards setBoard={setBoard} toggleSidebar={toggleSidebar}/>,
+      setSidebar: (sidebarElement: (JSX.Element | undefined)) => setSidebarContext({
         ...sidebarContext,
         sidebar: sidebarElement
       })

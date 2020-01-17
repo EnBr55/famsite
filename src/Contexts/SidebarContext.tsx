@@ -2,12 +2,14 @@ import React from 'react'
 
 type sidebarContext = {
   sidebar?: JSX.Element
-  setSidebar(element: JSX.Element): void
+  default: JSX.Element
+  setSidebar(element: (JSX.Element | undefined)): void
 }
 
 const defaultSidebar: sidebarContext = {
   sidebar: undefined,
-  setSidebar: () => {}
+  default: <div></div>,
+  setSidebar: (sidebarElement: JSX.Element | undefined) => {}
 }
 
 export const SidebarContext = React.createContext(defaultSidebar)
