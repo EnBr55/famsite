@@ -49,6 +49,7 @@ const BoardTag: React.FC<props> = ({ board, setBoard }) => {
         })
         setModules(snapshotModules)
       })
+    return unsubscribe
   }, [])
 
     
