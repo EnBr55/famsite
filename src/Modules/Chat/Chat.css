@@ -11,7 +11,11 @@
 .messages {
   background-color: orange;
   height: 70vh;
+  width: 75vw;
   overflow: auto;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0px 3px 5px 5px rgba(0, 0, 0, 0.3)
 }
 
 .message-sender {
@@ -32,4 +36,9 @@
   background-color: grey;
   margin: 0;
   color: rgba(0, 0, 0, 0.3);
+  max-width: 75vw;
+}
+
+.sending {
+  font-size: xx-large;
 }
