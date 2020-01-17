@@ -3,6 +3,7 @@ import './Board.css'
 import firebaseRef from '../../firebase'
 import { SidebarContext } from '../../Contexts/SidebarContext'
 import firebase from 'firebase'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 type module = {
   id: string
@@ -97,18 +98,22 @@ const Board: React.FC<props> = ({ setBoard, board, modules }) => {
   return (
     <div className="board">
       <h1>{board.name}</h1>
-      <span onClick={() => sidebar.setSidebar(sidebar.default)}>back</span>
+      <div className='back' onClick={() => sidebar.setSidebar(sidebar.default)}>
+        <ArrowBackIcon /> <span> back </span>
+      </div>
       {moduleList}
       <br />
-      <input onChange={(e) => setNewUserId(e.target.value)} />
+      <hr />
+      <br />
+      <input placeholder='User Id' onChange={(e) => setNewUserId(e.target.value)} />
       <button onClick={() => addUserToBoard(board, newUserId)}>Add User</button>
       <br />
       <br />
       <p>New module</p>
-      <input onChange={(e) => setNewModuleName(e.target.value)} />
+      <input placeholder='Module Name' onChange={(e) => setNewModuleName(e.target.value)} />
       <select defaultValue="a" onChange={(e) => setNewModuleType(e.target.value)}>
         <option disabled value="a">
-          New module type
+          Module type
         </option>
         <option value="todo">Todo</option>
       </select>

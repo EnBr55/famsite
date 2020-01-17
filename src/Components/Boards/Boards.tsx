@@ -81,6 +81,8 @@ const Boards: React.FC<props> = ({ setBoard }) => {
       { boards.sort(sortByBoardDates).map(board =>
         <BoardTag key={board.id} board={board} setBoard={setBoard} />
       )}
+        <hr />
+        <br />
       <div className='new'>
         { addingBoard && (
         <>

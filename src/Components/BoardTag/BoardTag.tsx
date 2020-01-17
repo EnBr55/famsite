@@ -55,12 +55,10 @@ const BoardTag: React.FC<props> = ({ board, setBoard }) => {
     
 
   return (
-    <div className="board-tag">
-      <div onClick={() => sidebar.setSidebar(
+    <div className="board-tag" onClick={() => sidebar.setSidebar(
         <Board setBoard={setBoard} board={board} modules={modules}/>
       )}>
         {board.name} 
-      </div>
     </div>
   )
 }

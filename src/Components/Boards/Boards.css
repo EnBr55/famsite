@@ -1,5 +1,5 @@
 .new {
-  display: flex;
+  height: 100%;
 }
 
 .hoverable:hover {
@@ -12,7 +12,8 @@
 }
 
 .boards h1 {
-  margin: unset;
+  margin-top: 0px;
+  margin-bottom: 0.5em;
 }
 
 .module {

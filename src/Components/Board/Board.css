@@ -1,3 +1,20 @@
 .board h1 {
-  margin: 0
+  margin-top: 0px;
+  margin-bottom: 1em;
 }
+
+.back {
+  display: flex;
+  position: absolute;
+  left: 1em;
+  top: 1em;
+  background-color: rgba(0, 0, 0, 0.33);
+  border-radius: 3px;
+  padding: 0.4em;
+}
+
+.back:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
