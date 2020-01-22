@@ -4,6 +4,7 @@ import { UserContext } from '../../Contexts/UserContext'
 import AddIcon from '@material-ui/icons/Add'
 import CloseIcon from '@material-ui/icons/Close'
 import BoardTag from '../BoardTag/BoardTag'
+import LoadingBar from '../LoadingBar/LoadingBar'
 import firebaseRef from '../../firebase'
 import firebase from 'firebase'
 import { Board, BoardRef } from '../../Models/Boards'
@@ -53,13 +54,13 @@ const Boards: React.FC<props> = ({ setBoard }) => {
   }, [])
 
   const sortByBoardDates = (a: Board, b: Board) => {
-   return (a.dateCreated > b.dateCreated) ? 1 : ((b.dateCreated > a.dateCreated) ? -1 : 0) 
+    return (a.dateCreated > b.dateCreated) ? 1 : ((b.dateCreated > a.dateCreated) ? -1 : 0) 
   }
 
   return (
     <div className='boards'>
       <h1 onClick={() => setIsLoading(!isLoading)}>Boards</h1>
-      { isLoading && 'Loading boards...' }
+      { isLoading && <LoadingBar /> }
       { boards.sort(sortByBoardDates).map(board =>
         <BoardTag key={board.id} board={board} setBoard={setBoard} />
       )}

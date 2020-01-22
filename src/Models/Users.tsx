@@ -8,6 +8,7 @@ export interface User {
   username: string
   usernameLower: string
   id: string
+  picURL: string
 }
 
 export const defaultUser: User = {
@@ -17,5 +18,6 @@ export const defaultUser: User = {
   nameLower: '',
   username: '',
   usernameLower: '',
-  id: ''
+  id: '',
+  picURL: ''
 }

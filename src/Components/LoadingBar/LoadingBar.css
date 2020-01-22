@@ -10,7 +10,7 @@
 
 .progress-bar {
   font-size: x-large;
-  width: 10%;
+  width: 1.5em;
   background-color: beige;
   position: relative;
   animation: 2s loading infinite linear;
@@ -19,7 +19,7 @@
 
 @keyframes loading {
   from {
-    left: -10%;
+    left: -1.5em;
   }
   
   to {

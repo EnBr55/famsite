@@ -1,5 +1,6 @@
 import React from 'react'
 import firebaseRef from '../../firebase'
+import LoadingBar from '../LoadingBar/LoadingBar'
 
 const Login: React.FC<{open: boolean}> = ({ open }) => {
 
@@ -9,14 +10,21 @@ const Login: React.FC<{open: boolean}> = ({ open }) => {
   const [username, setUsername] = React.useState('')
   const [registering, setRegistering] = React.useState(false)
   const [error, setError] = React.useState('')
+  const [loading, setLoading] = React.useState(false)
 
   const submitLogin = () => {
+    setLoading(true)
     firebaseRef.auth().signInWithEmailAndPassword(email, password)
-      .catch(error => setError(error.message))
+      .then(() => setLoading(false))
+      .catch(error => {
+        setLoading(false)
+        setError(error.message)
+      })
     setPassword('')
   }
 
   const signup = (emailRef: string, passwordRef: string, nameRef: string, usernameRef: string) => {
+    setLoading(true)
     firebaseRef.auth().createUserWithEmailAndPassword(emailRef, passwordRef)
       .then(newUser => {
         if (newUser.user) {
@@ -27,9 +35,11 @@ const Login: React.FC<{open: boolean}> = ({ open }) => {
             usernameLower: usernameRef.toLowerCase(),
             email: emailRef,
             id: newUser.user.uid,
-            boards: []
+            boards: [],
+            picURL: ''
           })
         }
+        setLoading(false)
       })
       .catch(error => setError(error.message))
   }
@@ -72,6 +82,9 @@ const Login: React.FC<{open: boolean}> = ({ open }) => {
         </button>
         <button onClick={() => setRegistering(false)}>Cancel</button>
         </>}
+        { loading && <div className="loading-bar">
+          <LoadingBar />
+        </div> }
       </div>
       <span style={{color: 'red'}}>{error}</span>
 
