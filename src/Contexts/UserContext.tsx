@@ -1,11 +1,5 @@
 import React from 'react'
-
-const defaultUser = {
-  loggedIn: false,
-  email: '',
-  id: '',
-  name: ''
-}
+import { defaultUser } from '../Models/Users'
 
 export const UserContext = React.createContext(defaultUser)
 export const UserProvider = UserContext.Provider

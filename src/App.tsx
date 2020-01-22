@@ -9,33 +9,22 @@ import LoginDropDown from './Components/LoginDropDown/LoginDropDown'
 import { UserProvider } from './Contexts/UserContext'
 import { SidebarProvider } from './Contexts/SidebarContext'
 import Boards from './Components/Boards/Boards'
+import { Module, Board } from './Models/Boards'
+import { User, defaultUser } from './/Models/Users'
 
-type user = {
-  loggedIn: boolean
-  id: string
-  email: string
-  name: string
-  boards: string[]
-}
-
-const onAuthStateChange = (setUser: (user: user) => void) => {
+const onAuthStateChange = (setUser: (user: User) => void) => {
   return firebaseRef.auth().onAuthStateChanged(user => {
     if (user) {
-      let name = ''
-      let boards = []
       firebaseRef.firestore().collection('users').doc(user.uid)
         .get().then(doc => {
           if (doc && doc.data()) {
-            name = doc.data()!.name
-            boards = doc.data()!.boards
-
-            setUser({loggedIn: true, id: user.uid, name: name, email: user.email!, boards: boards})
+            setUser({...defaultUser, ...doc.data()})
           }
         })
 
     } else {
       console.log('logged out')
-      setUser({loggedIn: false, id: '', email: '', name: '', boards: []})
+      setUser(defaultUser)
     }
   })
 }
@@ -44,7 +33,7 @@ const App: React.FC = () => {
   const [login, setLogin] = React.useState(false)
   const toggleLogin = (): void => setLogin(!login)
 
-  const [user, setUser] = React.useState({ loggedIn: false, id: '', email: '', name: '', boards: ['']})
+  const [user, setUser] = React.useState<User>(defaultUser)
   const [board, setBoard] = React.useState({ board: 'a', moduleType: 'a', module: 'a'})
 
   type sidebarContextType = {
@@ -84,7 +73,7 @@ const App: React.FC = () => {
         <SidebarProvider value={sidebarContext}>
           <Navbar setLogin={toggleLogin}/>
           <Sidebar />
-          <LoginDropDown open={login} loggedIn={user.loggedIn} toggleLogin={toggleLogin}/>
+          <LoginDropDown open={login} loggedIn={user.name !== ''} toggleLogin={toggleLogin}/>
           { moduleSwitch() }
         </SidebarProvider>
       </UserProvider >

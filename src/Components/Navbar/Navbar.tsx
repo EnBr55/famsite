@@ -19,7 +19,7 @@ const Navbar: React.FC<props> = ({ setLogin }) => {
           Famsite
         </div>
         <div className='right padded' onClick={() => setLogin()}>
-          { user.loggedIn ? user.name : 'Login' }
+          { user.name !== '' ? user.name : 'Login' }
         </div>
       </div>
     </div>

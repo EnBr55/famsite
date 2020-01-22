@@ -16,7 +16,7 @@ const LoginDropDown: React.FC<props> = ({ loggedIn, open, toggleLogin }) => {
   return (
     <div className="LoginDropDown" style={{ transform: open ? 'translateY(0)' : 'translateY(-100vh)' }}>
       <div className="cross" onClick={() => toggleLogin()} > <CloseIcon /> </div>
-      { user.loggedIn ? <Profile /> : <Login open={open} /> }
+      { user.name !== '' ? <Profile /> : <Login open={open} /> }
     </div>
   )
 }
