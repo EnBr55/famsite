@@ -2,13 +2,6 @@ import React from 'react'
 import './Sidebar.css'
 import { UserContext } from '../../Contexts/UserContext'
 import { SidebarContext } from '../../Contexts/SidebarContext'
-import Boards from '../Boards/Boards'
-
-type boardRef = {
-  board: string
-  module: string
-  moduleType: string
-}
 
 const Sidebar: React.FC = () => {
   const user = React.useContext(UserContext)

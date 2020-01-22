@@ -10,3 +10,9 @@ export interface Board {
   id: string
   dateCreated: number
 }
+
+export interface BoardRef {
+  board: string
+  module: string
+  moduleType: string
+}

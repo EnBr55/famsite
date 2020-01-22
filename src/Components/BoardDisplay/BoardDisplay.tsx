@@ -1,44 +1,20 @@
 import React from 'react'
-import './Board.css'
+import './BoardDisplay.css'
 import firebaseRef from '../../firebase'
 import UserSearch from '../UserSearch/UserSearch'
 import { SidebarContext } from '../../Contexts/SidebarContext'
 import firebase from 'firebase'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-
-type module = {
-  id: string
-  type: string
-  name: string
-}
-
-type board = {
-  members: string[]
-  name: string
-  id: string
-  dateCreated: number
-}
-
-type boardRef = {
-  board: string
-  module: string
-  moduleType: string
-}
+import { User } from '../../Models/Users'
+import { Board, BoardRef, Module } from '../../Models/Boards'
 
 type props = {
-  setBoard(board: boardRef): void
-  board: board
-  modules: module[]
+  setBoard(board: BoardRef): void
+  board: Board
+  modules: Module[]
 }
 
-type user = {
-  boards: board[]
-  email: string
-  name: string
-  id: string
-}
-
-const addUserToBoard = (board: board, userId: string) => {
+const addUserToBoard = (board: Board, userId: string) => {
   firebaseRef
     .firestore()
     .collection('boards')
@@ -55,13 +31,13 @@ const addUserToBoard = (board: board, userId: string) => {
     .catch((e) => console.log(e))
 }
 
-const Board: React.FC<props> = ({ setBoard, board, modules }) => {
+const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
   const sidebar = React.useContext(SidebarContext)
   const [newUserId, setNewUserId] = React.useState('')
   const [newModuleName, setNewModuleName] = React.useState('')
   const [newModuleType, setNewModuleType] = React.useState('')
   const [userList, setUserList] = React.useState<string[]>([])
-  const [searchedUsers, setSearchedUsers] = React.useState<user[]>([])
+  const [searchedUsers, setSearchedUsers] = React.useState<User[]>([])
 
   React.useEffect(() => {
     const unsubscribe = firebaseRef
@@ -104,7 +80,7 @@ const Board: React.FC<props> = ({ setBoard, board, modules }) => {
   ))
 
   const createModule = (
-    board: board,
+    board: Board,
     newModuleName: string,
     newModuleType: string,
   ) => {
@@ -174,4 +150,4 @@ const Board: React.FC<props> = ({ setBoard, board, modules }) => {
     </div>
   )
 }
-export default Board
+export default BoardDisplay

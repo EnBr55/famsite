@@ -6,35 +6,17 @@ import CloseIcon from '@material-ui/icons/Close'
 import BoardTag from '../BoardTag/BoardTag'
 import firebaseRef from '../../firebase'
 import firebase from 'firebase'
-
-type module = {
-  id: string
-  type: string
-  name: string
-}
-
-type board = {
-  members: string[]
-  name: string
-  id: string
-  dateCreated: number
-}
-
-type boardRef = {
-  board: string
-  module: string
-  moduleType: string
-}
+import { Board, BoardRef } from '../../Models/Boards'
 
 type props = {
-  setBoard(board: boardRef): void
+  setBoard(board: BoardRef): void
 }
 
 const Boards: React.FC<props> = ({ setBoard }) => {
   const user = React.useContext(UserContext)
   const [newBoardName, setNewBoardName] = React.useState('')
   const [addingBoard, setAddingBoard] = React.useState(false)
-  const [boards, setBoards] = React.useState<board[]>([])
+  const [boards, setBoards] = React.useState<Board[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
 
   const createBoard = (boardName: string) => {
@@ -54,7 +36,7 @@ const Boards: React.FC<props> = ({ setBoard }) => {
       firebaseRef.firestore().collection('boards')
       .where('members', 'array-contains', user.id)
       .onSnapshot(snapshot => {
-      const snapshotBoards: board[] = []
+      const snapshotBoards: Board[] = []
         if (snapshot.size > 0) { setIsLoading(true) }
         snapshot.forEach(doc => {
             snapshotBoards.push({
@@ -70,7 +52,7 @@ const Boards: React.FC<props> = ({ setBoard }) => {
     return unsubscribe
   }, [])
 
-  const sortByBoardDates = (a: board, b: board) => {
+  const sortByBoardDates = (a: Board, b: Board) => {
    return (a.dateCreated > b.dateCreated) ? 1 : ((b.dateCreated > a.dateCreated) ? -1 : 0) 
   }
 

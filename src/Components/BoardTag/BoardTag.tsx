@@ -2,34 +2,16 @@ import React from 'react'
 import './BoardTag.css'
 import firebaseRef from '../../firebase'
 import { SidebarContext } from '../../Contexts/SidebarContext'
-import Board from '../Board/Board'
-
-type module = {
-  id: string
-  type: string
-  name: string
-}
-
-type board = {
-  members: string[]
-  name: string
-  id: string
-  dateCreated: number
-}
-
-type boardRef = {
-  board: string
-  module: string
-  moduleType: string
-}
+import BoardDisplay from '../BoardDisplay/BoardDisplay'
+import { Board, BoardRef, Module } from '../../Models/Boards'
 
 type props = {
-  board: board
-  setBoard(board: boardRef): void
+  board: Board
+  setBoard(board: BoardRef): void
 }
 
 const BoardTag: React.FC<props> = ({ board, setBoard }) => {
-  const [modules, setModules] = React.useState<module[]>([])
+  const [modules, setModules] = React.useState<Module[]>([])
   const sidebar = React.useContext(SidebarContext)
 
   React.useEffect(() => {
@@ -39,7 +21,7 @@ const BoardTag: React.FC<props> = ({ board, setBoard }) => {
       .doc(board.id)
       .collection('modules')
       .onSnapshot((snapshot) => {
-        const snapshotModules: module[] = []
+        const snapshotModules: Module[] = []
         snapshot.forEach((doc) => {
           snapshotModules.push({
             id: doc.id,
@@ -56,7 +38,7 @@ const BoardTag: React.FC<props> = ({ board, setBoard }) => {
 
   return (
     <div className="board-tag" onClick={() => sidebar.setSidebar(
-        <Board setBoard={setBoard} board={board} modules={modules}/>
+        <BoardDisplay setBoard={setBoard} board={board} modules={modules}/>
       )}>
         {board.name} 
     </div>
