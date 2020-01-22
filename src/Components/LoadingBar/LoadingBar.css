@@ -1,0 +1,28 @@
+.bar-outline {
+  max-height: 100%;
+  max-width: 100%;
+  min-height: 1em;
+  min-width: 1em;
+  background-color: #a86;
+  overflow: hidden;
+  border-radius: 1em;
+}
+
+.progress-bar {
+  font-size: x-large;
+  width: 10%;
+  background-color: beige;
+  position: relative;
+  animation: 2s loading infinite linear;
+  border-radius: 5px;
+}
+
+@keyframes loading {
+  from {
+    left: -10%;
+  }
+  
+  to {
+    left: 100%;
+  }
+}

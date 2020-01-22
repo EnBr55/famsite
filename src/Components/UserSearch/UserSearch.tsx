@@ -2,6 +2,7 @@ import React from 'react'
 import './UserSearch.css'
 import firebaseRef from '../../firebase'
 import { User, defaultUser } from '../../Models/Users'
+import LoadingBar from '.././LoadingBar/LoadingBar'
 
 type props = {
   callback(result: User[]): void
@@ -69,7 +70,7 @@ const UserSearch: React.FC<props> = ({ callback }) => {
       <button onClick={() => queryUsers(search.toLowerCase(), setLoading, callback)}>
         Search
       </button>
-      {loading && <p>Loading...</p>}
+      {loading && <div className="loading-bar"><LoadingBar /></div>}
     </div>
   )
 }

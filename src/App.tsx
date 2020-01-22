@@ -9,7 +9,6 @@ import LoginDropDown from './Components/LoginDropDown/LoginDropDown'
 import { UserProvider } from './Contexts/UserContext'
 import { SidebarProvider } from './Contexts/SidebarContext'
 import Boards from './Components/Boards/Boards'
-import { Module, Board } from './Models/Boards'
 import { User, defaultUser } from './/Models/Users'
 
 const onAuthStateChange = (setUser: (user: User) => void) => {
@@ -58,7 +57,7 @@ const App: React.FC = () => {
       case 'chat':
         return <Chat boardId={board.board} moduleId={board.module} />
       default:
-        return <span>No module selected</span>
+        return <div style={{marginTop: '5px'}}>No module selected</div>
     }
   }
 
