@@ -1,6 +1,7 @@
 import React from 'react'
 import './Board.css'
 import firebaseRef from '../../firebase'
+import UserSearch from '../UserSearch/UserSearch'
 import { SidebarContext } from '../../Contexts/SidebarContext'
 import firebase from 'firebase'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
@@ -30,6 +31,13 @@ type props = {
   modules: module[]
 }
 
+type user = {
+  boards: board[]
+  email: string
+  name: string
+  id: string
+}
+
 const addUserToBoard = (board: board, userId: string) => {
   firebaseRef
     .firestore()
@@ -53,6 +61,7 @@ const Board: React.FC<props> = ({ setBoard, board, modules }) => {
   const [newModuleName, setNewModuleName] = React.useState('')
   const [newModuleType, setNewModuleType] = React.useState('')
   const [userList, setUserList] = React.useState<string[]>([])
+  const [searchedUsers, setSearchedUsers] = React.useState<user[]>([])
 
   React.useEffect(() => {
     const unsubscribe = firebaseRef
@@ -160,6 +169,8 @@ const Board: React.FC<props> = ({ setBoard, board, modules }) => {
       <button onClick={() => addUserToBoard(board, newUserId)}>Add User</button>
       <h3>Members</h3>
       {userList.map(user => <li key={user}>{user}</li>)}
+      <UserSearch callback={setSearchedUsers} />
+      {searchedUsers.map(user => <div key={user.id}>{user.name}, {user.id}</div>)}
     </div>
   )
 }
