@@ -1,33 +1,15 @@
 import React from 'react'
 import './UserSearch.css'
 import firebaseRef from '../../firebase'
+import { Module, Board } from '../../Models/Boards'
+import { User, defaultUser } from '../../Models/Users'
 
 type props = {
-  callback(result: user[]): void
+  callback(result: User[]): void
 }
 
-type module = {
-  id: string
-  type: string
-  name: string
-}
-
-type board = {
-  members: string[]
-  name: string
-  id: string
-  dateCreated: number
-}
-
-type user = {
-  boards: board[]
-  email: string
-  name: string
-  id: string
-}
-
-const queryUsers = (search: string, callback: (result: user[]) => void) => {
-  const result: user[] = []
+const queryUsers = (search: string, callback: (result: User[]) => void) => {
+  const result: User[] = []
   firebaseRef
     .firestore()
     .collection('users')
@@ -39,10 +21,7 @@ const queryUsers = (search: string, callback: (result: user[]) => void) => {
     .then((results) => {
       results.forEach((user) => {
         result.push({
-          boards: user.data().boards,
-          email: user.data().email,
-          id: user.data().id,
-          name: user.data().name,
+          ...defaultUser, ...user.data()
         })},
       )
       callback(result)
