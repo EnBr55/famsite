@@ -138,15 +138,17 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
       </button>
       <br />
       <br />
-      <input
-        placeholder="User Id"
-        onChange={(e) => setNewUserId(e.target.value)}
-      />
-      <button onClick={() => addUserToBoard(board, newUserId)}>Add User</button>
       <h3>Members</h3>
       {userList.map(user => <li key={user}>{user}</li>)}
+      <br />
+      <h3> Add New Members </h3>
       <UserSearch callback={setSearchedUsers} />
-      {searchedUsers.map(user => <div key={user.id}>{user.name}, {user.id}</div>)}
+      {searchedUsers.map(user => 
+        <div key={user.id}>
+          {user.name} &nbsp; - &nbsp; <i>{user.username}</i> &nbsp;
+          <button onClick={() => addUserToBoard(board, user.id)}>Add</button>
+        </div>
+      )}
     </div>
   )
 }
