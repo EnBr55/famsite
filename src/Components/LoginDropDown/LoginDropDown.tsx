@@ -14,7 +14,11 @@ type props = {
 const LoginDropDown: React.FC<props> = ({ loggedIn, open, toggleLogin }) => {
   const user = React.useContext(UserContext)
   return (
-    <div className="LoginDropDown" style={{ transform: open ? 'translateY(0)' : 'translateY(-100vh)' }}>
+    <div className="LoginDropDown" style={{ 
+      transform: open ? 'translateY(0)' : 'translateY(-100vh)',
+      height: open ? 'calc(100vh - 3em)' : '1vh',
+      width: open ? '100vw' : '1vh',
+      }}>
       <div className="cross" onClick={() => toggleLogin()} > <CloseIcon /> </div>
       { user.name !== '' ? <Profile /> : <Login open={open} /> }
     </div>

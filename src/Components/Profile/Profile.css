@@ -1,0 +1,35 @@
+.profile {
+  padding: 2em;
+}
+
+.profile-heading {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.profile-heading img {
+  object-fit: cover;
+  border-radius: 1em;
+}
+
+.image-preview {
+  height: 6em;
+  width: 6em;
+  margin: auto;
+  border: 2px solid;
+  border-radius: 1em;
+}
+
+.image-preview img {
+  object-fit: cover;
+  border-radius: 1em;
+}
+
+.profile-pic {
+  height: 6em;
+  width: 6em;  
+  border: 2px solid;
+  border-radius: 1em;
+}
