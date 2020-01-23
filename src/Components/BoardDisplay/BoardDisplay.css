@@ -45,3 +45,23 @@
   position: absolute;
   right: 0.5em;
 }
+
+.searched-user-grid {
+  margin: 1em 0.5em;
+  display: grid;
+  grid-template-columns: 15% 35% 30% 20%;
+}
+
+.searched-user-grid img {
+  object-fit: cover;
+  border-radius: 1em;
+}
+
+.searched-user-profile-pic {
+  height: 3em;
+  width: 3em;
+}
+
+.searched-user-text {
+  overflow-x: auto;
+}

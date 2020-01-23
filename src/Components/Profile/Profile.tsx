@@ -20,7 +20,6 @@ const Profile: React.FC = () => {
 
   const uploadProfilePic = (profilePic: File) => {
     setError('')
-    console.log(profilePic)
     if (profilePic.size / 1000000 > 2) {
       setError('Your file exceeds 2MB. Please upload a smaller file.\n')
       return
@@ -35,7 +34,6 @@ const Profile: React.FC = () => {
     const imageRef = storageRef.child('images/' + profilePic.name)
     setLoading(true)
     imageRef.put(profilePic).then((upload) => {
-      console.log(upload)
       upload.ref
         .getDownloadURL()
         .then((url) => {

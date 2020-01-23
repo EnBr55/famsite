@@ -145,8 +145,20 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
       <UserSearch callback={setSearchedUsers} />
       {searchedUsers.map(user => 
         <div key={user.id}>
-          {user.name} &nbsp; - &nbsp; <i>{user.username}</i> &nbsp;
-          <button onClick={() => addUserToBoard(board, user.id)}>Add</button>
+          <div className="searched-user-grid">
+            <div className="searched-user-profile-pic">
+              <img alt="profile-pic" src={user.picURL} width="100%" height="100%"/>
+            </div>
+            <div className="searched-user-text">
+              {user.name}
+            </div>
+            <div className="searched-user-text">
+              <i>{user.username}</i>
+            </div>
+            <div>
+              <button onClick={() => addUserToBoard(board, user.id)}>Add</button>
+            </div>
+          </div>
         </div>
       )}
     </div>
