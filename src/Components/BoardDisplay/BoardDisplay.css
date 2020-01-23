@@ -3,6 +3,10 @@
   margin-bottom: 1em;
 }
 
+.board {
+  height: 100%;
+}
+
 .back {
   display: flex;
   position: absolute;

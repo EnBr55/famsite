@@ -1,22 +1,13 @@
 .sidebar {
-  position: fixed;
+  position: absolute;
   z-index: 10;
   width: 100vw;
-  height: 100%;
-}
-
-.background {
-  z-index: 9;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-}
-
-.visible {
-  z-index: 11;
-  width: 100%;
-  height: 100%;
-  background-color: #ede3e4;
+  height: calc(100vh - 3em);
   transition: all 0.5s ease;
+  background-color: #ede3e4;
+  overflow-y: auto;
+}
+
+.sidebar-content {
+  padding-bottom: 1em;
 }

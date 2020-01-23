@@ -8,10 +8,8 @@ const Sidebar: React.FC = () => {
   const sidebar = React.useContext(SidebarContext)
   return (
     <div className='sidebar' style={{ transform: sidebar.sidebar ? 'translateX(0)' : 'translateX(-110%)' }}>
-      <div className='background' onClick={() => sidebar.setSidebar(undefined)}>
-        <div className='visible' onClick={(e) => {e.stopPropagation()}} style={{ transform: sidebar.sidebar ? 'translateX(0)' : 'translateX(-110%)' }}>
-          {user.name !== '' ? sidebar.sidebar : 'You\'re not logged in.'}
-        </div>
+      <div className='sidebar-content'>
+        {user.name !== '' ? sidebar.sidebar : 'You\'re not logged in.'}
       </div>
     </div>
   )

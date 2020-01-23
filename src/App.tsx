@@ -70,10 +70,16 @@ const App: React.FC = () => {
     <div className="App">
       <UserProvider value={user}>
         <SidebarProvider value={sidebarContext}>
-          <Navbar setLogin={toggleLogin}/>
-          <Sidebar />
-          <LoginDropDown open={login} loggedIn={user.name !== ''} toggleLogin={toggleLogin}/>
-          { moduleSwitch() }
+          <div className="header">
+            <Navbar setLogin={toggleLogin}/>
+          </div>
+          <div className="not-header">
+            <Sidebar />
+            <LoginDropDown open={login} loggedIn={user.name !== ''} toggleLogin={toggleLogin}/>
+            <div className="module-switch">
+              { moduleSwitch() }
+            </div>
+          </div>
         </SidebarProvider>
       </UserProvider >
     </div>

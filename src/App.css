@@ -6,3 +6,14 @@
   overflow: hidden;
 }
 
+.header {
+  height: 3em;
+}
+
+.not-header {
+  height: calc(100vh - 3em);
+}
+
+.module-switch {
+  padding: 0.5em;
+}
