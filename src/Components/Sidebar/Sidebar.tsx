@@ -8,11 +8,12 @@ const Sidebar: React.FC = () => {
   const user = React.useContext(UserContext)
   const sidebar = React.useContext(SidebarContext)
   const [panned, setPanned] = React.useState(0)
+  const [curX, setCurX] = React.useState(0)
 
   const handlePan = (e: HammerInput) => {
     sidebar.setSidebar(sidebar.default)
     if (e.isFinal) {
-      if (e.deltaX < window.innerWidth / 2.5) {
+      if (e.deltaX < window.innerWidth / 3) {
         sidebar.setSidebar(undefined)
       }
       setPanned(0)
@@ -22,8 +23,14 @@ const Sidebar: React.FC = () => {
   }
 
   const handlePanClose = (e: HammerInput) => {
+    // limit speed (some touchscreens are buggy)
+    if (Math.abs(e.deltaX) > Math.abs(curX) + 200) {
+      return
+    } else {
+      setCurX(e.deltaX)
+    }
     if (e.isFinal) {
-      if (Math.abs(e.deltaX) > window.innerWidth / 2.5) {
+      if (window.innerWidth + e.deltaX < window.innerWidth / 2.5 && Math.abs(e.deltaX) < window.innerWidth) {
         sidebar.setSidebar(undefined)
       }
       setPanned(0)
