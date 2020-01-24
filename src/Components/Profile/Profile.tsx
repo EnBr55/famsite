@@ -52,7 +52,7 @@ const Profile: React.FC = () => {
       .update({
         picURL: url,
       })
-      .then((result) => setError('Update profile picture'))
+      .then((result) => setError('Updated profile picture. Change visible on refresh.'))
   }
 
   return (
@@ -94,7 +94,7 @@ const Profile: React.FC = () => {
           </div>
           <br />
           <button onClick={() => updateProfilePicture(uploadedUrl)}>
-            Updated profile picture. Change visible on refresh.
+            Update Profile Picture
           </button>
         </>
       )}
