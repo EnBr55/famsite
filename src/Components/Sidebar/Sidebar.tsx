@@ -8,7 +8,6 @@ const Sidebar: React.FC = () => {
   const user = React.useContext(UserContext)
   const sidebar = React.useContext(SidebarContext)
   const [panned, setPanned] = React.useState(0)
-  const [curX, setCurX] = React.useState(0)
 
   const handlePan = (e: HammerInput) => {
     sidebar.setSidebar(sidebar.default)
@@ -19,23 +18,6 @@ const Sidebar: React.FC = () => {
       setPanned(0)
     } else {
       setPanned(e.deltaX)
-    }
-  }
-
-  const handlePanClose = (e: HammerInput) => {
-    // limit speed (some touchscreens are buggy)
-    if (Math.abs(e.deltaX) > Math.abs(curX) + 200) {
-      return
-    } else {
-      setCurX(e.deltaX)
-    }
-    if (e.isFinal) {
-      if (window.innerWidth + e.deltaX < window.innerWidth / 2.5 && Math.abs(e.deltaX) < window.innerWidth) {
-        sidebar.setSidebar(undefined)
-      }
-      setPanned(0)
-    } else {
-      setPanned(window.innerWidth + e.deltaX)
     }
   }
 
@@ -54,11 +36,6 @@ const Sidebar: React.FC = () => {
         <div className="sidebar-controller">
         </div>
       </Hammer>
-
-      { sidebar.sidebar !== undefined && <Hammer onPan={e => handlePanClose(e)}>
-        <div style={{right: '0', zIndex: 11}} className="sidebar-controller">
-        </div>
-      </Hammer> }
 
       <div className='sidebar' style={{ transform: getTranslation(), transition: panned === 0 ? 'all 0.5s ease' : 'all 0.2s ease-out' }}>
         <div className='sidebar-content'>
