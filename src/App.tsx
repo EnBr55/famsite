@@ -9,7 +9,9 @@ import LoginDropDown from './Components/LoginDropDown/LoginDropDown'
 import { UserProvider } from './Contexts/UserContext'
 import { SidebarProvider } from './Contexts/SidebarContext'
 import Boards from './Components/Boards/Boards'
-import { User, defaultUser } from './/Models/Users'
+import { User, defaultUser } from './Models/Users'
+import { Board } from './Models/Boards'
+import Hammer from 'react-hammerjs'
 
 const onAuthStateChange = (setUser: (user: User) => void) => {
   return firebaseRef.auth().onAuthStateChanged(user => {
@@ -17,7 +19,7 @@ const onAuthStateChange = (setUser: (user: User) => void) => {
       firebaseRef.firestore().collection('users').doc(user.uid)
         .get().then(doc => {
           if (doc && doc.data()) {
-            setUser({...defaultUser, ...doc.data()})
+            setUser({...defaultUser, ...doc.data(), boards: []})
           }
         })
 
@@ -35,6 +37,8 @@ const App: React.FC = () => {
   const [user, setUser] = React.useState<User>(defaultUser)
   const [board, setBoard] = React.useState({ board: 'a', moduleType: 'a', module: 'a'})
 
+  const [boards, setBoards] = React.useState<Board[]>([])
+
   type sidebarContextType = {
     sidebar: JSX.Element | undefined
     default: JSX.Element
@@ -49,6 +53,26 @@ const App: React.FC = () => {
         sidebar: sidebarElement
       })
     })
+
+  React.useEffect(() => {
+    const unsubscribe = 
+      firebaseRef.firestore().collection('boards')
+      .where('members', 'array-contains', user.id)
+      .onSnapshot(snapshot => {
+      const snapshotBoards: Board[] = []
+        snapshot.forEach(doc => {
+            snapshotBoards.push({
+              members: doc.data().members,
+              name: doc.data().name,
+              id: doc.id,
+              dateCreated: doc.data().dateCreated
+            })
+        })
+        setBoards(snapshotBoards)
+        setUser({...user, boards: snapshotBoards})
+      })
+    return unsubscribe
+  }, [user.id])
 
   const moduleSwitch = () => {
     switch(board.moduleType) {
@@ -74,6 +98,10 @@ const App: React.FC = () => {
             <Navbar setLogin={toggleLogin}/>
           </div>
           <div className="not-header">
+            <Hammer onPan={e => console.log(e)}>
+              <div className="sidebar-controller">
+              </div>
+            </Hammer>
             <Sidebar />
             <LoginDropDown open={login} loggedIn={user.name !== ''} toggleLogin={toggleLogin}/>
             <div className="module-switch">

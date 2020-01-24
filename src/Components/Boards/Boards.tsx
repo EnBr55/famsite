@@ -17,8 +17,8 @@ const Boards: React.FC<props> = ({ setBoard }) => {
   const user = React.useContext(UserContext)
   const [newBoardName, setNewBoardName] = React.useState('')
   const [addingBoard, setAddingBoard] = React.useState(false)
-  const [boards, setBoards] = React.useState<Board[]>([])
   const [isLoading, setIsLoading] = React.useState(false)
+  const boards = user.boards
 
   const createBoard = (boardName: string) => {
     firebaseRef.firestore().collection('boards').add({
@@ -31,27 +31,6 @@ const Boards: React.FC<props> = ({ setBoard }) => {
     })
     )
   }
-
-  React.useEffect(() => {
-    const unsubscribe = 
-      firebaseRef.firestore().collection('boards')
-      .where('members', 'array-contains', user.id)
-      .onSnapshot(snapshot => {
-      const snapshotBoards: Board[] = []
-        if (snapshot.size > 0) { setIsLoading(true) }
-        snapshot.forEach(doc => {
-            snapshotBoards.push({
-              members: doc.data().members,
-              name: doc.data().name,
-              id: doc.id,
-              dateCreated: doc.data().dateCreated
-            })
-        })
-        setIsLoading(false)
-        setBoards(snapshotBoards)
-      })
-    return unsubscribe
-  }, [])
 
   const sortByBoardDates = (a: Board, b: Board) => {
     return (a.dateCreated > b.dateCreated) ? 1 : ((b.dateCreated > a.dateCreated) ? -1 : 0) 

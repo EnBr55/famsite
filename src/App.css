@@ -17,3 +17,10 @@
 .module-switch {
   padding: 0.5em;
 }
+
+.sidebar-controller {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.3);
+  height: 100vh;
+  width: 20vw;
+}

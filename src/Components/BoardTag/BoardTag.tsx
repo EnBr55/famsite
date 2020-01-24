@@ -12,9 +12,11 @@ type props = {
 
 const BoardTag: React.FC<props> = ({ board, setBoard }) => {
   const [modules, setModules] = React.useState<Module[]>([])
+  const [loading, setLoading] = React.useState(false)
   const sidebar = React.useContext(SidebarContext)
 
   React.useEffect(() => {
+    setLoading(true)
     const unsubscribe = firebaseRef
       .firestore()
       .collection('boards')
@@ -30,6 +32,7 @@ const BoardTag: React.FC<props> = ({ board, setBoard }) => {
           })
         })
         setModules(snapshotModules)
+        setLoading(false)
       })
     return unsubscribe
   }, [])
@@ -37,7 +40,7 @@ const BoardTag: React.FC<props> = ({ board, setBoard }) => {
     
 
   return (
-    <div className="board-tag" onClick={() => sidebar.setSidebar(
+    <div className={loading ? "board-tag disabled" : "board-tag" } onClick={() => !loading && sidebar.setSidebar(
         <BoardDisplay setBoard={setBoard} board={board} modules={modules}/>
       )}>
         {board.name} 
