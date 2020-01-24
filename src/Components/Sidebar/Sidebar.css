@@ -3,11 +3,16 @@
   z-index: 10;
   width: 100vw;
   height: calc(100vh - 3em);
-  transition: all 0.5s ease;
   background-color: #ede3e4;
   overflow-y: auto;
 }
 
 .sidebar-content {
   padding-bottom: 1em;
+}
+
+.sidebar-controller {
+  position: fixed;
+  height: 100vh;
+  width: 20vw;
 }

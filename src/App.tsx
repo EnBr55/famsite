@@ -98,10 +98,6 @@ const App: React.FC = () => {
             <Navbar setLogin={toggleLogin}/>
           </div>
           <div className="not-header">
-            <Hammer onPan={e => console.log(e)}>
-              <div className="sidebar-controller">
-              </div>
-            </Hammer>
             <Sidebar />
             <LoginDropDown open={login} loggedIn={user.name !== ''} toggleLogin={toggleLogin}/>
             <div className="module-switch">
