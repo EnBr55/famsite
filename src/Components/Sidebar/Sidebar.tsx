@@ -21,6 +21,17 @@ const Sidebar: React.FC = () => {
     }
   }
 
+  const handlePanClose = (e: HammerInput) => {
+    if (e.isFinal) {
+      if (Math.abs(e.deltaX) > window.innerWidth / 2.5) {
+        sidebar.setSidebar(undefined)
+      }
+      setPanned(0)
+    } else {
+      setPanned(window.innerWidth + e.deltaX)
+    }
+  }
+
   const getTranslation = (): string => {
     if (panned !== 0) {
       return `translateX(calc(${panned}px - 100vw))`
@@ -36,6 +47,12 @@ const Sidebar: React.FC = () => {
         <div className="sidebar-controller">
         </div>
       </Hammer>
+
+      { sidebar.sidebar !== undefined && <Hammer onPan={e => handlePanClose(e)}>
+        <div style={{right: '0', zIndex: 11}} className="sidebar-controller">
+        </div>
+      </Hammer> }
+
       <div className='sidebar' style={{ transform: getTranslation(), transition: panned === 0 ? 'all 0.5s ease' : 'all 0.2s ease-out' }}>
         <div className='sidebar-content'>
           {user.name !== '' ? sidebar.sidebar : 'You\'re not logged in.'}
