@@ -25,23 +25,39 @@ const Login: React.FC<{open: boolean}> = ({ open }) => {
 
   const signup = (emailRef: string, passwordRef: string, nameRef: string, usernameRef: string) => {
     setLoading(true)
-    firebaseRef.auth().createUserWithEmailAndPassword(emailRef, passwordRef)
-      .then(newUser => {
-        if (newUser.user) {
-          firebaseRef.firestore().collection('users').doc(newUser.user.uid).set({
-            name: nameRef,
-            nameLower: nameRef.toLowerCase(),
-            username: usernameRef,
-            usernameLower: usernameRef.toLowerCase(),
-            email: emailRef,
-            id: newUser.user.uid,
-            boards: [],
-            picURL: ''
-          })
+    firebaseRef.firestore().collection('users').get().then(users => {
+      let failed = false
+      users.forEach(user => {
+        if (user.data().usernameLower === usernameRef.toLowerCase()) {
+          failed = true
+          setError('Username already taken. Please pick another username.')
+          setLoading(false)
         }
-        setLoading(false)
       })
-      .catch(error => setError(error.message))
+      if (!failed) {
+        firebaseRef.auth().createUserWithEmailAndPassword(emailRef, passwordRef)
+          .then(newUser => {
+            if (newUser.user) {
+              firebaseRef
+                .firestore()
+                .collection('users')
+                .doc(newUser.user.uid)
+                .set({
+                  name: nameRef,
+                  nameLower: nameRef.toLowerCase(),
+                  username: usernameRef,
+                  usernameLower: usernameRef.toLowerCase(),
+                  email: emailRef,
+                  id: newUser.user.uid,
+                  boards: [],
+                  picURL: 'https://firebasestorage.googleapis.com/v0/b/famsites.appspot.com/o/images%2Fdefault_profile.png?alt=media&token=882fd694-a580-4d68-b1bb-9cec4db1c0bd',
+                })
+            }
+            setLoading(false)
+          })
+          .catch(error => setError(error.message))
+      }
+    })
   }
 
   if (registering && !open) { setRegistering(false) }
