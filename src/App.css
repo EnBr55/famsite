@@ -17,4 +17,5 @@
 
 .module-switch {
   padding: 0.5em;
+  position: relative;
 }
