@@ -4,13 +4,15 @@ import './TextInput.css'
 type props = {
   placeholder: string
   callback(userInput: string): void
+  submitText?: string | JSX.Element
 }
 
-const TextInput: React.FC<props> = ({placeholder, callback}) => {
+const TextInput: React.FC<props> = ({placeholder, callback, submitText}) => {
   const [text, setText] = React.useState('')
   return (
     <div className="text-input">
-      <input 
+      <textarea 
+        className="text-input-field"
         placeholder={placeholder}
         onChange={e => setText(e.target.value)}
         value={text}
@@ -20,7 +22,13 @@ const TextInput: React.FC<props> = ({placeholder, callback}) => {
             setText('')
           }
         }}
-      ></input>
+      ></textarea>
+      { submitText && <button className="text-input-button"
+        onClick={() => {
+          callback(text)
+          setText('')
+        }}
+      >{submitText}</button>}
     </div>
   )
 }
