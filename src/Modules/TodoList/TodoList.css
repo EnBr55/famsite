@@ -26,7 +26,6 @@
 
 .label {
   display: flex;
-  word-break: break-all;
   justify-content: flex-end;
   max-height: 5em;
   overflow-y: auto;

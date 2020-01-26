@@ -1,7 +1,6 @@
 .message {
   background-color: #a98670;
   overflow: auto;
-  word-break: break-all;
   display: grid;
   grid-template-columns: 20% 60% 20%;
   padding-top: 1em;
