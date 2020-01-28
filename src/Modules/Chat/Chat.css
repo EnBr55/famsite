@@ -1,16 +1,21 @@
 .message {
   background-color: #a98670;
-  overflow: auto;
-  display: grid;
+  overflow-y: auto;
   grid-template-columns: 20% 60% 20%;
   padding-top: 1em;
   padding-bottom: 1em;
 }
 
+.sender-date {
+  display: flex;
+  justify-content: space-between;
+  padding: 0em 1em;
+}
+
 .messages {
   background-color: orange;
   height: 70vh;
-  width: 75vw;
+  width: 90vw;
   overflow: auto;
   margin: auto;
   border-radius: 10px;
@@ -25,17 +30,19 @@
   grid-column: 2;
   margin-right: 1em;
   margin-left: 1em;
+  overflow-wrap: break-word;
 }
 
 .message-date {
   grid-column: 3;
+  color: #444
 }
 
 .chat hr {
   background-color: grey;
   margin: 0;
   color: rgba(0, 0, 0, 0.3);
-  max-width: 75vw;
+  max-width: 90vw;
 }
 
 .sending {

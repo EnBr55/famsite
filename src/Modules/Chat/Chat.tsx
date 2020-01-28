@@ -2,6 +2,8 @@ import React from 'react'
 import './Chat.css'
 import firebaseRef from '../../firebase'
 import { UserContext } from '../../Contexts/UserContext'
+import TextInput from '../../Components/TextInput/TextInput'
+import SendIcon from '@material-ui/icons/Send';
 
 type props = {
   boardId: string
@@ -72,14 +74,16 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
         {messages.sort(sortByDate).map((message) => (
           <>
           <div key={message.id} className="message">
-            <div className="message-sender">
-              <b>{message.senderName}:&nbsp;</b>
+            <div className="sender-date">
+              <div className="message-sender">
+                <b>{message.senderName}:&nbsp;</b>
+              </div>
+              <div className="message-date">
+                {new Date(message.time).toLocaleTimeString()}
+              </div>
             </div>
             <div className="message-content">
               {message.content}
-            </div>
-            <div className="message-date">
-              {new Date(message.time).toLocaleTimeString()}
             </div>
           </div>
           <hr />
@@ -88,13 +92,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
       </div>
       <br />
       <div className="sending">
-        <input placeholder="Aa"
-          onChange={(e) => setMessage(e.target.value)} 
-          onKeyDown={(e) => e.key === 'Enter' && sendMessage(message)}
-        />
-        <button onClick={() => message !== '' && sendMessage(message)}>
-          Send
-        </button>
+        <TextInput placeholder={'Aa'} callback={sendMessage} submitText={<SendIcon />}/>
       </div>
     </div>
   )
