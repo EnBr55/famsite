@@ -1,15 +1,23 @@
+.chat {
+  height: 100%;
+}
+
 .message {
   background-color: #a98670;
   overflow-y: auto;
   grid-template-columns: 20% 60% 20%;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding: 0.5em 0;
+  max-width: 90%;
+  min-width: 51%;
+  border-radius: 1em;
+  margin: 0.3em 0.5em;
+  text-align: left;
 }
 
 .sender-date {
   display: flex;
   justify-content: space-between;
-  padding: 0em 1em;
+  padding: 0 0.5em;
 }
 
 .messages {
