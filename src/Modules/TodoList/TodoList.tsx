@@ -4,6 +4,7 @@ import FirebaseRef from '../../firebase'
 import Delete from '@material-ui/icons/Delete'
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@material-ui/icons/CheckBox'
+import TextInput from '../../Components/TextInput/TextInput'
 
 type todo = {
   label: string
@@ -51,8 +52,6 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
     return unsubscribe
   }, [boardId, moduleId])
 
-  const [newTodoName, setNewTodoName] = React.useState('')
-
   const addNewTodo = (label: string) => {
     ref.add({
       label: label,
@@ -96,11 +95,7 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
         </div>
       ))}
       <div className="adding">
-        <input
-          onKeyDown={(e) => e.key === 'Enter' && addNewTodo(newTodoName)}
-          onChange={(e) => setNewTodoName(e.target.value)}
-        />
-        <button onClick={() => addNewTodo(newTodoName)}>Add</button>
+        <TextInput placeholder={'Todo label'} callback={addNewTodo} submitText={'Add'} />
       </div>
     </div>
   )

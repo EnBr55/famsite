@@ -21,14 +21,14 @@
   margin-bottom: 1em;
 }
 
-.adding {
-}
-
 .label {
   display: flex;
   justify-content: flex-end;
   max-height: 5em;
   overflow-y: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: manual;
 }
 
 .checkbox {
@@ -46,3 +46,7 @@
   opacity: 0.5;
 }
   
+.adding {
+  width: 70%;
+  margin: auto;
+}

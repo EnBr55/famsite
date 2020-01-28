@@ -58,12 +58,14 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   }, [])
 
   const sendMessage = (newMessage: string) => {
-    ref.add({
-      senderName: user.name,
-      senderId: user.id,
-      content: newMessage,
-      time: new Date().getTime(),
-    })
+    if (newMessage && newMessage !== '\n') {
+      ref.add({
+        senderName: user.name,
+        senderId: user.id,
+        content: newMessage,
+        time: new Date().getTime(),
+      })
+    }
   }
 
   const sortByDate = (a: message, b: message) => {
@@ -75,7 +77,6 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
       <h2> {title} </h2>
       <div className="messages">
         {messages.sort(sortByDate).map((message) => (
-          <>
           <div key={message.id} className="message" style={{
             backgroundColor: message.senderId === user.id ? '#3074e3' : '#9fab8c',
             float: message.senderId === user.id ? 'right' : 'left'
@@ -92,7 +93,6 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
               {message.content}
             </div>
           </div>
-        </>
         ))}
       </div>
       <br />

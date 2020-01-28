@@ -13,6 +13,7 @@
 
 .not-header {
   height: calc(100vh - 3em);
+  overflow: auto;
 }
 
 .module-switch {
