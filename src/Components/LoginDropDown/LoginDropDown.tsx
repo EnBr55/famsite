@@ -15,7 +15,7 @@ const LoginDropDown: React.FC<props> = ({ loggedIn, open, toggleLogin }) => {
   const user = React.useContext(UserContext)
   return (
     <div className="LoginDropDown" style={{ 
-      transform: open ? 'translateY(0)' : 'translateY(-100vh)',
+      transform: open ? 'translateY(0)' : 'translateY(calc(-100% - 1em))',
       height: open ? 'calc(100vh - 3em)' : '1vh',
       width: open ? '100vw' : '1vh',
       }}>

@@ -22,7 +22,11 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   const user = React.useContext(UserContext)
   const [messages, setMessages] = React.useState<message[]>([])
   const [title, setTitle] = React.useState('')
-  const [message, setMessage] = React.useState('')
+  const [messageLimit, setMessageLimit] = React.useState(5)
+  // the listener should get the number of messages in the collection.
+  // there should be a floating div at the top of the messages that is visible
+  // if messageLimit < the number of documents in the collection
+  // which on click will load more messages
 
   const ref = firebaseRef
     .firestore()
@@ -30,18 +34,13 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
     .doc(boardId)
     .collection('modules')
     .doc(moduleId)
-    .collection('data')
 
   React.useEffect(() => {
-    firebaseRef
-      .firestore()
-      .collection('boards')
-      .doc(boardId)
-      .collection('modules')
-      .doc(moduleId)
-      .get()
-      .then((doc) => setTitle(doc.data()!.name || 'Chat'))
-    const unsubscribe = ref.onSnapshot((snapshot) => {
+    const numMessages = 0
+    ref.get().then((doc) => setTitle(doc.data()!.name || 'Chat'))
+    const unsubscribe = ref.collection('data')
+    .orderBy('time', 'desc').limit(messageLimit).onSnapshot((snapshot) => {
+      console.log(snapshot.size)
       const newMessages: message[] = []
       snapshot.forEach((doc) => {
         newMessages.push({
@@ -52,20 +51,25 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
           id: doc.id,
         })
       })
-      setMessages([...messages, ...newMessages])
+      setMessages(newMessages)
+      console.log(newMessages)
     })
     return unsubscribe
-  }, [])
+  }, [messageLimit, boardId, moduleId])
 
   const sendMessage = (newMessage: string) => {
     if (newMessage && newMessage !== '\n') {
-      ref.add({
+      ref.collection('data').add({
         senderName: user.name,
         senderId: user.id,
         content: newMessage,
         time: new Date().getTime(),
       })
     }
+  }
+
+  const loadMore = () => {
+    setMessageLimit(messageLimit + 5)
   }
 
   const sortByDate = (a: message, b: message) => {
@@ -76,6 +80,9 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
     <div className="chat">
       <h2> {title} </h2>
       <div className="messages">
+        <div className="load-more" onClick={() => loadMore()}>
+          Load More
+        </div>
         {messages.sort(sortByDate).map((message) => (
           <div key={message.id} className="message" style={{
             backgroundColor: message.senderId === user.id ? '#3074e3' : '#9fab8c',
