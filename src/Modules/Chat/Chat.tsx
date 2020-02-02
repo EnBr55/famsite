@@ -21,12 +21,22 @@ type message = {
 const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   const user = React.useContext(UserContext)
   const [messages, setMessages] = React.useState<message[]>([])
+  const [loadedMessages, setLoadedMessages] = React.useState<message[]>([])
   const [title, setTitle] = React.useState('')
   const [messageLimit, setMessageLimit] = React.useState(5)
+  // number of messages to load at a time
+  const messageLoadAmount = 5
+  const [messageSnaphot, setMessageSnapshot] = React.useState<undefined | firebase.firestore.QueryDocumentSnapshot >()
+  const listeners: (() => void)[] = []
   // the listener should get the number of messages in the collection.
   // there should be a floating div at the top of the messages that is visible
   // if messageLimit < the number of documents in the collection
   // which on click will load more messages
+
+  // new state stores snapshot as *most recent message*
+  // loadMessages() calls the useEffect thing again
+  // useEffect updates the snapshot
+  // useEffect appends to list of loaded messages instead of loading every message every time
 
   const ref = firebaseRef
     .firestore()
@@ -35,12 +45,16 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
     .collection('modules')
     .doc(moduleId)
 
-  React.useEffect(() => {
-    const numMessages = 0
-    ref.get().then((doc) => setTitle(doc.data()!.name || 'Chat'))
+  const createNextListener = () => {
+    const messageSnapshotRef = messageSnaphot
+    // remove message snapshot while initially loading
+    setMessageSnapshot(undefined)
     const unsubscribe = ref.collection('data')
-    .orderBy('time', 'desc').limit(messageLimit).onSnapshot((snapshot) => {
-      console.log(snapshot.size)
+    .orderBy('time', 'desc')
+    .startAfter(messageSnapshotRef === undefined ? Infinity : messageSnapshotRef)
+    .limit(messageLoadAmount)
+    .onSnapshot((snapshot) => {
+      setMessageSnapshot(snapshot.docs[snapshot.docs.length - 1])
       const newMessages: message[] = []
       snapshot.forEach((doc) => {
         newMessages.push({
@@ -51,11 +65,32 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
           id: doc.id,
         })
       })
-      setMessages(newMessages)
-      console.log(newMessages)
+      console.log('loaded messages')
+      setLoadedMessages([...loadedMessages, ...newMessages])
+      // first call should set messages straight away
+      if (messages.length === 0) {
+        setMessages(newMessages)
+      }
     })
-    return unsubscribe
-  }, [messageLimit, boardId, moduleId])
+    console.log(unsubscribe)
+    listeners.push(unsubscribe)
+    console.log(listeners)
+  }
+
+  React.useEffect(() => {
+    console.log('useEffect called')
+    ref.get().then((doc) => setTitle(doc.data()!.name || 'Chat'))
+    createNextListener()
+    // snapshot holder is not yet set. load more button should be hidden until it is set
+    // maybe have a reference to the last message, and just check if the last document loaded in the listener
+    //    is equal to the last message. if so, hide the load more button
+    createNextListener()
+    return () => {
+      console.log('unmounting')
+      console.log(listeners)
+      listeners.forEach(listener => {console.log('unsubscribed');listener()})
+    } 
+  }, [boardId, moduleId])
 
   const sendMessage = (newMessage: string) => {
     if (newMessage && newMessage !== '\n') {
@@ -69,7 +104,8 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   }
 
   const loadMore = () => {
-    setMessageLimit(messageLimit + 5)
+    setMessages(loadedMessages)
+    createNextListener()
   }
 
   const sortByDate = (a: message, b: message) => {
