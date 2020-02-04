@@ -3,7 +3,8 @@ import './Chat.css'
 import firebaseRef from '../../firebase'
 import { UserContext } from '../../Contexts/UserContext'
 import TextInput from '../../Components/TextInput/TextInput'
-import SendIcon from '@material-ui/icons/Send';
+import SendIcon from '@material-ui/icons/Send'
+import LoadingBar from '../../Components/LoadingBar/LoadingBar'
 
 type props = {
   boardId: string
@@ -18,25 +19,26 @@ type message = {
   id: string
 }
 
+const defaultMessage = {
+  senderName: '',
+  senderId: '',
+  content: '',
+  time: 0,
+  id: '',
+}
+
 const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   const user = React.useContext(UserContext)
   const [messages, setMessages] = React.useState<message[]>([])
-  const [loadedMessages, setLoadedMessages] = React.useState<message[]>([])
   const [title, setTitle] = React.useState('')
-  const [messageLimit, setMessageLimit] = React.useState(5)
-  // number of messages to load at a time
+  const [loading, setLoading] = React.useState(false)
   const messageLoadAmount = 5
-  const [messageSnaphot, setMessageSnapshot] = React.useState<undefined | firebase.firestore.QueryDocumentSnapshot >()
-  const listeners: (() => void)[] = []
-  // the listener should get the number of messages in the collection.
-  // there should be a floating div at the top of the messages that is visible
-  // if messageLimit < the number of documents in the collection
-  // which on click will load more messages
-
-  // new state stores snapshot as *most recent message*
-  // loadMessages() calls the useEffect thing again
-  // useEffect updates the snapshot
-  // useEffect appends to list of loaded messages instead of loading every message every time
+  const [
+    messageSnapshot,
+    setMessageSnapshot,
+  ] = React.useState<null | firebase.firestore.QueryDocumentSnapshot>(null)
+  const [listeners, setListeners] = React.useState<(() => void)[]>([])
+  const [lastMessage, setLastMessage] = React.useState<message | null>(null)
 
   const ref = firebaseRef
     .firestore()
@@ -45,51 +47,99 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
     .collection('modules')
     .doc(moduleId)
 
-  const createNextListener = () => {
-    const messageSnapshotRef = messageSnaphot
-    // remove message snapshot while initially loading
-    setMessageSnapshot(undefined)
-    const unsubscribe = ref.collection('data')
-    .orderBy('time', 'desc')
-    .startAfter(messageSnapshotRef === undefined ? Infinity : messageSnapshotRef)
-    .limit(messageLoadAmount)
-    .onSnapshot((snapshot) => {
-      setMessageSnapshot(snapshot.docs[snapshot.docs.length - 1])
-      const newMessages: message[] = []
-      snapshot.forEach((doc) => {
-        newMessages.push({
-          senderName: doc.data().senderName,
-          senderId: doc.data().senderId,
-          content: doc.data().content,
-          time: doc.data().time,
-          id: doc.id,
-        })
+  const createInitialListener = () => {
+    setLoading(true)
+    ref
+      .collection('data')
+      .orderBy('time', 'desc')
+      .startAfter(Infinity)
+      .limit(messageLoadAmount)
+      .get()
+      .then((query) => {
+        let end = query.docs[query.docs.length - 1]
+        setMessageSnapshot(end)
+        const unsubscribe = ref
+          .collection('data')
+          .orderBy('time', 'desc')
+          .startAt(Infinity)
+          .endAt(end || 0)
+          .onSnapshot((snapshot) => {
+            console.log(snapshot.docs)
+            const newMessages: message[] = []
+            snapshot.forEach((doc) => {
+              newMessages.push({ ...defaultMessage, ...doc.data(), id: doc.id })
+            })
+            setMessages((previousMessages) =>
+              [...previousMessages, ...newMessages].filter(
+                (msg, index, self) =>
+                  index === self.findIndex((t) => t.id === msg.id),
+              ),
+            )
+          })
+        setListeners([...listeners, unsubscribe])
+        setLoading(false)
       })
-      console.log('loaded messages')
-      setLoadedMessages([...loadedMessages, ...newMessages])
-      // first call should set messages straight away
-      if (messages.length === 0) {
-        setMessages(newMessages)
-      }
-    })
-    console.log(unsubscribe)
-    listeners.push(unsubscribe)
-    console.log(listeners)
+  }
+
+  const createNextListener = () => {
+    console.log(messages)
+    setLoading(true)
+    ref
+      .collection('data')
+      .orderBy('time', 'desc')
+      .startAfter(messageSnapshot === null ? Infinity : messageSnapshot)
+      .limit(messageLoadAmount)
+      .get()
+      .then((query) => {
+        let start = messageSnapshot
+        let end = query.docs[query.docs.length - 1]
+        if (!end) {
+          return
+        }
+        setMessageSnapshot(end)
+        const unsubscribe = ref
+          .collection('data')
+          .orderBy('time', 'desc')
+          .startAfter(start)
+          .endAt(end)
+          .onSnapshot((snapshot) => {
+            console.log(messages)
+            const newMessages: message[] = []
+            snapshot.forEach((doc) => {
+              newMessages.push({ ...defaultMessage, ...doc.data(), id: doc.id })
+            })
+            setMessages((previousMessages) =>
+              [...previousMessages, ...newMessages].filter(
+                (msg, index, self) =>
+                  index === self.findIndex((t) => t.id === msg.id),
+              ),
+            )
+          })
+        setListeners([...listeners, unsubscribe])
+        setLoading(false)
+      })
   }
 
   React.useEffect(() => {
-    console.log('useEffect called')
     ref.get().then((doc) => setTitle(doc.data()!.name || 'Chat'))
-    createNextListener()
-    // snapshot holder is not yet set. load more button should be hidden until it is set
-    // maybe have a reference to the last message, and just check if the last document loaded in the listener
-    //    is equal to the last message. if so, hide the load more button
-    createNextListener()
+    ref
+      .collection('data')
+      .orderBy('time')
+      .limit(1)
+      .get()
+      .then((msg) => {
+        if(msg.docs.length > 0) {
+          setLastMessage({
+            ...defaultMessage,
+            ...msg.docs[0].data(),
+            id: msg.docs[0].id,
+          })
+        }
+      })
+    createInitialListener()
     return () => {
-      console.log('unmounting')
-      console.log(listeners)
-      listeners.forEach(listener => {console.log('unsubscribed');listener()})
-    } 
+      listeners.forEach((listener) => listener())
+    }
   }, [boardId, moduleId])
 
   const sendMessage = (newMessage: string) => {
@@ -104,26 +154,33 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   }
 
   const loadMore = () => {
-    setMessages(loadedMessages)
     createNextListener()
   }
 
   const sortByDate = (a: message, b: message) => {
-    return (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0) 
+    return a.time > b.time ? 1 : b.time > a.time ? -1 : 0
   }
 
   return (
     <div className="chat">
       <h2> {title} </h2>
       <div className="messages">
-        <div className="load-more" onClick={() => loadMore()}>
-          Load More
-        </div>
+        {(!loading && lastMessage !== null && !messages.find(msg => msg.id === lastMessage.id)) && 
+          <div className="load-more" onClick={() => loadMore()}>
+            Load More
+          </div>
+        }
+        {loading && <LoadingBar />}
         {messages.sort(sortByDate).map((message) => (
-          <div key={message.id} className="message" style={{
-            backgroundColor: message.senderId === user.id ? '#3074e3' : '#9fab8c',
-            float: message.senderId === user.id ? 'right' : 'left'
-          }}>
+          <div
+            key={message.id}
+            className="message"
+            style={{
+              backgroundColor:
+                message.senderId === user.id ? '#3074e3' : '#9fab8c',
+              float: message.senderId === user.id ? 'right' : 'left',
+            }}
+          >
             <div className="sender-date">
               <div className="message-sender">
                 <b>{message.senderName}:&nbsp;</b>
@@ -132,15 +189,17 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
                 {new Date(message.time).toLocaleTimeString()}
               </div>
             </div>
-            <div className="message-content">
-              {message.content}
-            </div>
+            <div className="message-content">{message.content}</div>
           </div>
         ))}
       </div>
       <br />
       <div className="sending">
-        <TextInput placeholder={'Aa'} callback={sendMessage} submitText={<SendIcon />}/>
+        <TextInput
+          placeholder={'Aa'}
+          callback={sendMessage}
+          submitText={<SendIcon />}
+        />
       </div>
     </div>
   )
