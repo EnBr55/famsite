@@ -37,6 +37,7 @@
   background-color: #ee3333;
   justify-content: center;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .message-sender {

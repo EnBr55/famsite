@@ -118,6 +118,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   }
 
   React.useEffect(() => {
+    setMessages([])
     ref.get().then((doc) => setTitle(doc.data()!.name || 'Chat'))
     ref
       .collection('data')
@@ -162,12 +163,12 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
     <div className="chat">
       <h2> {title} </h2>
       <div className="messages">
-        {(!loading && lastMessage !== null && !messages.find(msg => msg.id === lastMessage.id)) && 
+        {(!loading && lastMessage && !messages.find(msg => msg.id === lastMessage.id)) && 
           <div className="load-more" onClick={() => loadMore()}>
             Load More
           </div>
         }
-        {loading && <LoadingBar />}
+        {(loading && lastMessage && !messages.find(msg => msg.id === lastMessage.id)) && <LoadingBar />}
         {messages.sort(sortByDate).map((message) => (
           <div
             key={message.id}

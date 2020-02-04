@@ -9,9 +9,12 @@
   hyphens: auto;
   overflow-y: auto;
   resize: none;
-  max-height: 20em;
-  min-height: 4em;
+  max-height: 8em;
   width: 100%;
+  border-radius: 5px;
+  outline: none;
+  font-size: 1.3rem;
+  transition: all 0.5s ease-in-out;
 }
 
 .text-input-button {
