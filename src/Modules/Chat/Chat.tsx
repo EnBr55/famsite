@@ -64,7 +64,6 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
           .startAt(Infinity)
           .endAt(end || 0)
           .onSnapshot((snapshot) => {
-            console.log(snapshot.docs)
             const newMessages: message[] = []
             snapshot.forEach((doc) => {
               newMessages.push({ ...defaultMessage, ...doc.data(), id: doc.id })
@@ -82,7 +81,6 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   }
 
   const createNextListener = () => {
-    console.log(messages)
     setLoading(true)
     ref
       .collection('data')
@@ -103,7 +101,6 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
           .startAfter(start)
           .endAt(end)
           .onSnapshot((snapshot) => {
-            console.log(messages)
             const newMessages: message[] = []
             snapshot.forEach((doc) => {
               newMessages.push({ ...defaultMessage, ...doc.data(), id: doc.id })
