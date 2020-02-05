@@ -235,7 +235,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
               setModal(
                 <div>
                   {message.imgUrl && (
-                    <img src={message.imgUrl} width="50" height="50" />
+                    <div ><img style={{height:'50vh'}} src={message.imgUrl} /></div>
                   )}
                   <br />
                   {message.content}
@@ -278,7 +278,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             <div className="message-content">
               {message.content}
               {message.imgUrl && (
-                <img src={message.imgUrl} height="100" width="100" />
+                <img src={message.imgUrl} width='100' height='100'/>
               )}
             </div>
           </div>
