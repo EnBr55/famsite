@@ -24,6 +24,20 @@
   border: 1px solid black;
 }
 
+.image-upload:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.image-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
 .text-input-button:hover {
   background-color: rgba(0, 0, 0, 0.5);
   cursor: pointer;

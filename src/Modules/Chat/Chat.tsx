@@ -197,6 +197,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
           placeholder={'Aa'}
           callback={sendMessage}
           submitText={<SendIcon />}
+          imageUploadCallback={(file: File) => console.log(file)}
         />
       </div>
     </div>
