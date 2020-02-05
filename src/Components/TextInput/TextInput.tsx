@@ -30,8 +30,12 @@ const TextInput: React.FC<props> = ({placeholder, callback, onChange, submitText
             id="file"
             style={{content: 'yeet'}}
             accept="image/*"
-            onChange={(e) =>
-              e.target.files !== null && setFile(e.target.files[0])
+            onChange={(e) => {
+              if (e.target.files !== null) {
+                setFile(e.target.files[0])
+                imageUploadCallback(e.target.files[0])
+              } 
+            }
             }
           />
           <label className="image-upload" htmlFor="file"><AddAPhotoIcon/></label>
@@ -60,14 +64,16 @@ const TextInput: React.FC<props> = ({placeholder, callback, onChange, submitText
         onKeyDown={e => {
           if (e.key === "Enter" && callback) {
             callback(text)
-            setText('')
+            setText('');
+            setFile(undefined)
           }
         }}
       ></textarea>
       { submitText && <button className="text-input-button"
         onClick={() => {
-          callback && callback(text)
+          callback && callback(text);
           setText('')
+          setFile(undefined)
         }}
       >{submitText}</button>}
     </div>

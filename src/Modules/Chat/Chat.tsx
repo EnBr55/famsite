@@ -17,6 +17,7 @@ type message = {
   content: string
   time: number
   id: string
+  imgUrl?: string
 }
 
 const defaultMessage = {
@@ -30,6 +31,7 @@ const defaultMessage = {
 const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   const user = React.useContext(UserContext)
   const [messages, setMessages] = React.useState<message[]>([])
+  const [file, setFile] = React.useState<File>()
   const [title, setTitle] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const messageLoadAmount = 5
@@ -147,6 +149,20 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
         senderId: user.id,
         content: newMessage,
         time: new Date().getTime(),
+        imgUrl: file ? 'https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif' : ''
+      }).then(sentMessage => {
+        if (file) {
+          const storageRef = firebaseRef.storage().ref()
+          const imageRef = storageRef.child('images/' + file.name)
+          imageRef.put(file).then((upload) => {
+            upload.ref
+              .getDownloadURL()
+              .then((url) => {
+                sentMessage.update({imgUrl: url})
+              })
+              .catch((error) => console.log(error))
+          })
+        }
       })
     }
   }
@@ -175,7 +191,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             className="message"
             style={{
               backgroundColor:
-                message.senderId === user.id ? '#3074e3' : '#9fab8c',
+              message.senderId === user.id ? '#3074e3' : '#9fab8c',
               float: message.senderId === user.id ? 'right' : 'left',
             }}
           >
@@ -187,7 +203,10 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
                 {new Date(message.time).toLocaleTimeString()}
               </div>
             </div>
-            <div className="message-content">{message.content}</div>
+            <div className="message-content">
+              {message.content}
+              {message.imgUrl && <img src={message.imgUrl} height='100' width='100' />}
+            </div>
           </div>
         ))}
       </div>
@@ -197,7 +216,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
           placeholder={'Aa'}
           callback={sendMessage}
           submitText={<SendIcon />}
-          imageUploadCallback={(file: File) => console.log(file)}
+          imageUploadCallback={(file: File) => setFile(file)}
         />
       </div>
     </div>
