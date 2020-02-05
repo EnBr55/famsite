@@ -3,8 +3,11 @@ import './Chat.css'
 import firebaseRef from '../../firebase'
 import { UserContext } from '../../Contexts/UserContext'
 import TextInput from '../../Components/TextInput/TextInput'
-import SendIcon from '@material-ui/icons/Send'
 import LoadingBar from '../../Components/LoadingBar/LoadingBar'
+import FullscreenModal from '../../Components/FullscreenModal/FullscreenModal'
+import SendIcon from '@material-ui/icons/Send'
+import EditIcon from '@material-ui/icons/Edit'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 type props = {
   boardId: string
@@ -28,11 +31,14 @@ const defaultMessage = {
   id: '',
 }
 
+const storageRef = firebaseRef.storage().ref()
+
 const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   const user = React.useContext(UserContext)
   const [messages, setMessages] = React.useState<message[]>([])
   const [title, setTitle] = React.useState('')
   const [loading, setLoading] = React.useState(false)
+  const [modal, setModal] = React.useState<JSX.Element | undefined>(undefined)
   const messageLoadAmount = 5
   const [
     messageSnapshot,
@@ -72,7 +78,18 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             setMessages((previousMessages) => {
               let oldMessages = previousMessages
               // replace old messages with updated messages
-              newMessages.forEach(msg => oldMessages = oldMessages.filter(t => t.id !== msg.id))
+              newMessages.forEach(
+                (msg) =>
+                  (oldMessages = oldMessages.filter((t) => t.id !== msg.id)),
+              )
+              snapshot
+                .docChanges()
+                .filter((change) => change.type === 'removed')
+                .forEach((removedMessage) => 
+                  oldMessages = oldMessages.filter(
+                    (t) => t.id !== removedMessage.doc.id,
+                  )
+                )
               return [...oldMessages, ...newMessages]
             })
           })
@@ -109,7 +126,19 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             setMessages((previousMessages) => {
               let oldMessages = previousMessages
               // replace old messages with updated messages
-              newMessages.forEach(msg => oldMessages = oldMessages.filter(t => t.id !== msg.id))
+              newMessages.forEach(
+                (msg) =>
+                  (oldMessages = oldMessages.filter((t) => t.id !== msg.id)),
+              )
+              // remove all messages from delete events
+              snapshot
+                .docChanges()
+                .filter((change) => change.type === 'removed')
+                .forEach((removedMessage) =>
+                  oldMessages = oldMessages.filter(
+                    (t) => t.id !== removedMessage.doc.id,
+                  ),
+                )
               return [...oldMessages, ...newMessages]
             })
           })
@@ -127,7 +156,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
       .limit(1)
       .get()
       .then((msg) => {
-        if(msg.docs.length > 0) {
+        if (msg.docs.length > 0) {
           setLastMessage({
             ...defaultMessage,
             ...msg.docs[0].data(),
@@ -143,26 +172,33 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
 
   const sendMessage = (newMessage: string, image?: File) => {
     if ((newMessage && newMessage !== '\n') || image) {
-      ref.collection('data').add({
-        senderName: user.name,
-        senderId: user.id,
-        content: newMessage,
-        time: new Date().getTime(),
-        imgUrl: image ? 'https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif' : ''
-      }).then(sentMessage => {
-        if (image) {
-          const storageRef = firebaseRef.storage().ref()
-          const imageRef = storageRef.child(`images/${boardId}/${moduleId}/${image.name}`)
-          imageRef.put(image).then((upload) => {
-            upload.ref
-              .getDownloadURL()
-              .then((url) => {
-                sentMessage.update({imgUrl: url})
-              })
-              .catch((error) => console.log(error))
-          })
-        }
-      })
+      let messageSentTime = new Date().getTime()
+      ref
+        .collection('data')
+        .add({
+          senderName: user.name,
+          senderId: user.id,
+          content: newMessage,
+          time: messageSentTime,
+          imgUrl: image
+            ? 'https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif'
+            : '',
+        })
+        .then((sentMessage) => {
+          if (image) {
+            const imageRef = storageRef.child(
+              `images/${boardId}/${moduleId}/${user.id}-${messageSentTime}`,
+            )
+            imageRef.put(image).then((upload) => {
+              upload.ref
+                .getDownloadURL()
+                .then((url) => {
+                  sentMessage.update({ imgUrl: url })
+                })
+                .catch((error) => console.log(error))
+            })
+          }
+        })
     }
   }
 
@@ -176,21 +212,58 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
 
   return (
     <div className="chat">
+      {modal && (
+        <FullscreenModal element={modal} setModal={setModal} closeable={true} />
+      )}
       <h2> {title} </h2>
       <div className="messages">
-        {(!loading && lastMessage && !messages.find(msg => msg.id === lastMessage.id)) && 
-          <div className="load-more" onClick={() => loadMore()}>
-            Load More
-          </div>
-        }
-        {(loading && lastMessage && !messages.find(msg => msg.id === lastMessage.id)) && <LoadingBar />}
+        {!loading &&
+          lastMessage &&
+          !messages.find((msg) => msg.id === lastMessage.id) && (
+            <div className="load-more" onClick={() => loadMore()}>
+              Load More
+            </div>
+          )}
+        {loading &&
+          lastMessage &&
+          !messages.find((msg) => msg.id === lastMessage.id) && <LoadingBar />}
         {messages.sort(sortByDate).map((message) => (
           <div
             key={message.id}
             className="message"
+            onClick={() =>
+              setModal(
+                <div>
+                  {message.imgUrl && (
+                    <img src={message.imgUrl} width="50" height="50" />
+                  )}
+                  <br />
+                  {message.content}
+                  <br />
+                  <div
+                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <EditIcon className="cross" />
+                    <DeleteIcon
+                      className="cross"
+                      onClick={() => {
+                        ref
+                          .collection('data')
+                          .doc(message.id)
+                          .delete()
+                          .then(() => {
+                            setModal(undefined)
+                            storageRef.child(`images/${boardId}/${moduleId}/${message.senderId}-${message.time}`).delete()
+                          })
+                      }}
+                    />
+                  </div>
+                </div>,
+              )
+            }
             style={{
               backgroundColor:
-              message.senderId === user.id ? '#3074e3' : '#9fab8c',
+                message.senderId === user.id ? '#3074e3' : '#9fab8c',
               float: message.senderId === user.id ? 'right' : 'left',
             }}
           >
@@ -204,7 +277,9 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             </div>
             <div className="message-content">
               {message.content}
-              {message.imgUrl && <img src={message.imgUrl} height='100' width='100' />}
+              {message.imgUrl && (
+                <img src={message.imgUrl} height="100" width="100" />
+              )}
             </div>
           </div>
         ))}
