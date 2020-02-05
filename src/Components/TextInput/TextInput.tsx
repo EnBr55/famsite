@@ -1,6 +1,7 @@
 import React from 'react'
 import './TextInput.css'
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 type props = {
   placeholder: string
@@ -37,10 +38,12 @@ const TextInput: React.FC<props> = ({placeholder, callback, onChange, submitText
         </div>
       }
       {file && 
-        <img 
-          src={URL.createObjectURL(file)} width='50px' height='50px'
-          onClick={() => setFile(undefined)}
-        />
+        <div className="uploaded" onClick={() => setFile(undefined)}>
+          <img src={URL.createObjectURL(file)} width='50px' height='50px' alt='upload'/>
+          <div className="cancel-upload">
+            <CancelIcon style={{backgroundColor: 'white', borderRadius: '100%'}}/>
+          </div>
+        </div>
       }
       <textarea 
         className="text-input-field"

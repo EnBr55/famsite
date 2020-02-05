@@ -24,9 +24,25 @@
   border: 1px solid black;
 }
 
+.image-upload {
+  padding-right: 0.2em;
+}
+
+.text-input .uploaded:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
 .image-upload:hover {
   cursor: pointer;
   opacity: 0.6;
+}
+
+.cancel-upload {
+  display: inline-block;
+  position: relative;
+  right: 15px;
+  bottom: 35px;
 }
 
 .image-input {
