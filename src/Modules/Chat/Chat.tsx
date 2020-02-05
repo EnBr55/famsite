@@ -70,12 +70,12 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             snapshot.forEach((doc) => {
               newMessages.push({ ...defaultMessage, ...doc.data(), id: doc.id })
             })
-            setMessages((previousMessages) =>
-              [...previousMessages, ...newMessages].filter(
-                (msg, index, self) =>
-                  index === self.findIndex((t) => t.id === msg.id),
-              ),
-            )
+            setMessages((previousMessages) => {
+              let oldMessages = previousMessages
+              // replace old messages with updated messages
+              newMessages.forEach(msg => oldMessages = oldMessages.filter(t => t.id !== msg.id))
+              return [...oldMessages, ...newMessages]
+            })
           })
         setListeners([...listeners, unsubscribe])
         setLoading(false)
@@ -107,12 +107,12 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             snapshot.forEach((doc) => {
               newMessages.push({ ...defaultMessage, ...doc.data(), id: doc.id })
             })
-            setMessages((previousMessages) =>
-              [...previousMessages, ...newMessages].filter(
-                (msg, index, self) =>
-                  index === self.findIndex((t) => t.id === msg.id),
-              ),
-            )
+            setMessages((previousMessages) => {
+              let oldMessages = previousMessages
+              // replace old messages with updated messages
+              newMessages.forEach(msg => oldMessages = oldMessages.filter(t => t.id !== msg.id))
+              return [...oldMessages, ...newMessages]
+            })
           })
         setListeners([...listeners, unsubscribe])
         setLoading(false)
