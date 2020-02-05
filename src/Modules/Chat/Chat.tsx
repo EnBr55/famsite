@@ -31,7 +31,6 @@ const defaultMessage = {
 const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   const user = React.useContext(UserContext)
   const [messages, setMessages] = React.useState<message[]>([])
-  const [file, setFile] = React.useState<File>()
   const [title, setTitle] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const messageLoadAmount = 5
@@ -142,19 +141,19 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
     }
   }, [boardId, moduleId])
 
-  const sendMessage = (newMessage: string) => {
-    if (newMessage && newMessage !== '\n') {
+  const sendMessage = (newMessage: string, image?: File) => {
+    if ((newMessage && newMessage !== '\n') || image) {
       ref.collection('data').add({
         senderName: user.name,
         senderId: user.id,
         content: newMessage,
         time: new Date().getTime(),
-        imgUrl: file ? 'https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif' : ''
+        imgUrl: image ? 'https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif' : ''
       }).then(sentMessage => {
-        if (file) {
+        if (image) {
           const storageRef = firebaseRef.storage().ref()
-          const imageRef = storageRef.child('images/' + file.name)
-          imageRef.put(file).then((upload) => {
+          const imageRef = storageRef.child(`images/${boardId}/${moduleId}/${image.name}`)
+          imageRef.put(image).then((upload) => {
             upload.ref
               .getDownloadURL()
               .then((url) => {
@@ -216,7 +215,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
           placeholder={'Aa'}
           callback={sendMessage}
           submitText={<SendIcon />}
-          imageUploadCallback={(file: File) => setFile(file)}
+          imageUploadCallback={() => {}}
         />
       </div>
     </div>

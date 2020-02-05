@@ -6,7 +6,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 type props = {
   placeholder: string
   onChange?(newValue: string): void
-  callback?(userInput: string): void
+  callback?(userInput: string, image?: File): void
   submitText?: string | JSX.Element
   imageUploadCallback?(image: File): void
 }
@@ -63,7 +63,7 @@ const TextInput: React.FC<props> = ({placeholder, callback, onChange, submitText
         value={text}
         onKeyDown={e => {
           if (e.key === "Enter" && callback) {
-            callback(text)
+            callback(text, file && file)
             setText('');
             setFile(undefined)
           }
@@ -71,7 +71,7 @@ const TextInput: React.FC<props> = ({placeholder, callback, onChange, submitText
       ></textarea>
       { submitText && <button className="text-input-button"
         onClick={() => {
-          callback && callback(text);
+          callback && callback(text, file && file);
           setText('')
           setFile(undefined)
         }}
