@@ -21,6 +21,7 @@ type message = {
   time: number
   id: string
   imgUrl?: string
+  edited?: boolean
 }
 
 const defaultMessage = {
@@ -85,10 +86,11 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
               snapshot
                 .docChanges()
                 .filter((change) => change.type === 'removed')
-                .forEach((removedMessage) => 
-                  oldMessages = oldMessages.filter(
-                    (t) => t.id !== removedMessage.doc.id,
-                  )
+                .forEach(
+                  (removedMessage) =>
+                    (oldMessages = oldMessages.filter(
+                      (t) => t.id !== removedMessage.doc.id,
+                    )),
                 )
               return [...oldMessages, ...newMessages]
             })
@@ -134,10 +136,11 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
               snapshot
                 .docChanges()
                 .filter((change) => change.type === 'removed')
-                .forEach((removedMessage) =>
-                  oldMessages = oldMessages.filter(
-                    (t) => t.id !== removedMessage.doc.id,
-                  ),
+                .forEach(
+                  (removedMessage) =>
+                    (oldMessages = oldMessages.filter(
+                      (t) => t.id !== removedMessage.doc.id,
+                    )),
                 )
               return [...oldMessages, ...newMessages]
             })
@@ -232,18 +235,30 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             key={message.id}
             className="message"
             onClick={() =>
+              message.senderId === user.id &&
               setModal(
                 <div>
                   {message.imgUrl && (
-                    <div ><img style={{height:'50vh'}} src={message.imgUrl} /></div>
+                    <div>
+                      <img style={{ height: '50vh' }} src={message.imgUrl} />
+                    </div>
                   )}
                   <br />
-                  {message.content}
+                    <TextInput
+                      initialValue={message.content}
+                      callback={(editedMessage) => {
+                        ref
+                          .collection('data')
+                          .doc(message.id)
+                          .update({ content: editedMessage, edited: true })
+                          setModal(undefined)
+                      }}
+                      submitText={<EditIcon />}
+                    />
                   <br />
                   <div
                     style={{ display: 'flex', justifyContent: 'space-between' }}
                   >
-                    <EditIcon className="cross" />
                     <DeleteIcon
                       className="cross"
                       onClick={() => {
@@ -253,7 +268,11 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
                           .delete()
                           .then(() => {
                             setModal(undefined)
-                            storageRef.child(`images/${boardId}/${moduleId}/${message.senderId}-${message.time}`).delete()
+                            storageRef
+                              .child(
+                                `images/${boardId}/${moduleId}/${message.senderId}-${message.time}`,
+                              )
+                              .delete()
                           })
                       }}
                     />
@@ -276,10 +295,14 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
               </div>
             </div>
             <div className="message-content">
-              {message.content}
               {message.imgUrl && (
-                <img src={message.imgUrl} width='100' height='100'/>
+                <>
+                <img src={message.imgUrl} width="100" height="100" />
+                <br />
+                </>
               )}
+              {message.content}
+              {message.edited && <><br/><EditIcon /></>}
             </div>
           </div>
         ))}

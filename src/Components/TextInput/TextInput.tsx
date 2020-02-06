@@ -4,11 +4,13 @@ import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 type props = {
-  placeholder: string
+  placeholder?: string
+  initialValue?: string
   onChange?(newValue: string): void
   callback?(userInput: string, image?: File): void
   submitText?: string | JSX.Element
   imageUploadCallback?(image: File): void
+  shrink?: boolean
 }
 
 const handleResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -16,8 +18,8 @@ const handleResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
   e.target.style.height = `${e.target.scrollHeight / 1.3}px`
 }
 
-const TextInput: React.FC<props> = ({placeholder, callback, onChange, submitText, imageUploadCallback}) => {
-  const [text, setText] = React.useState('')
+const TextInput: React.FC<props> = ({placeholder, initialValue, callback, onChange, submitText, imageUploadCallback, shrink}) => {
+  const [text, setText] = React.useState(initialValue || '')
   const [expanded, setExpanded] = React.useState(false)
   const [file, setFile] = React.useState<File>()
   return (
@@ -51,7 +53,7 @@ const TextInput: React.FC<props> = ({placeholder, callback, onChange, submitText
       }
       <textarea 
         className="text-input-field"
-        style={{width: expanded ? '100%' : '50%'}}
+        style={{width: (expanded || !shrink) ? '100%' : '50%'}}
         placeholder={placeholder}
         onFocus={() => setExpanded(true)}
         onBlur={() => setExpanded(false)}
