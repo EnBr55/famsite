@@ -33,14 +33,16 @@ const defaultMessage = {
 }
 
 const storageRef = firebaseRef.storage().ref()
+let initialScroll = false
 
 const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   const user = React.useContext(UserContext)
   const [messages, setMessages] = React.useState<message[]>([])
+  const [messagesEndRef, setMessagesEndRef] = React.useState<HTMLDivElement | null>(null)
   const [title, setTitle] = React.useState('')
   const [loading, setLoading] = React.useState(false)
   const [modal, setModal] = React.useState<JSX.Element | undefined>(undefined)
-  const messageLoadAmount = 5
+  const messageLoadAmount = 15
   const [
     messageSnapshot,
     setMessageSnapshot,
@@ -94,6 +96,17 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
                 )
               return [...oldMessages, ...newMessages]
             })
+            if (!initialScroll) {
+              setMessagesEndRef(e => {
+                console.log(e)
+                if (e) {
+                  e.scrollIntoView()
+                  initialScroll = false
+                  return e
+                }
+                return null
+              })
+            }
           })
         setListeners([...listeners, unsubscribe])
         setLoading(false)
@@ -149,6 +162,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
         setLoading(false)
       })
   }
+
 
   React.useEffect(() => {
     setMessages([])
@@ -244,17 +258,17 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
                     </div>
                   )}
                   <br />
-                    <TextInput
-                      initialValue={message.content}
-                      callback={(editedMessage) => {
-                        ref
-                          .collection('data')
-                          .doc(message.id)
-                          .update({ content: editedMessage, edited: true })
-                          setModal(undefined)
-                      }}
-                      submitText={<EditIcon />}
-                    />
+                  <TextInput
+                    initialValue={message.content}
+                    callback={(editedMessage) => {
+                      ref
+                        .collection('data')
+                        .doc(message.id)
+                        .update({ content: editedMessage, edited: true })
+                      setModal(undefined)
+                    }}
+                    submitText={<EditIcon />}
+                  />
                   <br />
                   <div
                     style={{ display: 'flex', justifyContent: 'space-between' }}
@@ -297,15 +311,37 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             <div className="message-content">
               {message.imgUrl && (
                 <>
-                <img src={message.imgUrl} width="100" height="100" />
-                <br />
+                  <img
+                    className="chat-image"
+                    src={message.imgUrl}
+                    width="100"
+                    height="100"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setModal(
+                        <>
+                          <img
+                            src={message.imgUrl}
+                            className="image-fullscreen-preview"
+                          />
+                        </>,
+                      )
+                    }}
+                  />
+                  <br />
                 </>
               )}
               {message.content}
-              {message.edited && <><br/><EditIcon /></>}
+              {message.edited && (
+                <>
+                  <br />
+                  <EditIcon />
+                </>
+              )}
             </div>
           </div>
         ))}
+      <div ref={setMessagesEndRef} style={{float: 'right', backgroundColor: 'red', height: '100px', width: '100px'}} ></div>
       </div>
       <br />
       <div className="sending">
@@ -314,6 +350,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
           callback={sendMessage}
           submitText={<SendIcon />}
           imageUploadCallback={() => {}}
+          shrink={true}
         />
       </div>
     </div>
