@@ -96,12 +96,11 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
                 )
               return [...oldMessages, ...newMessages]
             })
-            if (!initialScroll) {
+            if (true) {
               setMessagesEndRef(e => {
-                console.log(e)
                 if (e) {
-                  e.scrollIntoView()
-                  initialScroll = false
+                  e.scrollIntoView({behavior: 'smooth'})
+                  initialScroll = true
                   return e
                 }
                 return null
@@ -341,7 +340,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
             </div>
           </div>
         ))}
-      <div ref={setMessagesEndRef} style={{float: 'right', backgroundColor: 'red', height: '100px', width: '100px'}} ></div>
+      <div ref={setMessagesEndRef} style={{float: 'left', height: '0px', width: '100px'}} ></div>
       </div>
       <br />
       <div className="sending">

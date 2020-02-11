@@ -12,7 +12,8 @@
 
 .fullscreen-modal-content {
     background-color: white;
-    min-width: 50%;
+    min-width: 40%;
+    max-width: 80%; 
     margin: auto;
     border-radius: 1em;
     overflow: hidden;
