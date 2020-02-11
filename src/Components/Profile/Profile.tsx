@@ -103,7 +103,9 @@ console.log(user.picURL)
         <h1>{user.name}</h1>
         {profilePicInfo()}
       </div>
+      <br />
       {userInfo()}
+      <br />
       <Notifications />
     </div>
   )
