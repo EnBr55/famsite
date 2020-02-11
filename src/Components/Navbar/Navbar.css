@@ -27,9 +27,23 @@
 
 .right {
   min-width: 4em;
+  display: flex;
 }
 
 .right:hover {
   cursor: pointer;
   background-color: #0b39a3;
+}
+
+.notifications-circle {
+  margin-right: 1em;
+  width: 1.3em;
+  height: 1.3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #b00;
+  color: white;
+  font-size: smaller;
+  border-radius: 50%;
 }

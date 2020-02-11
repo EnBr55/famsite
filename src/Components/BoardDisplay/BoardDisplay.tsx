@@ -61,7 +61,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
       .doc(userId)
       .collection('notifications')
       .add({
-        text: `You've been invited to join ${user.name}'s board, '${board.name}'.`,
+        text: `${user.name} invited you to join the board, '${board.name}'.`,
         senderName: user.name,
         senderId: user.id,
         boardJoinId: board.id
@@ -148,7 +148,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
       <h3>Members</h3>
       {userList.map(user => <li key={user}>{user}</li>)}
       <br />
-      <h3> Add New Members </h3>
+      <h3> Invite New Members </h3>
       <UserSearch callback={setSearchedUsers} />
       {searchedUsers.map(user => 
         <div key={user.id}>
@@ -163,7 +163,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
               <i>{user.username}</i>
             </div>
             <div>
-              <button onClick={() => inviteUserToBoard(board, user.id)}>Add</button>
+              <button onClick={() => {inviteUserToBoard(board, user.id);setSearchedUsers([])}}>Invite</button>
             </div>
           </div>
         </div>

@@ -67,7 +67,6 @@ const Profile: React.FC = () => {
     <div><button onClick={() => logout()}>Logout</button></div>
   </div>
 
-console.log(user.picURL)
   const profilePicInfo = () => <div>
     <label htmlFor="file">
       <div className="profile-pic">
