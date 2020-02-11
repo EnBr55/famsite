@@ -2,12 +2,16 @@ import React from 'react'
 import './Profile.css'
 import { UserContext } from '../../Contexts/UserContext'
 import firebaseRef from '../../firebase'
+import Notifications from '../Notifications/Notifications'
+import FullscreenModal from '../FullscreenModal/FullscreenModal'
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import LoadingBar from '../LoadingBar/LoadingBar'
 
 const Profile: React.FC = () => {
   const [error, setError] = React.useState('')
   const [uploadedUrl, setUploadedUrl] = React.useState('')
   const [loading, setLoading] = React.useState(false)
+  const [file, setFile] = React.useState<File>()
   const user = React.useContext(UserContext)
   const logout = () => {
     firebaseRef
@@ -55,51 +59,63 @@ const Profile: React.FC = () => {
       .then((result) => setError('Updated profile picture. Change visible on refresh.'))
   }
 
+  const userInfo = () => <div className="profile-info">
+    <div><i>name</i><br/>{user.name}</div>
+    <div><i>username</i><br/>{user.username}</div>
+    <div><i>email</i><br/>{user.email}</div>
+    <div><button onClick={() => logout()}>Logout</button></div>
+  </div>
+
+  const profilePicInfo = () => <div>
+    <label htmlFor="file">
+      <div className="profile-pic">
+        {loading && <LoadingBar />}
+        <AddAPhotoIcon className="upload-pic-icon"/>
+        {(!loading && user.picURL !== '') && (
+          <img
+            src={(file && URL.createObjectURL(file)) || user.picURL}
+            alt="profile pic"
+            height="100%"
+            width="100%"
+          />
+        )}
+      </div>
+    </label>
+    <input
+      className="image-upload"
+      type="file"
+      id="file"
+      accept="image/*"
+      onChange={(e) =>
+        e.target.files !== null && setFile(e.target.files[0])
+      }
+    />
+    <br />
+    <div style={{ color: 'red' }}>{error}</div>
+    {file && <button onClick={() => uploadProfilePic(file)}>Upload</button>}
+    {uploadedUrl !== '' && (
+      <>
+        <h4>Preview</h4>
+        <div className="image-preview">
+          <img src={uploadedUrl} width="100%" alt="preview pfp" />
+        </div>
+        <br />
+        <button onClick={() => updateProfilePicture(uploadedUrl)}>
+          Update Profile Picture
+        </button>
+      </>
+    )}
+    {loading && <LoadingBar />}
+  </div>
+
   return (
     <div className="profile">
       <div className="profile-heading">
         <h1>{user.name}</h1>
-        <div className="profile-pic">
-          {user.picURL !== '' && (
-            <img
-              src={user.picURL}
-              alt="profile pic"
-              height="100%"
-              width="100%"
-            />
-          )}
-        </div>
+        {profilePicInfo()}
       </div>
-      <h2>Your Profile</h2>
-      <li>Email address: {user.email}</li>
-      <li>Account ID: {user.id}</li>
-      <li>Username: {user.username}</li>
-      <br />
-      <button onClick={() => logout()}>Logout</button>
-      <br />
-      <h3>Profile Picture</h3>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) =>
-          e.target.files !== null && uploadProfilePic(e.target.files[0])
-        }
-      />
-      <br />
-      <span style={{ color: 'red' }}>{error}</span>
-      {uploadedUrl !== '' && (
-        <>
-          <h4>Preview</h4>
-          <div className="image-preview">
-            <img src={uploadedUrl} width="100%" alt="preview pfp" />
-          </div>
-          <br />
-          <button onClick={() => updateProfilePicture(uploadedUrl)}>
-            Update Profile Picture
-          </button>
-        </>
-      )}
-      {loading && <LoadingBar />}
+      {userInfo()}
+      <Notifications />
     </div>
   )
 }
