@@ -35,15 +35,12 @@ const Profile: React.FC = () => {
       return
     }
     const storageRef = firebaseRef.storage().ref()
-    const imageRef = storageRef.child('images/' + profilePic.name)
+    const imageRef = storageRef.child('images/' + 'userProfilePics/' + user.id)
     setLoading(true)
     imageRef.put(profilePic).then((upload) => {
       upload.ref
         .getDownloadURL()
-        .then((url) => {
-          setUploadedUrl(url)
-          setLoading(false)
-        })
+        .then((url) => updateProfilePicture(url))
         .catch((error) => setError(error))
     })
   }
@@ -56,7 +53,11 @@ const Profile: React.FC = () => {
       .update({
         picURL: url,
       })
-      .then((result) => setError('Updated profile picture. Change visible on refresh.'))
+      .then((result) => {
+        setUploadedUrl(url)
+        setFile(undefined)
+        setLoading(false)
+      })
   }
 
   const userInfo = () => <div className="profile-info">
@@ -66,19 +67,20 @@ const Profile: React.FC = () => {
     <div><button onClick={() => logout()}>Logout</button></div>
   </div>
 
+console.log(user.picURL)
   const profilePicInfo = () => <div>
     <label htmlFor="file">
       <div className="profile-pic">
         {loading && <LoadingBar />}
-        <AddAPhotoIcon className="upload-pic-icon"/>
-        {(!loading && user.picURL !== '') && (
+        {(!loading && user.picURL !== '') && ( <>
+          <AddAPhotoIcon className="upload-pic-icon"/>
           <img
-            src={(file && URL.createObjectURL(file)) || user.picURL}
+            src={(file && URL.createObjectURL(file)) || uploadedUrl || user.picURL}
             alt="profile pic"
             height="100%"
             width="100%"
           />
-        )}
+        </>)}
       </div>
     </label>
     <input
@@ -93,19 +95,6 @@ const Profile: React.FC = () => {
     <br />
     <div style={{ color: 'red' }}>{error}</div>
     {file && <button onClick={() => uploadProfilePic(file)}>Upload</button>}
-    {uploadedUrl !== '' && (
-      <>
-        <h4>Preview</h4>
-        <div className="image-preview">
-          <img src={uploadedUrl} width="100%" alt="preview pfp" />
-        </div>
-        <br />
-        <button onClick={() => updateProfilePicture(uploadedUrl)}>
-          Update Profile Picture
-        </button>
-      </>
-    )}
-    {loading && <LoadingBar />}
   </div>
 
   return (
