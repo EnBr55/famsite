@@ -3,6 +3,7 @@ import './BoardDisplay.css'
 import firebaseRef from '../../firebase'
 import UserSearch from '../UserSearch/UserSearch'
 import { SidebarContext } from '../../Contexts/SidebarContext'
+import { UserContext } from '../../Contexts/UserContext'
 import firebase from 'firebase'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { User } from '../../Models/Users'
@@ -14,25 +15,17 @@ type props = {
   modules: Module[]
 }
 
-const addUserToBoard = (board: Board, userId: string) => {
-  firebaseRef
-    .firestore()
-    .collection('boards')
-    .doc(board.id)
-    .update({ members: firebase.firestore.FieldValue.arrayUnion(userId) })
-    .then(() => {
-      // TODO: check that user exists in database first
-      firebaseRef
-        .firestore()
-        .collection('users')
-        .doc(userId)
-        .update({ boards: firebase.firestore.FieldValue.arrayUnion(board.id) })
-    })
-    .catch((e) => console.log(e))
+type notification = {
+  text: string
+  id: string
+  senderName?: string
+  senderId?: string
+  boardJoinId: string
 }
 
 const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
   const sidebar = React.useContext(SidebarContext)
+  const user = React.useContext(UserContext)
   const [newUserId, setNewUserId] = React.useState('')
   const [newModuleName, setNewModuleName] = React.useState('')
   const [newModuleType, setNewModuleType] = React.useState('')
@@ -60,6 +53,20 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
       })
     return unsubscribe
   }, [])
+
+  const inviteUserToBoard = (board: Board, userId: string) => {
+    firebaseRef
+      .firestore()
+      .collection('users')
+      .doc(userId)
+      .collection('notifications')
+      .add({
+        text: `You've been invited to join ${user.name}'s board, '${board.name}'.`,
+        senderName: user.name,
+        senderId: user.id,
+        boardJoinId: board.id
+      })
+  }
 
   const moduleList = modules.map((module) => (
     <div
@@ -156,7 +163,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
               <i>{user.username}</i>
             </div>
             <div>
-              <button onClick={() => addUserToBoard(board, user.id)}>Add</button>
+              <button onClick={() => inviteUserToBoard(board, user.id)}>Add</button>
             </div>
           </div>
         </div>
