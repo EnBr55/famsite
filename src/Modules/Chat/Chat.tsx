@@ -231,7 +231,9 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
       {modal && (
         <FullscreenModal element={modal} setModal={setModal} closeable={true} />
       )}
-      <h2> {title} </h2>
+      <div className="chat-title">
+        <h2> {title} </h2>
+      </div>
       <div className="messages">
         {!loading &&
           lastMessage &&
@@ -342,15 +344,16 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
         ))}
       <div ref={setMessagesEndRef} style={{float: 'left', height: '0px', width: '100px'}} ></div>
       </div>
-      <br />
       <div className="sending">
-        <TextInput
-          placeholder={'Aa'}
-          callback={sendMessage}
-          submitText={<SendIcon />}
-          imageUploadCallback={() => {}}
-          shrink={true}
-        />
+        <div className="sending-input">
+          <TextInput
+            placeholder={'Aa'}
+            callback={sendMessage}
+            submitText={<SendIcon />}
+            imageUploadCallback={() => {}}
+            shrink={true}
+          />
+        </div>
       </div>
     </div>
   )
