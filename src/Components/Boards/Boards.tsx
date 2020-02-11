@@ -22,6 +22,7 @@ const Boards: React.FC<props> = ({ setBoard }) => {
 
   const createBoard = (boardName: string) => {
     firebaseRef.firestore().collection('boards').add({
+      creator: user.id,
       members: [user.id],
       name: boardName,
       dateCreated: new Date().getTime()

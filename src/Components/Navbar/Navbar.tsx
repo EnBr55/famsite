@@ -20,7 +20,6 @@ const Navbar: React.FC<props> = ({ setLogin }) => {
         .doc(user.id)
         .collection('notifications')
         .onSnapshot((snapshot) => {
-          console.log(snapshot)
           setNotifications(snapshot.docs.length)
         })
 

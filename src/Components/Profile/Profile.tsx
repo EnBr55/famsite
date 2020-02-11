@@ -3,7 +3,6 @@ import './Profile.css'
 import { UserContext } from '../../Contexts/UserContext'
 import firebaseRef from '../../firebase'
 import Notifications from '../Notifications/Notifications'
-import FullscreenModal from '../FullscreenModal/FullscreenModal'
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import LoadingBar from '../LoadingBar/LoadingBar'
 

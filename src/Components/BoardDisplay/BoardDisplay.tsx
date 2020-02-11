@@ -4,8 +4,9 @@ import firebaseRef from '../../firebase'
 import UserSearch from '../UserSearch/UserSearch'
 import { SidebarContext } from '../../Contexts/SidebarContext'
 import { UserContext } from '../../Contexts/UserContext'
-import firebase from 'firebase'
+import FullscreenModal from '../FullscreenModal/FullscreenModal'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import EditIcon from '@material-ui/icons/Edit'
 import { User } from '../../Models/Users'
 import { Board, BoardRef, Module } from '../../Models/Boards'
 
@@ -26,11 +27,11 @@ type notification = {
 const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
   const sidebar = React.useContext(SidebarContext)
   const user = React.useContext(UserContext)
-  const [newUserId, setNewUserId] = React.useState('')
   const [newModuleName, setNewModuleName] = React.useState('')
   const [newModuleType, setNewModuleType] = React.useState('')
   const [userList, setUserList] = React.useState<string[]>([])
   const [searchedUsers, setSearchedUsers] = React.useState<User[]>([])
+  const [modal, setModal] = React.useState<JSX.Element>()
 
   React.useEffect(() => {
     const unsubscribe = firebaseRef
@@ -113,9 +114,17 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
 
   return (
     <div className="board">
+      {modal && <FullscreenModal element={modal} setModal={setModal} closeable={true}/>}
       <h1>{board.name}</h1>
-      <div className="back" onClick={() => sidebar.setSidebar(sidebar.default)}>
-        <ArrowBackIcon /> <span> back </span>
+      <div className="top-bar">
+        <div className="top-bar-button" onClick={() => sidebar.setSidebar(sidebar.default)}>
+          <ArrowBackIcon /> <span> back </span>
+        </div>
+        <div className="top-bar-button" onClick={() => setModal(
+          <div>
+            Board settings / delete will be here
+          </div>
+        )} ><EditIcon /></div>
       </div>
       {moduleList}
       <br />
