@@ -253,12 +253,6 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
               message.senderId === user.id &&
               setModal(
                 <div>
-                  {message.imgUrl && (
-                    <div>
-                      <img style={{ height: '50vh' }} src={message.imgUrl} />
-                    </div>
-                  )}
-                  <br />
                   <TextInput
                     initialValue={message.content}
                     callback={(editedMessage) => {

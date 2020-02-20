@@ -18,6 +18,7 @@ const handleResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
   e.target.style.height = `${e.target.scrollHeight / 1.3}px`
 }
 
+
 const TextInput: React.FC<props> = ({placeholder, initialValue, callback, onChange, submitText, imageUploadCallback, shrink}) => {
   const [text, setText] = React.useState(initialValue || '')
   const [expanded, setExpanded] = React.useState(false)
@@ -29,8 +30,8 @@ const TextInput: React.FC<props> = ({placeholder, initialValue, callback, onChan
           <input
             className="image-input"
             type="file"
-            id="file"
-            style={{content: 'yeet'}}
+            id="chat-upload-image"
+            style={{content: 'content'}}
             accept="image/*"
             onChange={(e) => {
               if (e.target.files !== null) {
@@ -40,7 +41,7 @@ const TextInput: React.FC<props> = ({placeholder, initialValue, callback, onChan
             }
             }
           />
-          <label className="image-upload" htmlFor="file"><AddAPhotoIcon/></label>
+          <label className="image-upload" htmlFor="chat-upload-image"><AddAPhotoIcon/></label>
         </div>
       }
       {file && 
