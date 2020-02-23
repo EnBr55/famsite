@@ -63,12 +63,14 @@ const TextInput: React.FC<props> = ({placeholder, initialValue, callback, onChan
           onChange && onChange(e.target.value)
           handleResize(e)
         }}
-        value={text}
+        value={text === '\n' ? '' : text}
         onKeyDown={e => {
           if (e.key === "Enter" && callback) {
-            callback(text, file && file)
+            if (callback) {
+              callback(text, file && file)
+              setFile(undefined)
+            }
             setText('');
-            setFile(undefined)
           }
         }}
       ></textarea>

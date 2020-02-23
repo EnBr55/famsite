@@ -53,11 +53,13 @@ const TodoList: React.FC<props> = ({ boardId, moduleId }) => {
   }, [boardId, moduleId])
 
   const addNewTodo = (label: string) => {
-    ref.add({
-      label: label,
-      checked: false,
-      dateAdded: new Date().getTime(),
-    })
+    if (label.trim()) {
+      ref.add({
+        label: label,
+        checked: false,
+        dateAdded: new Date().getTime(),
+      })
+    }
   }
 
   const deleteTodo = (id: string) => {
