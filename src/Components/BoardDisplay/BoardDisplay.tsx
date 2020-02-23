@@ -2,6 +2,7 @@ import React from 'react'
 import './BoardDisplay.css'
 import firebaseRef from '../../firebase'
 import UserSearch from '../UserSearch/UserSearch'
+import BoardSettings from '../BoardSettings/BoardSettings'
 import { SidebarContext } from '../../Contexts/SidebarContext'
 import { UserContext } from '../../Contexts/UserContext'
 import FullscreenModal from '../FullscreenModal/FullscreenModal'
@@ -121,9 +122,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
           <ArrowBackIcon /> <span> back </span>
         </div>
         <div className="top-bar-button" onClick={() => setModal(
-          <div>
-            Board settings / delete will be here
-          </div>
+          <BoardSettings setModal={setModal} board={board}/>
         )} ><EditIcon /></div>
       </div>
       {moduleList}
