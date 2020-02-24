@@ -9,14 +9,16 @@ import DeleteIcon from '@material-ui/icons/Delete'
 type props = {
   board: Board
   setModal?(element: JSX.Element | undefined): void
+  setBoard(board: BoardRef | undefined): void
 }
 
-const BoardSettings: React.FC<props> = ({board, setModal}) => {
+const BoardSettings: React.FC<props> = ({board, setModal, setBoard}) => {
   const user = React.useContext(UserContext)
   const sidebar = React.useContext(SidebarContext)
   const [deleteConfirming, setDeleteConfirming] = React.useState(false)
 
   const deleteBoard = () => {
+    setBoard(undefined)
     sidebar.setSidebar(undefined)
     firebaseRef
       .firestore()

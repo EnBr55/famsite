@@ -13,7 +13,7 @@ import { User } from '../../Models/Users'
 import { Board, BoardRef, Module } from '../../Models/Boards'
 
 type props = {
-  setBoard(board: BoardRef): void
+  setBoard(board: BoardRef | undefined): void
   board: Board
   modules: Module[]
 }
@@ -166,7 +166,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
         <div
           className="top-bar-button"
           onClick={() =>
-            setModal(<BoardSettings setModal={setModal} board={board} />)
+            setModal(<BoardSettings setBoard={setBoard} setModal={setModal} board={board} />)
           }
         >
           <EditIcon />
