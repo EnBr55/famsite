@@ -1,0 +1,19 @@
+.calendar .add-event {
+    font-size: xx-large;
+    height: 1.2em;
+    width: 1.2em;
+    background-color: white;
+    border-radius: 50%;
+    transition: background-color 1s ease;
+    cursor: pointer;
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar .add-event:hover {
+    background-color: #aaa
+}
