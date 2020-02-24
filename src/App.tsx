@@ -4,6 +4,7 @@ import Navbar from './Components/Navbar/Navbar'
 import Sidebar from './Components/Sidebar/Sidebar'
 import TodoList from './Modules/TodoList/TodoList'
 import Chat from './Modules/Chat/Chat'
+import Calendar from './Modules/Calendar/Calendar'
 import firebaseRef from './firebase' 
 import LoginDropDown from './Components/LoginDropDown/LoginDropDown'
 import { UserProvider } from './Contexts/UserContext'
@@ -81,6 +82,8 @@ const App: React.FC = () => {
           return <TodoList boardId={board.board} moduleId={board.module} />
         case 'chat':
           return <Chat boardId={board.board} moduleId={board.module} />
+        case 'calendar':
+          return <Calendar boardId={board.board} moduleId={board.module} />
         default:
           return <div style={{marginTop: '5px'}}>No module selected</div>
       }

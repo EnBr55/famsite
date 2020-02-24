@@ -11,18 +11,21 @@ type props = {
   submitText?: string | JSX.Element
   imageUploadCallback?(image: File): void
   shrink?: boolean
+  maxlength?: number
+  maxHeight?: string
 }
 
 const handleResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
   e.target.style.height = 'inherit'
-  e.target.style.height = `${e.target.scrollHeight / 1.3}px`
+  e.target.style.height = `${e.target.scrollHeight}px`
 }
 
 
-const TextInput: React.FC<props> = ({placeholder, initialValue, callback, onChange, submitText, imageUploadCallback, shrink}) => {
+const TextInput: React.FC<props> = ({placeholder, initialValue, callback, onChange, submitText, imageUploadCallback, shrink, maxlength, maxHeight}) => {
   const [text, setText] = React.useState(initialValue || '')
   const [expanded, setExpanded] = React.useState(false)
   const [file, setFile] = React.useState<File>()
+
   return (
     <div className="text-input">
       {(imageUploadCallback && !expanded) &&
@@ -54,7 +57,8 @@ const TextInput: React.FC<props> = ({placeholder, initialValue, callback, onChan
       }
       <textarea 
         className="text-input-field"
-        style={{width: (expanded || !shrink) ? '100%' : '50%'}}
+        style={{width: (expanded || !shrink) ? '100%' : '50%', maxHeight: maxHeight}}
+        maxLength={maxlength}
         placeholder={placeholder}
         onFocus={() => setExpanded(true)}
         onBlur={() => setExpanded(false)}

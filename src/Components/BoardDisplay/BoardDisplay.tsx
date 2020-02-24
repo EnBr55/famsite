@@ -77,7 +77,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
   }
 
   const moduleList = modules.map((module) => (
-    <div className="module-tag">
+    <div key={module.id} className="module-tag">
       <div className="type-label">[{module.type}]</div>
       <div
         className="module"
@@ -191,6 +191,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
         </option>
         <option value="todo">Todo</option>
         <option value="chat">Chat</option>
+        <option value="calendar">Calendar</option>
       </select>
       <button
         disabled={newModuleType === '' || newModuleName === ''}
