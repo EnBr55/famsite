@@ -41,6 +41,8 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   const [newEventName, setNewEventName] = React.useState('')
   const [newEventLocation, setNewEventLocation] = React.useState('')
   const [newEventDescription, setNewEventDescription] = React.useState('')
+  const [newEventDate, setNewEventDate] = React.useState('')
+  const [newEventTime, setNewEventTime] = React.useState('')
 
   const ref = FirebaseRef.firestore()
     .collection('boards')
@@ -81,9 +83,10 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
         <br />
         <TextInput placeholder={'Description'} onChange={setNewEventDescription} maxHeight={'1.5em'}/> 
         <br />
-        <input type='date' onChange={e => console.log(e.target.value)} />
+        <input type='date' onChange={e => setNewEventDate(e.target.value)} />
         <br />
-        <input type='time' onChange={e => console.log(e.target.value)} />
+        <input type='time' onChange={e => setNewEventTime(e.target.value)} />
+        <br />
       </div>
     )
   }
@@ -120,6 +123,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       <div className="add-event" onClick={() => setModal(addEventDialog())}>
         +
       </div>
+        <h3>{new Date(newEventDate + ' ' + newEventTime).toString()}</h3>
     </div>
   )
 }
