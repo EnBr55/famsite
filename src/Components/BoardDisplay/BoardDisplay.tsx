@@ -7,6 +7,7 @@ import { SidebarContext } from '../../Contexts/SidebarContext'
 import { UserContext } from '../../Contexts/UserContext'
 import FullscreenModal from '../FullscreenModal/FullscreenModal'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import EditIcon from '@material-ui/icons/Edit'
 import { User } from '../../Models/Users'
 import { Board, BoardRef, Module } from '../../Models/Boards'
@@ -39,18 +40,23 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
       .firestore()
       .collection('boards')
       .doc(board.id)
-      .onSnapshot(snapshot => {
+      .onSnapshot((snapshot) => {
         const members: string[] = snapshot.data()!.members
         const memberNames: string[] = []
         let counter = 0
-        members.forEach(member => {
-          firebaseRef.firestore().collection('users').doc(member).get().then(doc => {
-            memberNames.push(doc.data()!.name)
-            counter++
-            if (counter === members.length) {
-              setUserList(memberNames)
-            }
-          })
+        members.forEach((member) => {
+          firebaseRef
+            .firestore()
+            .collection('users')
+            .doc(member)
+            .get()
+            .then((doc) => {
+              memberNames.push(doc.data()!.name)
+              counter++
+              if (counter === members.length) {
+                setUserList(memberNames)
+              }
+            })
         })
       })
     return unsubscribe
@@ -66,25 +72,56 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
         text: `${user.name} invited you to join the board, '${board.name}'.`,
         senderName: user.name,
         senderId: user.id,
-        boardJoinId: board.id
+        boardJoinId: board.id,
       })
   }
 
   const moduleList = modules.map((module) => (
-    <div
-      className="module"
-      key={module.id}
-      onClick={() => {
-        setBoard({
-          board: board.id,
-          moduleType: module.type,
-          module: module.id,
-        })
-        sidebar.setSidebar(undefined)
-      }}
-    >
-      {module.name}
+    <div className="module-tag">
       <div className="type-label">[{module.type}]</div>
+      <div
+        className="module"
+        key={module.id}
+        onClick={() => {
+          setBoard({
+            board: board.id,
+            moduleType: module.type,
+            module: module.id,
+          })
+          sidebar.setSidebar(undefined)
+        }}
+      >
+        {module.name}
+      </div>
+      <div className="right">
+        <DeleteForeverIcon
+          style={{cursor: 'pointer'}}
+          onClick={(e) => {
+            e.stopPropagation()
+            setModal(
+              <div>
+                Are you sure you want to delete {module.name}?
+                <br />
+                <button
+                  onClick={() => {
+                    firebaseRef
+                      .firestore()
+                      .collection('boards')
+                      .doc(board.id)
+                      .collection('modules')
+                      .doc(module.id)
+                      .delete()
+                      .then(() => {setModal(undefined); sidebar.setSidebar(sidebar.default)})
+                  }}
+                >
+                  Yes
+                </button>
+                <button onClick={() => setModal(undefined)}>No</button>
+              </div>,
+            )
+          }}
+        />
+      </div>
     </div>
   ))
 
@@ -115,15 +152,25 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
 
   return (
     <div className="board">
-      {modal && <FullscreenModal element={modal} setModal={setModal} closeable={true}/>}
+      {modal && (
+        <FullscreenModal element={modal} setModal={setModal} closeable={true} />
+      )}
       <h1>{board.name}</h1>
       <div className="top-bar">
-        <div className="top-bar-button" onClick={() => sidebar.setSidebar(sidebar.default)}>
+        <div
+          className="top-bar-button"
+          onClick={() => sidebar.setSidebar(sidebar.default)}
+        >
           <ArrowBackIcon /> <span> back </span>
         </div>
-        <div className="top-bar-button" onClick={() => setModal(
-          <BoardSettings setModal={setModal} board={board}/>
-        )} ><EditIcon /></div>
+        <div
+          className="top-bar-button"
+          onClick={() =>
+            setModal(<BoardSettings setModal={setModal} board={board} />)
+          }
+        >
+          <EditIcon />
+        </div>
       </div>
       {moduleList}
       <br />
@@ -154,28 +201,40 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
       <br />
       <br />
       <h3>Members</h3>
-      {userList.map(user => <li key={user}>{user}</li>)}
+      {userList.map((user) => (
+        <li key={user}>{user}</li>
+      ))}
       <br />
       <h3> Invite New Members </h3>
       <UserSearch callback={setSearchedUsers} />
-      {searchedUsers.map(user => 
+      {searchedUsers.map((user) => (
         <div key={user.id}>
           <div className="searched-user-grid">
             <div className="searched-user-profile-pic">
-              <img alt="profile-pic" src={user.picURL} width="100%" height="100%"/>
+              <img
+                alt="profile-pic"
+                src={user.picURL}
+                width="100%"
+                height="100%"
+              />
             </div>
-            <div className="searched-user-text">
-              {user.name}
-            </div>
+            <div className="searched-user-text">{user.name}</div>
             <div className="searched-user-text">
               <i>{user.username}</i>
             </div>
             <div>
-              <button onClick={() => {inviteUserToBoard(board, user.id);setSearchedUsers([])}}>Invite</button>
+              <button
+                onClick={() => {
+                  inviteUserToBoard(board, user.id)
+                  setSearchedUsers([])
+                }}
+              >
+                Invite
+              </button>
             </div>
           </div>
         </div>
-      )}
+      ))}
     </div>
   )
 }

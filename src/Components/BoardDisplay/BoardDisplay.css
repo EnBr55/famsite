@@ -18,11 +18,6 @@
   background-color: rgba(0, 0, 0, 0.33);
   border-radius: 3px;
   padding: 0.4em;
-  /* display: flex;
-  position: absolute;
-  left: 1em;
-  top: 1em;
-  padding: 0.4em; */
 }
 
 .board .top-bar-button:hover {
@@ -31,27 +26,32 @@
 }
 
 .module {
+  overflow: auto;
   font-size: larger;
   background-color: rgba(190, 0, 190, 0.2);
   transition: background-color 1s ease;
   min-height: 3em;
+  width: 100%;
   max-width: 30em;
-  margin: auto;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 1em;
 }
 
+.module-tag {
+  display: flex;
+  justify-content: space-between;
+}
+
+.board .right {
+  font-size: larger;
+}
+
 .module:hover {
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0.4);
   transition: background-color 0.3s linear; 
-}
-
-.type-label {
-  position: absolute;
-  right: 0.5em;
 }
 
 .searched-user-grid {
