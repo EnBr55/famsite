@@ -20,17 +20,37 @@
   -moz-box-sizing: border-box;
 }
 
-.left {
+.navbar .left {
+  flex: 1;
   height: 100%;
   margin-top: -0.2em;
-}
-
-.right {
-  min-width: 4em;
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.right:hover {
+.navbar .right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.navbar .user {
+  min-width: 4em;
+  height: 100%;
+  height: 4em;
+  overflow: hidden;
+}
+
+.navbar .home {
+  cursor: pointer;
+  color: #e2c6f8;
+  height: 100%;
+  width: 1.5em;
+}
+
+.navbar .user:hover {
   cursor: pointer;
   background-color: #0b39a3;
 }

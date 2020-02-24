@@ -10,7 +10,7 @@ import { UserProvider } from './Contexts/UserContext'
 import { SidebarProvider } from './Contexts/SidebarContext'
 import Boards from './Components/Boards/Boards'
 import { User, defaultUser } from './Models/Users'
-import { Board } from './Models/Boards'
+import { Board, BoardRef } from './Models/Boards'
 import Hammer from 'react-hammerjs'
 
 const onAuthStateChange = (setUser: (user: User) => void) => {
@@ -35,7 +35,7 @@ const App: React.FC = () => {
   const toggleLogin = (): void => setLogin(!login)
 
   const [user, setUser] = React.useState<User>(defaultUser)
-  const [board, setBoard] = React.useState({ board: 'a', moduleType: 'a', module: 'a'})
+  const [board, setBoard] = React.useState<BoardRef | undefined>()
 
   const [boards, setBoards] = React.useState<Board[]>([])
 
@@ -75,13 +75,18 @@ const App: React.FC = () => {
   }, [user.id])
 
   const moduleSwitch = () => {
-    switch(board.moduleType) {
-      case 'todo':
-        return <TodoList boardId={board.board} moduleId={board.module} />
-      case 'chat':
-        return <Chat boardId={board.board} moduleId={board.module} />
-      default:
-        return <div style={{marginTop: '5px'}}>No module selected</div>
+    if (board) {
+      switch(board.moduleType) {
+        case 'todo':
+          return <TodoList boardId={board.board} moduleId={board.module} />
+        case 'chat':
+          return <Chat boardId={board.board} moduleId={board.module} />
+        default:
+          return <div style={{marginTop: '5px'}}>No module selected</div>
+      }
+    }
+    else {
+      return <div>HOME</div>
     }
   }
 
@@ -95,7 +100,7 @@ const App: React.FC = () => {
       <UserProvider value={user}>
         <SidebarProvider value={sidebarContext}>
           <div className="header">
-            <Navbar setLogin={toggleLogin}/>
+            <Navbar setLogin={toggleLogin} setBoard={setBoard}/>
           </div>
           <div className="not-header">
             <Sidebar />
