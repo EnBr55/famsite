@@ -83,11 +83,13 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
         className="module"
         key={module.id}
         onClick={() => {
-          setBoard({
+          const selectedBoard = {
             board: board.id,
             moduleType: module.type,
             module: module.id,
-          })
+          }
+          localStorage.setItem('selectedBoard', JSON.stringify(selectedBoard))
+          setBoard(selectedBoard)
           sidebar.setSidebar(undefined)
         }}
       >

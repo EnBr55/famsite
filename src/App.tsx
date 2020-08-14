@@ -12,24 +12,8 @@ import { SidebarProvider } from './Contexts/SidebarContext'
 import Boards from './Components/Boards/Boards'
 import { User, defaultUser } from './Models/Users'
 import { Board, BoardRef } from './Models/Boards'
-import Hammer from 'react-hammerjs'
+import LoadingBar from './Components/LoadingBar/LoadingBar'
 
-const onAuthStateChange = (setUser: (user: User) => void) => {
-  return firebaseRef.auth().onAuthStateChanged(user => {
-    if (user) {
-      firebaseRef.firestore().collection('users').doc(user.uid)
-        .get().then(doc => {
-          if (doc && doc.data()) {
-            setUser({...defaultUser, ...doc.data(), boards: []})
-          }
-        })
-
-    } else {
-      console.log('logged out')
-      setUser(defaultUser)
-    }
-  })
-}
 
 const App: React.FC = () => {
   const [login, setLogin] = React.useState(false)
@@ -38,7 +22,29 @@ const App: React.FC = () => {
   const [user, setUser] = React.useState<User>(defaultUser)
   const [board, setBoard] = React.useState<BoardRef | undefined>()
 
-  const [boards, setBoards] = React.useState<Board[]>([])
+  const [loading, setLoading] = React.useState(true)
+
+  const onAuthStateChange = (setUser: (user: User) => void) => {
+    return firebaseRef.auth().onAuthStateChanged(user => {
+      setLoading(false)
+      if (localStorage.getItem('selectedBoard')) {
+        // @ts-ignore
+        setBoard(JSON.parse(localStorage.getItem('selectedBoard')))
+      }
+      if (user) {
+        firebaseRef.firestore().collection('users').doc(user.uid)
+          .get().then(doc => {
+            if (doc && doc.data()) {
+              setUser({...defaultUser, ...doc.data(), boards: []})
+            }
+          })
+
+      } else {
+        console.log('logged out')
+        setUser(defaultUser)
+      }
+    })
+  }
 
   type sidebarContextType = {
     sidebar: JSX.Element | undefined
@@ -69,7 +75,6 @@ const App: React.FC = () => {
               dateCreated: doc.data().dateCreated
             })
         })
-        setBoards(snapshotBoards)
         setUser({...user, boards: snapshotBoards})
       })
     return unsubscribe
@@ -89,7 +94,7 @@ const App: React.FC = () => {
       }
     }
     else {
-      return <div>HOME</div>
+      return <div>No module selected(Open the sidebar)</div>
     }
   }
 
@@ -97,6 +102,10 @@ const App: React.FC = () => {
     const unsubscribe = onAuthStateChange(setUser)
     return () => { unsubscribe() }
   }, [])
+
+  if (loading) {
+    return <div className="LoadingScreen"><LoadingBar /></div>
+  }
 
   return (
     <div className="App">
