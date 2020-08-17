@@ -41,11 +41,18 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   const [title, setTitle] = React.useState('')
   const [modal, setModal] = React.useState<JSX.Element | undefined>(undefined)
 
-  const [newEventName, setNewEventName] = React.useState('')
-  const [newEventLocation, setNewEventLocation] = React.useState('')
-  const [newEventDescription, setNewEventDescription] = React.useState('')
   const [newEventDate, setNewEventDate] = React.useState('')
   const [newEventTime, setNewEventTime] = React.useState('')
+  const [submitting, setSubmitting] = React.useState(false)
+
+  const reducer = (state: calendarEvent, updatedState: ({[key: string]: string | number}) | {}): calendarEvent => {
+    return {
+      ...state,
+      ...updatedState
+    }
+  }
+
+  const [state, dispatch] = React.useReducer(reducer, defaultCalendarEvent)
 
   const ref = FirebaseRef.firestore()
     .collection('boards')
@@ -82,19 +89,19 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
         <h2>New Event</h2>
         <TextInput
           placeholder={'Event Label'}
-          onChange={setNewEventName}
+          onChange={(newValue: string) => {dispatch({label: newValue})}}
           maxHeight={'1.5em'}
         />
         <br />
         <TextInput
           placeholder={'Location'}
-          onChange={setNewEventLocation}
+          onChange={(newValue: string) => {dispatch({location: newValue})}}
           maxHeight={'1.5em'}
         />
         <br />
         <TextInput
           placeholder={'Description'}
-          onChange={setNewEventDescription}
+          onChange={(newValue: string) => {dispatch({description: newValue})}}
           maxHeight={'1.5em'}
         />
         <br />
@@ -103,18 +110,10 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
         <input type="time" onChange={(e) => setNewEventTime(e.target.value)} />
         <br />
         <button
-          onClick={() =>
-            AddCalendarEvent({
-              creator: user,
-              label: newEventName,
-              location: newEventLocation,
-              description: newEventDescription,
-              timeCreated: new Date().getTime(),
-              time: 0,
-              assigned: [],
-              id: ''
-            })
+        onClick={() => {
+            setSubmitting(true)
           }
+        }
         >
           Add Event
         </button>
@@ -122,11 +121,23 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
     )
   }
 
-  const AddCalendarEvent = (newCalendarEvent: calendarEvent) => {
-    console.log(newCalendarEvent)
-    let calendarEventWithoutId = newCalendarEvent
-    delete calendarEventWithoutId.id
-    ref.add(calendarEventWithoutId)
+  // useEffect on submitting state change to ensure batched state updates are performed before state is read
+  React.useEffect(() => {
+    console.log('submitting new calendar event', state)
+    if (submitting) {
+      AddCalendarEvent();
+      setSubmitting(false)
+    }
+  }, [submitting])
+
+  const AddCalendarEvent = () => {
+    const newCalendarEvent = { 
+      ... state,
+      creator: user,
+      timeCreated: new Date().getTime()
+    }
+    delete newCalendarEvent.id
+    ref.add(newCalendarEvent)
   }
 
   const deleteCalendarEvent = () => {}
