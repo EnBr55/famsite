@@ -1,7 +1,7 @@
 import React from 'react'
 import './Calendar.css'
 import FirebaseRef from '../../firebase'
-import Delete from '@material-ui/icons/Delete'
+// import Delete from '@material-ui/icons/Delete'
 import TextInput from '../../Components/TextInput/TextInput'
 import FullscreenModal from '../../Components/FullscreenModal/FullscreenModal'
 import { UserContext } from '../../Contexts/UserContext'

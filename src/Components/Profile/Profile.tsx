@@ -34,7 +34,7 @@ const Profile: React.FC = () => {
       return
     }
     const storageRef = firebaseRef.storage().ref()
-    const imageRef = storageRef.child('images/' + 'userProfilePics/' + user.id)
+    const imageRef = storageRef.child('images/userProfilePics/' + user.id)
     setLoading(true)
     imageRef.put(profilePic).then((upload) => {
       upload.ref

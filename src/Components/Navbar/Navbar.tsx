@@ -3,7 +3,7 @@ import './Navbar.css'
 import Hamburger from '../Hamburger/Hamburger'
 import { UserContext } from '../../Contexts/UserContext'
 import { SidebarContext } from '../../Contexts/SidebarContext'
-import { Board, BoardRef } from '../../Models/Boards'
+import { BoardRef } from '../../Models/Boards'
 import firebaseRef from '../../firebase'
 import HomeIcon from '@material-ui/icons/Home'
 

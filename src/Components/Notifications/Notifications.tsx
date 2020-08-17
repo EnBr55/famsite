@@ -40,7 +40,7 @@ const Notifications: React.FC = () => {
         setNotifications(newNotifications)
       })
     return unsubscribe
-  }, [])
+  }, [user.id])
 
   const joinBoard = (notification: notification) => {
     firebaseRef

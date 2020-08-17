@@ -1,9 +1,9 @@
 import React from 'react'
 import './BoardSettings.css'
 import firebaseRef from '../../firebase'
-import { UserContext } from '../../Contexts/UserContext'
+//import { UserContext } from '../../Contexts/UserContext'
 import { SidebarContext } from '../../Contexts/SidebarContext'
-import { Board, BoardRef, Module } from '../../Models/Boards'
+import { Board, BoardRef } from '../../Models/Boards'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 type props = {
@@ -13,7 +13,7 @@ type props = {
 }
 
 const BoardSettings: React.FC<props> = ({board, setModal, setBoard}) => {
-  const user = React.useContext(UserContext)
+  // const user = React.useContext(UserContext)
   const sidebar = React.useContext(SidebarContext)
   const [deleteConfirming, setDeleteConfirming] = React.useState(false)
 

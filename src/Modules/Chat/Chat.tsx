@@ -33,7 +33,6 @@ const defaultMessage = {
 }
 
 const storageRef = firebaseRef.storage().ref()
-let initialScroll = false
 
 const Chat: React.FC<props> = ({ boardId, moduleId }) => {
   const user = React.useContext(UserContext)
@@ -100,7 +99,6 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
               setMessagesEndRef(e => {
                 if (e) {
                   e.scrollIntoView({behavior: 'smooth'})
-                  initialScroll = true
                   return e
                 }
                 return null
@@ -309,6 +307,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
                   <img
                     className="chat-image"
                     src={message.imgUrl}
+                    alt="chat message visual element"
                     width="100"
                     height="100"
                     onClick={(e) => {
@@ -317,6 +316,7 @@ const Chat: React.FC<props> = ({ boardId, moduleId }) => {
                         <>
                           <img
                             src={message.imgUrl}
+                            alt="fullscreen"
                             className="image-fullscreen-preview"
                           />
                         </>,

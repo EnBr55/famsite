@@ -60,7 +60,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
         })
       })
     return unsubscribe
-  }, [])
+  }, [board.id])
 
   const inviteUserToBoard = (board: Board, userId: string) => {
     firebaseRef

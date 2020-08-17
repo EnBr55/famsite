@@ -35,7 +35,7 @@ const BoardTag: React.FC<props> = ({ board, setBoard }) => {
         setLoading(false)
       })
     return unsubscribe
-  }, [])
+  }, [board.id])
 
     
 
