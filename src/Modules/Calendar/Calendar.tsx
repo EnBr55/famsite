@@ -19,14 +19,14 @@ type calendarEvent = {
 }
 
 const defaultCalendarEvent = {
-  label: 'default label',
+  label: '',
   creator: undefined,
   assigned: [],
   timeCreated: 0,
   time: 1,
-  location: 'default location',
-  description: 'default description',
-  id: 'default id',
+  location: '',
+  description: '',
+  id: '',
 }
 
 type props = {
@@ -41,25 +41,33 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   const [title, setTitle] = React.useState('')
   const [modal, setModal] = React.useState<JSX.Element | undefined>(undefined)
 
-  const [newEventDate, setNewEventDate] = React.useState('')
-  const [newEventTime, setNewEventTime] = React.useState('')
   const [submitting, setSubmitting] = React.useState(false)
 
-  const reducer = (state: calendarEvent, updatedState: ({[key: string]: string | number}) | {}): calendarEvent => {
+
+  // 2pm to 7pm
+  const startTime = 1597723199999
+  const endTime = startTime + 1000*60*60*5
+
+  const reducer = (state: calendarEvent & {localTime: string, date: string} , updatedState: ({[key: string]: string | number}) | {}): (calendarEvent & {localTime: string, date: string}) => {
     return {
       ...state,
       ...updatedState
     }
   }
 
-  const [state, dispatch] = React.useReducer(reducer, defaultCalendarEvent)
+  const [state, dispatch] = React.useReducer(reducer, {...defaultCalendarEvent, localTime: '', date: ''})
 
-  const ref = FirebaseRef.firestore()
+  let ref = FirebaseRef.firestore()
     .collection('boards')
     .doc(boardId)
     .collection('modules')
     .doc(moduleId)
     .collection('data')
+
+  let queryRef = ref
+    .where("time", ">", startTime)
+    .where("time", "<", endTime)
+    .orderBy("time")
 
   React.useEffect(() => {
     FirebaseRef.firestore()
@@ -69,7 +77,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       .doc(moduleId)
       .get()
       .then((doc) => setTitle(doc.data()!.name || 'Todo List'))
-    const unsubscribe = ref.onSnapshot((snapshot) => {
+    const unsubscribe = queryRef.onSnapshot((snapshot) => {
       const newEvents: calendarEvent[] = []
       snapshot.forEach((doc) => {
         newEvents.push({
@@ -105,9 +113,9 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
           maxHeight={'1.5em'}
         />
         <br />
-        <input type="date" onChange={(e) => setNewEventDate(e.target.value)} />
+        <input type="date" onChange={(e) => {dispatch({date: e.target.value})}} />
         <br />
-        <input type="time" onChange={(e) => setNewEventTime(e.target.value)} />
+        <input type="time" onChange={(e) => {dispatch({localTime: e.target.value})}} />
         <br />
         <button
         onClick={() => {
@@ -134,10 +142,19 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
     const newCalendarEvent = { 
       ... state,
       creator: user,
-      timeCreated: new Date().getTime()
+      timeCreated: new Date().getTime(),
+      time: new Date(state.date + ' ' + state.localTime).getTime()
     }
     delete newCalendarEvent.id
-    ref.add(newCalendarEvent)
+    if (newCalendarEvent.label && String(newCalendarEvent.time) !== "Invalid Date" && String(newCalendarEvent.time) !== "NaN") {
+      ref.add(newCalendarEvent)
+      setModal(undefined)
+    } else {
+      setModal(<div>
+        <h2>Invalid arguments given for calendar event</h2>
+        <p style={{"cursor": "pointer", border: "1px solid black"}} onClick={() => setModal(addEventDialog())}> BACK </p>
+        </div>)
+    }
   }
 
   const deleteCalendarEvent = () => {}
@@ -167,7 +184,6 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       <div className="add-event" onClick={() => setModal(addEventDialog())}>
         +
       </div>
-      <h3>{new Date(newEventDate + ' ' + newEventTime).toString()}</h3>
     </div>
   )
 }
