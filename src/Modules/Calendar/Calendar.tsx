@@ -132,7 +132,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
 
   // useEffect on submitting state change to ensure batched state updates are performed before state is read
   React.useEffect(() => {
-    console.log('submitting new calendar event', state)
+    console.log('attempting to submit new calendar event', state)
     if (submitting) {
       AddCalendarEvent();
       setSubmitting(false)
@@ -171,8 +171,23 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   const listEvents = () => {
     return events
       .sort(sortByDate)
-      .map((event) => <div className="event">{event.label}</div>)
+      .map((event) => <div className="event" key={event.id}>{event.label}</div>)
   }
+
+  const getClosestMonday = (): Date => {
+    const currentDay = new Date
+    const dayLength = 1000*60*60*24
+    // we want the start of the day
+    currentDay.setHours(0, 0, 0, 0)
+    // if Sunday, we take the next day
+    if (currentDay.getDay() == 0) {
+      return new Date(currentDay.getTime() + dayLength)
+    } else {
+      return new Date(currentDay.getTime() - ((currentDay.getDay() - 1) * dayLength))
+    }
+  }
+
+  console.log(getClosestMonday())
 
   return (
     <div className="calendar">

@@ -4,12 +4,17 @@ import './CalendarDisplay.css'
 const CalendarDisplay: React.FC = () => {
   const numCols = 5
 
+
+  const events = new Array(numCols)
+
+  events[2] = [<div>hi</div>, <div>bye</div>]
+
   const getCols = (): JSX.Element[] => {
     const cols: JSX.Element[] = []
     for (let i=0; i < numCols; i++) {
       cols.push(
-        <div className='Column'>
-          aaaa
+        <div className='Column' key={i}>
+          { events[i] }
         </div>
       )
     }
