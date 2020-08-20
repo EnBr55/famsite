@@ -17,3 +17,7 @@
 .calendar .add-event:hover {
     background-color: #aaa
 }
+
+.calendar {
+  height: 80%;
+}

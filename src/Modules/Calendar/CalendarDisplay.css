@@ -1,0 +1,10 @@
+.CalendarDisplay {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  height: 100%;
+}
+
+.CalendarDisplay .Column {
+  border: 1px solid black;
+  height: 100%;
+}

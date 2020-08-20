@@ -4,6 +4,7 @@ import FirebaseRef from '../../firebase'
 // import Delete from '@material-ui/icons/Delete'
 import TextInput from '../../Components/TextInput/TextInput'
 import FullscreenModal from '../../Components/FullscreenModal/FullscreenModal'
+import CalendarDisplay from './CalendarDisplay'
 import { UserContext } from '../../Contexts/UserContext'
 import { User } from '../../Models/Users'
 
@@ -181,6 +182,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
 
       <h1>{title}</h1>
       {listEvents()}
+      <CalendarDisplay />
       <div className="add-event" onClick={() => setModal(addEventDialog())}>
         +
       </div>
