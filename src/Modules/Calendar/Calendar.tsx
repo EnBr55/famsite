@@ -8,7 +8,7 @@ import CalendarDisplay from './CalendarDisplay'
 import { UserContext } from '../../Contexts/UserContext'
 import { User } from '../../Models/Users'
 
-type calendarEvent = {
+export type calendarEvent = {
   creator?: User
   label: string
   location: string
@@ -35,6 +35,20 @@ type props = {
   moduleId: string
 }
 
+const dayLength = 1000*60*60*24
+
+const getClosestMonday = (): Date => {
+  const currentDay = new Date
+  // we want the start of the day
+  currentDay.setHours(0, 0, 0, 0)
+  // if Sunday, we take the next day
+  if (currentDay.getDay() == 0) {
+    return new Date(currentDay.getTime() - dayLength*6)
+  } else {
+    return new Date(currentDay.getTime() - ((currentDay.getDay() - 1) * dayLength))
+  }
+}
+
 const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   const user = React.useContext(UserContext)
 
@@ -44,10 +58,8 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
 
   const [submitting, setSubmitting] = React.useState(false)
 
-
-  // 2pm to 7pm
-  const startTime = 1597723199999
-  const endTime = startTime + 1000*60*60*5
+  const startTime = getClosestMonday().getTime()
+  const endTime = startTime + dayLength * 6 - 1
 
   const reducer = (state: calendarEvent & {localTime: string, date: string} , updatedState: ({[key: string]: string | number}) | {}): (calendarEvent & {localTime: string, date: string}) => {
     return {
@@ -160,35 +172,6 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
 
   const deleteCalendarEvent = () => {}
 
-  const sortByDate = (a: calendarEvent, b: calendarEvent) => {
-    return a.timeCreated > b.timeCreated
-      ? 1
-      : b.timeCreated > a.timeCreated
-      ? -1
-      : 0
-  }
-
-  const listEvents = () => {
-    return events
-      .sort(sortByDate)
-      .map((event) => <div className="event" key={event.id}>{event.label}</div>)
-  }
-
-  const getClosestMonday = (): Date => {
-    const currentDay = new Date
-    const dayLength = 1000*60*60*24
-    // we want the start of the day
-    currentDay.setHours(0, 0, 0, 0)
-    // if Sunday, we take the next day
-    if (currentDay.getDay() == 0) {
-      return new Date(currentDay.getTime() + dayLength)
-    } else {
-      return new Date(currentDay.getTime() - ((currentDay.getDay() - 1) * dayLength))
-    }
-  }
-
-  console.log(getClosestMonday())
-
   return (
     <div className="calendar">
       {modal && (
@@ -196,8 +179,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       )}
 
       <h1>{title}</h1>
-      {listEvents()}
-      <CalendarDisplay />
+      <CalendarDisplay events={events} startTime={startTime}/>
       <div className="add-event" onClick={() => setModal(addEventDialog())}>
         +
       </div>

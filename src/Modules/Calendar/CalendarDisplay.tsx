@@ -1,20 +1,57 @@
 import React from 'react'
 import './CalendarDisplay.css'
 
-const CalendarDisplay: React.FC = () => {
-  const numCols = 5
+import { calendarEvent } from './Calendar'
 
+const dayLength = 1000*60*60*24
 
-  const events = new Array(numCols)
+const sortByDate = (a: calendarEvent, b: calendarEvent) => {
+  return a.time > b.time ? 1 : b.time > a.time ? -1 : 0
+}
 
-  events[2] = [<div>hi</div>, <div>bye</div>]
+type props = {
+  events: calendarEvent[]
+  startTime: number
+}
+
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+const CalendarDisplay: React.FC<props> = ({events, startTime}) => {
+
+  const numCols = 7
+
+  const createEventsArr = (events: calendarEvent[]) => {
+    const eventArr: calendarEvent[][] = []
+    for (let i = 0; i < numCols; i++) {
+      eventArr[i] = []
+    }
+    // array of events in descending order from the end of the period
+    // ( the first thing popped will be the first event )
+    const reversedEvents = Array.from(events.sort(sortByDate).reverse())
+    let i = 1
+    while (reversedEvents.length) {
+      while (reversedEvents[reversedEvents.length-1].time >= (startTime + i*dayLength)) {
+        i++
+      }
+
+      let event = reversedEvents.pop()
+      if (event !== undefined) {
+        eventArr[i-1].push(event)
+      
+      }
+    }
+    return eventArr
+  }
 
   const getCols = (): JSX.Element[] => {
     const cols: JSX.Element[] = []
+    const eventArr = createEventsArr(events)
     for (let i=0; i < numCols; i++) {
       cols.push(
         <div className='Column' key={i}>
-          { events[i] }
+          <h2>{days[new Date(startTime + i*dayLength).getDay()]}</h2>
+          <hr />
+          { eventArr[i].map((event) => <div className="event" key={event.id}>{event.label}</div>) }
         </div>
       )
     }
