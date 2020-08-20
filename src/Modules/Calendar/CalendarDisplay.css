@@ -1,7 +1,11 @@
 .CalendarDisplay {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
   height: 100%;
+}
+
+.CalendarDisplay .Columns {
+  height: 100%;
+  display: grid;
+  overflow: auto;
 }
 
 .CalendarDisplay .Column {
