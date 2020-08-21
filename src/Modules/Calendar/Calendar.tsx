@@ -7,6 +7,7 @@ import FullscreenModal from '../../Components/FullscreenModal/FullscreenModal'
 import CalendarDisplay from './CalendarDisplay'
 import { UserContext } from '../../Contexts/UserContext'
 import { User } from '../../Models/Users'
+import UserSearch from '../../Components/UserSearch/UserSearch'
 
 export type calendarEvent = {
   creator?: User
@@ -55,6 +56,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   const [events, setEvents] = React.useState<calendarEvent[]>([])
   const [title, setTitle] = React.useState('')
   const [modal, setModal] = React.useState<JSX.Element | undefined>(undefined)
+  const [searchResults, setSearchResults] = React.useState<User[]>([])
 
   const [submitting, setSubmitting] = React.useState(false)
 
@@ -126,9 +128,18 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
           maxHeight={'1.5em'}
         />
         <br />
-        <input type="date" onChange={(e) => {dispatch({date: e.target.value})}} />
+        Event Time:
         <br />
+        <input type="date" onChange={(e) => {dispatch({date: e.target.value})}} />
         <input type="time" onChange={(e) => {dispatch({localTime: e.target.value})}} />
+        <br />
+        <br />
+        Assign Users:
+        <UserSearch callback={(users) => setSearchResults(users)}/>
+        <br />
+        { searchResults &&
+          searchResults.map(result => <div onClick={() => dispatch({assigned: [...state.assigned, user]})}>{result.name}</div>)
+        })}
         <br />
         <button
         onClick={() => {
@@ -141,6 +152,8 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       </div>
     )
   }
+
+  console.log(searchResults)
 
   // useEffect on submitting state change to ensure batched state updates are performed before state is read
   React.useEffect(() => {
