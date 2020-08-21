@@ -12,17 +12,20 @@ const CalendarEvent: React.FC<props> = ({ event }) => {
 
   const createModalContent = () => { 
     return (
-      <div>
+      <div className='EventContent'>
         <h2>{ event.label }</h2>
         <i> { event.description } </i>
         <br />
         { new Date(event.time).toLocaleString() }
         <br />
+        <br />
         { event.location && <span>Location: {event.location}</span>}
         <br />
-        Added by { event.creator!.name }
+        <br />
+        Added by <i>{ event.creator!.name }</i>
         <br />
         { event.assigned.length > 0 && <span>Assigned to: {event.assigned}</span> }
+        <br />
       </div>
     )
   }
