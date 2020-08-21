@@ -79,6 +79,15 @@ const AddEvent: React.FC<props> = ({setModal, user, boardId, moduleId}) => {
 
   const [state, dispatch] = React.useReducer(reducer, {...defaultCalendarEvent, localTime: '', date: ''})
 
+  const assignedIncludes = (userToCheck: User) => {
+    for (let u of state.assigned) {
+      if (u.id === userToCheck.id) {
+        return true
+      }
+    }
+    return false
+  }
+
   return (
     <div className='AddEvent'>
       <div className="add-event-dialog">
@@ -111,8 +120,16 @@ const AddEvent: React.FC<props> = ({setModal, user, boardId, moduleId}) => {
         <UserSearch callback={(users) => setSearchResults(users)}/>
         <br />
         { searchResults &&
-          searchResults.map(result => <div onClick={() => dispatch({assigned: [...state.assigned, user]})}>{result.name}</div>)
-        })}
+        searchResults.map(result => <div key={result.id} className='SearchResults'>
+          <img src={result.picURL} />
+          <span>{result.name}</span>
+          { 
+            assignedIncludes(result)
+              ? <i>assigned</i>
+              : <button onClick={() => dispatch({assigned: [...state.assigned, result]})}>Assign</button>
+          }
+              
+        </div>)}
         <br />
         <button
         onClick={() => {
@@ -126,5 +143,6 @@ const AddEvent: React.FC<props> = ({setModal, user, boardId, moduleId}) => {
     </div>
   )
 }
+
 
 export default AddEvent

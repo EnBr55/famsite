@@ -1,0 +1,12 @@
+.AddEvent .SearchResults {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  margin-bottom: 0.4em;
+  height: 3em;
+  align-items: center;
+}
+
+.AddEvent img {
+  height: 3em;
+  width: 3em;
+}

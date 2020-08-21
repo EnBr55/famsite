@@ -1,13 +1,13 @@
-.CalendarEvent {
+.CalendarEventContainer {
   border: 1px solid black;
   cursor: pointer;
   transition: background 0.3s;
 }
 
-.CalendarEvent:hover {
+.CalendarEventContainer:hover {
   background: rgba(50, 50, 50, 0.5);
 }
 
-.CalendarEvent .EventContent {
+.CalendarEvent .CalendarEventContainer .EventContent {
   overflow: auto;
 }

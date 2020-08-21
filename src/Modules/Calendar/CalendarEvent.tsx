@@ -24,21 +24,23 @@ const CalendarEvent: React.FC<props> = ({ event }) => {
         <br />
         Added by <i>{ event.creator!.name }</i>
         <br />
-        { event.assigned.length > 0 && <span>Assigned to: {event.assigned}</span> }
+        { event.assigned.length > 0 && <span>Assigned to: {event.assigned.map(user => <div key={user.id}>
+            {user.name}
+          </div>)}</span> }
         <br />
       </div>
     )
   }
 
   return (
-    <div className='CalendarEvent' onClick={() => {setModal(createModalContent())}}>
-
+    <div className='CalendarEvent'>
       {modal && (
         <FullscreenModal element={modal} setModal={setModal} closeable={true} />
       )}
-
-      <h3> { event.label } </h3> 
-      <b> { new Date(event.time).toLocaleTimeString() } </b>
+      <div className='CalendarEventContainer' onClick={() => {setModal(createModalContent())}}>
+        <h3> { event.label } </h3> 
+        <b> { new Date(event.time).toLocaleTimeString() } </b>
+      </div>
     </div>
   )
 }
