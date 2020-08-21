@@ -57,8 +57,8 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   const [title, setTitle] = React.useState('')
   const [modal, setModal] = React.useState<JSX.Element | undefined>(undefined)
 
-  const startTime = getClosestMonday().getTime()
-  const endTime = startTime + dayLength * 6 - 1
+  const [startTime, setStartTime] = React.useState(getClosestMonday().getTime())
+  let getEndTime = (start: number) => start + dayLength * 6 - 1
 
 
 
@@ -71,7 +71,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
 
   let queryRef = ref
     .where("time", ">", startTime)
-    .where("time", "<", endTime)
+    .where("time", "<", getEndTime(startTime))
     .orderBy("time")
 
   React.useEffect(() => {
@@ -104,6 +104,13 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       {modal && (
         <FullscreenModal element={modal} setModal={setModal} closeable={true} />
       )}
+
+        <div onClick={() => {setStartTime(startTime + dayLength * 7)}}>
+          -->
+        </div>
+        <div onClick={() => {setStartTime(startTime - dayLength * 7)}}>
+          {'<--'}
+        </div>
 
       <h1>{title}</h1>
       <CalendarDisplay events={events} startTime={startTime}/>
