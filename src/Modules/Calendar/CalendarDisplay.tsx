@@ -3,6 +3,8 @@ import './CalendarDisplay.css'
 
 import { calendarEvent } from './Calendar'
 
+import CalendarEvent from './CalendarEvent'
+
 const dayLength = 1000*60*60*24
 
 const sortByDate = (a: calendarEvent, b: calendarEvent) => {
@@ -51,7 +53,7 @@ const CalendarDisplay: React.FC<props> = ({events, startTime}) => {
         <div className='Column' key={i}>
           <h2>{days[new Date(startTime + i*dayLength).getDay()]}</h2>
           <hr />
-          { eventArr[i].map((event) => <div className="event" key={event.id}>{event.label}</div>) }
+          { eventArr[i].map((event) => <CalendarEvent key={event.id} event={event} />) }
         </div>
       )
     }
