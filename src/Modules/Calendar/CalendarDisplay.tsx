@@ -14,11 +14,12 @@ const sortByDate = (a: calendarEvent, b: calendarEvent) => {
 type props = {
   events: calendarEvent[]
   startTime: number
+  endTime: number
 }
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-const CalendarDisplay: React.FC<props> = ({events, startTime}) => {
+const CalendarDisplay: React.FC<props> = ({events, startTime, endTime}) => {
 
   const numCols = 7
 
@@ -32,14 +33,18 @@ const CalendarDisplay: React.FC<props> = ({events, startTime}) => {
     const reversedEvents = Array.from(events.sort(sortByDate).reverse())
     let i = 1
     while (reversedEvents.length) {
-      while (reversedEvents[reversedEvents.length-1].time >= (startTime + i*dayLength)) {
-        i++
-      }
+      let currentEvent = reversedEvents[reversedEvents.length-1]
+      if (currentEvent.time > endTime || currentEvent.time < startTime) {
+        reversedEvents.pop()
+      } else {
+        while (currentEvent.time >= (startTime + i*dayLength)) {
+          i++
+        }
 
-      let event = reversedEvents.pop()
-      if (event !== undefined) {
-        eventArr[i-1].push(event)
-      
+        let event = reversedEvents.pop()
+        if (event !== undefined) {
+          eventArr[i-1].push(event)
+        }
       }
     }
     return eventArr

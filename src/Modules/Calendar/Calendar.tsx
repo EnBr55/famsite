@@ -113,7 +113,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
         </div>
 
       <h1>{title}</h1>
-      <CalendarDisplay events={events} startTime={startTime}/>
+      <CalendarDisplay events={events} startTime={startTime} endTime={getEndTime(startTime)}/>
       <div className="add-event" onClick={() => setModal(<AddEvent boardId={boardId} moduleId={moduleId} setModal={setModal} user={user}/>)}>
         +
       </div>
