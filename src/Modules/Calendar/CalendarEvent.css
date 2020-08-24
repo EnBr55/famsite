@@ -12,3 +12,24 @@
 .CalendarEvent .CalendarEventContainer .EventContent {
   overflow: auto;
 }
+
+.CalendarEvent .Counter {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.CalendarEvent .CounterButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2em;
+  height: 2em;
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border-radius: 100%;
+}
+
+.CalendarEvent .CounterButton:hover {
+  background: rgba(0, 0, 0, 0.1);
+}

@@ -11,6 +11,7 @@ type props = {
 
 const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
   const [modal, setModal] = React.useState<JSX.Element | undefined>(undefined)
+  const [loading, setLoading] = React.useState(false)
 
   const createModalContent = () => { 
     return (
@@ -31,13 +32,16 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
           </div>)}</span> }
         <br />
         <br />
-        { eventCounterInterface() }
+        <div className='CounterInterface'>
+          { !loading && eventCounterInterface() }
+        </div>
       </div>
     )
   }
 
   const updateCounter = (updateAmount: number) => {
     FirebaseRef.firestore().runTransaction((transaction) => {
+      setLoading(true)
       return transaction.get(moduleRef.doc(event.id)).then(doc => {
         if(doc.exists && doc.data() !== undefined) {
           let newCounter = doc.data()!.counterUpdates[event.time] + updateAmount
@@ -49,8 +53,9 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
           }
         }
       }).then((newValue) => {
+        setLoading(false)
         console.log('Modified counter to ', newValue)
-      }).catch((error) => {console.log(error)})
+      }).catch((error) => {console.log(error); setLoading(false)})
     })
   }
 
@@ -59,12 +64,12 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
       if (event.counterMax > 1) {
         return (
           <div className='Counter'>
-            { event.counterMax - event.counterUpdates[event.time] }
-            <div onClick={() => {updateCounter(1)}} className='CounterButton'>
-            +  
-            </div>
-            <div onClick={() => {updateCounter(-1)}} className='CounterButton'>
+            <div onClick={() => {updateCounter(1);setLoading(true)}} className='CounterButton'>
             -  
+            </div>
+            { event.counterMax - event.counterUpdates[event.time] }
+            <div onClick={() => {updateCounter(-1);setLoading(true)}} className='CounterButton'>
+            +  
             </div>
           </div>
         )
@@ -77,6 +82,12 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
       }
     }
   }
+
+  React.useEffect(() => {
+    console.log('called')
+    // regenerate modal when event document changes
+    modal && setModal(createModalContent())
+  },[event, loading])
 
   return (
     <div className='CalendarEvent'>
