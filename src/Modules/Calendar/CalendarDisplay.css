@@ -6,7 +6,7 @@
 
 .CalendarDisplay .Columns {
   display: grid;
-  overflow: auto;
+  overflow: hidden;
   margin: 1em;
   flex: 1;
 }
@@ -17,4 +17,28 @@
   margin: 0 0.5em;
   min-width: 10em;
   overflow: auto;
+  display: flex;
+  flex-flow: column;
+}
+
+.CalendarDisplay hr { 
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.CalendarDisplay .Columns .InnerColumn {
+  flex: 1;
+  overflow: auto;
+}
+
+.CalendarDisplay .ColumnEventsWrapper {
+  position: relative;
+}
+
+.CalendarDisplay .ColumnEvents {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }

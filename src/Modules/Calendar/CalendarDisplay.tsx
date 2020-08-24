@@ -58,7 +58,13 @@ const CalendarDisplay: React.FC<props> = ({events, startTime, endTime}) => {
         <div className='Column' key={i}>
           <h2>{days[new Date(startTime + i*dayLength).getDay()]}</h2>
           <hr />
-          { eventArr[i].map((event) => <CalendarEvent key={event.id} event={event} />) }
+          <div className='InnerColumn'>
+            <div className='ColumnEventsWrapper'>
+              <div className='ColumnEvents'>
+                { eventArr[i].map((event) => <CalendarEvent key={event.id} event={event} />) }
+              </div>
+            </div>
+          </div>
         </div>
       )
     }

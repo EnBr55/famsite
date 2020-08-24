@@ -86,7 +86,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       .collection('modules')
       .doc(moduleId)
       .get()
-      .then((doc) => setTitle(doc.data()!.name || 'Todo List'))
+      .then((doc) => setTitle(doc.data()!.name || 'Calendar'))
     const unsubscribe = queryRef.onSnapshot((snapshot) => {
       const newEvents: calendarEvent[] = []
       snapshot.forEach((doc) => {
