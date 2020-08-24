@@ -14,12 +14,13 @@
 }
 
 .CalendarEvent .Counter {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
 }
 
 .CalendarEvent .CounterButton {
+  margin: auto;
   display: flex;
   justify-content: center;
   align-items: center;

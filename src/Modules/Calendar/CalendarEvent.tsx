@@ -59,19 +59,20 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
 
   const eventCounterInterface = () => {
     if (event.counterMax !== undefined && event.counterMax >= 1) {
+      let current = event.counterUpdates[event.time]
       if (event.counterMax > 1) {
         return (
           <>
             <br />
             <br />
             <div className='Counter'>
-              <div onClick={() => {updateCounter(1);setLoading(true)}} className='CounterButton'>
+              { current > 0  && <div onClick={() => {updateCounter(-1);setLoading(true)}} className='CounterButton'>
               -  
-              </div>
-              { event.counterMax - event.counterUpdates[event.time] } / {event.counterMax}
-              <div onClick={() => {updateCounter(-1);setLoading(true)}} className='CounterButton'>
+              </div> }
+              <div style={{gridColumn: "2"}}>{ event.counterUpdates[event.time] } / {event.counterMax}</div>
+              { current < event.counterMax && <div onClick={() => {updateCounter(+1);setLoading(true)}} className='CounterButton'>
               +  
-              </div>
+              </div> } 
             </div>
           </>
         )
