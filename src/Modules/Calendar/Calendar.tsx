@@ -75,7 +75,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   React.useEffect(() => {
 
     let queryRef = ref
-      .where("time", ">", startTime)
+      .where("time", ">=", startTime)
       .where("time", "<", getEndTime(startTime))
       .orderBy("time")
 
