@@ -33,3 +33,10 @@
 .CalendarEvent .CounterButton:hover {
   background: rgba(0, 0, 0, 0.1);
 }
+
+.CalendarEvent .CompleteEvent {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -3,6 +3,8 @@ import './CalendarEvent.css'
 import { calendarEvent } from './Calendar'
 import FullscreenModal from '../../Components/FullscreenModal/FullscreenModal'
 import FirebaseRef from '../../firebase'
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
+import CheckBoxIcon from '@material-ui/icons/CheckBox'
 
 type props = {
   event: calendarEvent
@@ -30,11 +32,7 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
         { event.assigned.length > 0 && <span>Assigned to: {event.assigned.map(user => <div key={user.id}>
             {user.name}
           </div>)}</span> }
-        <br />
-        <br />
-        <div className='CounterInterface'>
-          { !loading && eventCounterInterface() }
-        </div>
+        { !loading && eventCounterInterface() }
       </div>
     )
   }
@@ -60,24 +58,35 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
   }
 
   const eventCounterInterface = () => {
-    if (event.counterMax !== undefined && event.counterMax >= 0) {
+    if (event.counterMax !== undefined && event.counterMax >= 1) {
       if (event.counterMax > 1) {
         return (
-          <div className='Counter'>
-            <div onClick={() => {updateCounter(1);setLoading(true)}} className='CounterButton'>
-            -  
+          <>
+            <br />
+            <br />
+            <div className='Counter'>
+              <div onClick={() => {updateCounter(1);setLoading(true)}} className='CounterButton'>
+              -  
+              </div>
+              { event.counterMax - event.counterUpdates[event.time] } / {event.counterMax}
+              <div onClick={() => {updateCounter(-1);setLoading(true)}} className='CounterButton'>
+              +  
+              </div>
             </div>
-            { event.counterMax - event.counterUpdates[event.time] }
-            <div onClick={() => {updateCounter(-1);setLoading(true)}} className='CounterButton'>
-            +  
-            </div>
-          </div>
+          </>
         )
       } else {
         return (
-          <div className='CompleteEvent'>
-            { event.counterUpdates[event.time] >= 1 ? 'Completed (include box to uncomplete here)' : 'Uncompleted (checkbox button here)' }
-          </div>
+          <>
+            <br />
+            <br />
+          <div className='CompleteEvent' onClick={() => {event.counterUpdates[event.time] >=1 ? updateCounter(-1) : updateCounter(1)}}> Status: &nbsp; 
+              { event.counterUpdates[event.time] >= 1 
+              ? <CheckBoxIcon /> 
+              : <CheckBoxOutlineBlankIcon />
+              }
+            </div>
+          </>
         )
       }
     }
