@@ -37,12 +37,16 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
     )
   }
 
+  // pass in 0 to initialise a new key/value pair with this event's time as the key
   const updateCounter = (updateAmount: number) => {
     FirebaseRef.firestore().runTransaction((transaction) => {
       setLoading(true)
       return transaction.get(moduleRef.doc(event.id)).then(doc => {
         if(doc.exists && doc.data() !== undefined) {
-          let newCounter = doc.data()!.counterUpdates[event.time] + updateAmount
+          let newCounter = 0
+          if (updateAmount !== 0) {
+            newCounter = doc.data()!.counterUpdates[event.time] + updateAmount
+          }
           console.log(newCounter)
           if (newCounter <= event.counterMax! && newCounter >= 0) {
             transaction.update(moduleRef.doc(event.id), { counterUpdates: {...doc.data()!.counterUpdates, [event.time]: newCounter} })
@@ -60,6 +64,10 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
   const eventCounterInterface = () => {
     if (event.counterMax !== undefined && event.counterMax >= 1) {
       let current = event.counterUpdates[event.time]
+      // if no key is defined for this event's time, initialise one
+      if (current === undefined) {
+        updateCounter(0)
+      }
       if (event.counterMax > 1) {
         return (
           <>
