@@ -23,6 +23,7 @@ type props = {
 const AddEvent: React.FC<props> = ({setModal, user, boardId, moduleId}) => {
   const [searchResults, setSearchResults] = React.useState<User[]>([])
   const [submitting, setSubmitting] = React.useState(false)
+  const [advancedMode, setAdvancedMode] = React.useState(false)
 
   let ref = FirebaseRef.firestore()
     .collection('boards')
@@ -82,19 +83,19 @@ const AddEvent: React.FC<props> = ({setModal, user, boardId, moduleId}) => {
       <div className="add-event-dialog">
         <h2>New Event</h2>
         <TextInput
-          placeholder={'Event Label'}
+          placeholder={'Event Label - Required'}
           onChange={(newValue: string) => {dispatch({label: newValue})}}
           maxHeight={'1.5em'}
         />
         <br />
         <TextInput
-          placeholder={'Location'}
+          placeholder={'Location (Optional)'}
           onChange={(newValue: string) => {dispatch({location: newValue})}}
           maxHeight={'1.5em'}
         />
         <br />
         <TextInput
-          placeholder={'Description'}
+          placeholder={'Description (Optional)'}
           onChange={(newValue: string) => {dispatch({description: newValue})}}
           maxHeight={'1.5em'}
         />
@@ -105,26 +106,41 @@ const AddEvent: React.FC<props> = ({setModal, user, boardId, moduleId}) => {
         <input type="time" onChange={(e) => {dispatch({localTime: e.target.value})}} />
         <br />
         <br />
-        Event Completion Requirements:
-        <input type="number" placeholder="0" min={0} onChange={(e) => {dispatch({counterMax: e.target.value})}} />
+        <button onClick={() => {setAdvancedMode(!advancedMode)}}>Advanced</button>
         <br />
-        <i style={{fontSize: 'smaller'}}>A value of 1 will generate a checkbox; greater than 1 will generate a counter; 0 for nothing</i>
-        <br />
-        <br />
-        Assign Users:
-        <UserSearch callback={(users) => setSearchResults(users)}/>
-        <br />
-        { searchResults &&
-        searchResults.map(result => <div key={result.id} className='SearchResults'>
-          <img src={result.picURL} />
-          <span>{result.name}</span>
-          { 
-            assignedIncludes(result)
-              ? <i>assigned</i>
-              : <button onClick={() => dispatch({assigned: [...state.assigned, result]})}>Assign</button>
-          }
-              
-        </div>)}
+        <div className='Advanced' style={{maxHeight: advancedMode ? '80vh' : '0px'}}>
+          <br />
+          <br />
+          Event Completion Requirements:
+          <br />
+          <input type="number" placeholder="0" min={0} onChange={(e) => {dispatch({counterMax: e.target.value})}} />
+          <br />
+          <i style={{fontSize: 'smaller'}}>A value of 1 will generate a checkbox; greater than 1 will generate a counter; 0 for nothing</i>
+          <br />
+          <br />
+          Repeat Interval(days):
+          <br />
+          <input type="number" placeholder="0" min={0} onChange={(e) => {dispatch({repeatInterval: e.target.value})}} />
+          <br />
+          <i style={{fontSize: 'smaller'}}>Repeat every *this many* days. 0 for no repeating (default)</i>
+          <br />
+          <br />
+          Assign Users:
+          <UserSearch callback={(users) => setSearchResults(users)}/>
+          <br />
+          { searchResults &&
+          searchResults.map(result => <div key={result.id} className='SearchResults'>
+            <img src={result.picURL} />
+            <span>{result.name}</span>
+            { 
+              assignedIncludes(result)
+                ? <i>assigned</i>
+                : <button onClick={() => dispatch({assigned: [...state.assigned, result]})}>Assign</button>
+            }
+                
+          </div>)}
+          <br />
+        </div>
         <br />
         <button
         onClick={() => {

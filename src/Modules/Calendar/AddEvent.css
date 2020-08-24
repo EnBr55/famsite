@@ -10,3 +10,8 @@
   height: 3em;
   width: 3em;
 }
+
+.AddEvent .Advanced {
+  transition: max-height 0.4s;
+  overflow: hidden;
+}
