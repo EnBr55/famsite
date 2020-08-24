@@ -5,16 +5,17 @@
 }
 
 .CalendarDisplay .Columns {
+  border: 0.3em inset #999;
   display: grid;
+  grid-gap: 1em;
   overflow: auto;
   margin: 1em;
   flex: 1;
 }
 
 .CalendarDisplay .Columns .Column {
-  border: 1px solid black;
+  border: 0.2em outset #666;
   border-radius: 0.4em;
-  margin: 0 0.5em;
   min-width: 10em;
   overflow: auto;
   display: flex;

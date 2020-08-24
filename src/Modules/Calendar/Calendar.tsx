@@ -22,6 +22,7 @@ export type calendarEvent = {
   id: string
   counterMax?: number
   counterUpdates: {[key: string]: number}
+  repeatInterval?: number
 }
 
 
