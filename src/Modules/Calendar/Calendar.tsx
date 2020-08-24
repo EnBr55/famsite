@@ -109,11 +109,12 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       {modal && (
         <FullscreenModal element={modal} setModal={setModal} closeable={true} />
       )}
-      <h1>{title}</h1>
+        { /* <h1>{title}</h1> */ }
       <div className='TimeArrows'>
         <div className='Arrow' onClick={() => {setStartTime(startTime - dayLength * 7)}}>
           <ArrowBackIcon/>
         </div>
+        <h2>Week starting at {new Date(startTime).toDateString()} </h2>
         <div className='Arrow' onClick={() => {setStartTime(startTime + dayLength * 7)}}>
           <ArrowForwardIcon/>
         </div>

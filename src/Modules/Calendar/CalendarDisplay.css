@@ -6,7 +6,7 @@
 
 .CalendarDisplay .Columns {
   display: grid;
-  overflow: hidden;
+  overflow: auto;
   margin: 1em;
   flex: 1;
 }

@@ -28,6 +28,7 @@
 .Calendar .TimeArrows {
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 .Calendar .Arrow {

@@ -73,7 +73,6 @@ const CalendarDisplay: React.FC<props> = ({events, startTime, endTime}) => {
 
   return (
     <div className='CalendarDisplay'>
-      <h2>Week starting at {new Date(startTime).toDateString()} </h2>
       <div className='Columns' style={{'gridTemplateColumns': `repeat(${numCols}, 1fr)`}}>
         {getCols()} 
       </div>
