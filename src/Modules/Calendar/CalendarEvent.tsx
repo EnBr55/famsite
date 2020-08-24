@@ -39,6 +39,7 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
           <button style={{margin: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center'}} onClick={() => {
             setModal(<div>
               <h2>Confirm deletion of <i>{event.label}</i></h2>
+              { event.repeatInterval > 0 && <p style={{color: 'red'}}>Warning: As this is a repeating event, deleting it will remove <b>all</b> instances of the event</p> }
               <div style={{display: 'flex', justifyContent: 'space-between'}}>
                 <button onClick={()=>{deleteEvent()}}>Confirm</button>
                 <button onClick={()=>{setModal(createModalContent())}}>Cancel</button>

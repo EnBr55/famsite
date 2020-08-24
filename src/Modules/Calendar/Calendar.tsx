@@ -137,9 +137,12 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   const getAllEventsInPeriod = () => {
     const combinedEvents = Array.from(events)
     for (let event of repeatingEvents) {
+
+      let dayStart = new Date(event.time).setHours(0, 0, 0, 0)
+      let diff = event.time - dayStart
+
       for (let i = 0; i < numDays; i++) {
-        if ((startTime + i*dayLength - startTime) % (event.repeatInterval*dayLength) === 0) {
-          let diff = event.time - new Date(event.time).setHours(0, 0, 0, 0)
+        if ((startTime + i*dayLength - dayStart) % (event.repeatInterval*dayLength) === 0) {
           combinedEvents.push({
             ...event,
             time: startTime + i*dayLength + diff
