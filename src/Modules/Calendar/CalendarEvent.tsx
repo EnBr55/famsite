@@ -20,6 +20,7 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
     return (
       <div className='EventContent'>
         <h2>{ event.label }</h2>
+        {event.repeatInterval > 0 && <h4>Repeating every {event.repeatInterval} days</h4>}
         <i> { event.description } </i>
         <br />
         { new Date(event.time).toLocaleString() }
@@ -132,6 +133,9 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
         <FullscreenModal element={modal} setModal={setModal} closeable={true} />
       )}
       <div className='CalendarEventContainer' onClick={() => {setModal(createModalContent())}}>
+        {event.repeatInterval > 0 && <div className='RepeatingLabel'>
+          R 
+        </div>}
         <h3> { event.label } </h3> 
         <b> { new Date(event.time).toLocaleTimeString() } </b>
       </div>

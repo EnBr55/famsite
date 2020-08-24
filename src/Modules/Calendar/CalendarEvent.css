@@ -13,6 +13,21 @@
   overflow: auto;
 }
 
+.CalendarEvent .RepeatingLabel {
+  border-radius: 100%;
+  width: 1em;
+  height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0.1em;
+  left: 0.1em;
+  background: rgb(255, 255, 255, 1);
+  color: red;
+  position: relative;
+  margin-bottom: -1em;
+}
+
 .CalendarEvent .Counter {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
