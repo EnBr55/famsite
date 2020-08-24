@@ -1,4 +1,4 @@
-.calendar .add-event {
+.Calendar .add-event {
     font-size: xx-large;
     height: 1.2em;
     width: 1.2em;
@@ -14,10 +14,30 @@
     justify-content: center;
 }
 
-.calendar .add-event:hover {
+.Calendar .add-event:hover {
     background-color: #aaa
 }
 
-.calendar {
+.Calendar {
   height: 80%;
+}
+
+.Calendar .TimeArrows {
+  display: flex;
+  justify-content: space-around;
+}
+
+.Calendar .Arrow {
+  cursor: pointer;
+  background: #aaa;
+  border-radius: 1em;
+  width: 2em;
+  height: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Calendar .Arrow:hover {
+  background: #999;
 }

@@ -1,7 +1,10 @@
 import React from 'react'
 import './Calendar.css'
 import FirebaseRef from '../../firebase'
-// import Delete from '@material-ui/icons/Delete'
+//import Delete from '@material-ui/icons/Delete'
+//
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import FullscreenModal from '../../Components/FullscreenModal/FullscreenModal'
 import CalendarDisplay from './CalendarDisplay'
 import { UserContext } from '../../Contexts/UserContext'
@@ -69,12 +72,14 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
     .doc(moduleId)
     .collection('data')
 
-  let queryRef = ref
-    .where("time", ">", startTime)
-    .where("time", "<", getEndTime(startTime))
-    .orderBy("time")
-
   React.useEffect(() => {
+
+    let queryRef = ref
+      .where("time", ">", startTime)
+      .where("time", "<", getEndTime(startTime))
+      .orderBy("time")
+
+    console.log('happening again')
     FirebaseRef.firestore()
       .collection('boards')
       .doc(boardId)
@@ -94,25 +99,25 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       setEvents(newEvents)
     })
     return unsubscribe
-  }, [boardId, moduleId])
+  }, [boardId, moduleId, startTime])
 
 
   const deleteCalendarEvent = () => {}
 
   return (
-    <div className="calendar">
+    <div className="Calendar">
       {modal && (
         <FullscreenModal element={modal} setModal={setModal} closeable={true} />
       )}
-
-        <div onClick={() => {setStartTime(startTime + dayLength * 7)}}>
-          -->
-        </div>
-        <div onClick={() => {setStartTime(startTime - dayLength * 7)}}>
-          {'<--'}
-        </div>
-
       <h1>{title}</h1>
+      <div className='TimeArrows'>
+        <div className='Arrow' onClick={() => {setStartTime(startTime - dayLength * 7)}}>
+          <ArrowBackIcon/>
+        </div>
+        <div className='Arrow' onClick={() => {setStartTime(startTime + dayLength * 7)}}>
+          <ArrowForwardIcon/>
+        </div>
+      </div>
       <CalendarDisplay events={events} startTime={startTime} endTime={getEndTime(startTime)}/>
       <div className="add-event" onClick={() => setModal(<AddEvent boardId={boardId} moduleId={moduleId} setModal={setModal} user={user}/>)}>
         +
