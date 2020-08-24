@@ -113,14 +113,14 @@ const AddEvent: React.FC<props> = ({setModal, user, boardId, moduleId}) => {
           <br />
           Event Completion Requirements:
           <br />
-          <input type="number" placeholder="0" min={0} onChange={(e) => {dispatch({counterMax: e.target.value})}} />
+          <input type="number" placeholder="0" min={0} onChange={(e) => {dispatch({counterMax: Number(e.target.value)})}} />
           <br />
           <i style={{fontSize: 'smaller'}}>A value of 1 will generate a checkbox; greater than 1 will generate a counter; 0 for nothing</i>
           <br />
           <br />
           Repeat Interval(days):
           <br />
-          <input type="number" placeholder="0" min={0} onChange={(e) => {dispatch({repeatInterval: e.target.value})}} />
+          <input type="number" placeholder="0" min={0} onChange={(e) => {dispatch({repeatInterval: Number(e.target.value)})}} />
           <br />
           <i style={{fontSize: 'smaller'}}>Repeat every *this many* days. 0 for no repeating (default)</i>
           <br />

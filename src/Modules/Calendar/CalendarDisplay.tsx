@@ -15,14 +15,15 @@ type props = {
   events: calendarEvent[]
   startTime: number
   endTime: number
+  numDays: number
   moduleRef: firebase.firestore.CollectionReference
 }
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-const CalendarDisplay: React.FC<props> = ({events, startTime, endTime, moduleRef}) => {
+const CalendarDisplay: React.FC<props> = ({events, startTime, endTime, numDays, moduleRef}) => {
 
-  const numCols = 7
+  const numCols = numDays
 
   const createEventsArr = (events: calendarEvent[]) => {
     const eventArr: calendarEvent[][] = []
@@ -36,6 +37,7 @@ const CalendarDisplay: React.FC<props> = ({events, startTime, endTime, moduleRef
     while (reversedEvents.length) {
       let currentEvent = reversedEvents[reversedEvents.length-1]
       if (currentEvent.time > endTime || currentEvent.time < startTime) {
+        console.log(endTime)
         reversedEvents.pop()
       } else {
         while (currentEvent.time >= (startTime + i*dayLength)) {
@@ -52,7 +54,6 @@ const CalendarDisplay: React.FC<props> = ({events, startTime, endTime, moduleRef
   }
 
   const getCols = (): JSX.Element[] => {
-    console.log('called again')
     const cols: JSX.Element[] = []
     const eventArr = createEventsArr(events)
     for (let i=0; i < numCols; i++) {

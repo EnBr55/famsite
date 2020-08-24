@@ -58,7 +58,6 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
           if (updateAmount !== 0) {
             newCounter = doc.data()!.counterUpdates[event.time] + updateAmount
           }
-          console.log(newCounter)
           if (newCounter <= event.counterMax! && newCounter >= 0) {
             transaction.update(moduleRef.doc(event.id), { counterUpdates: {...doc.data()!.counterUpdates, [event.time]: newCounter} })
           } else { 
@@ -67,7 +66,6 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
         }
       }).then((newValue) => {
         setLoading(false)
-        console.log('Modified counter to ', newValue)
       }).catch((error) => {console.log(error); setLoading(false)})
     })
   }
@@ -119,12 +117,10 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
   }
 
   React.useEffect(() => {
-    console.log('called')
     // regenerate modal when event document changes
     modal && setModal(createModalContent())
   },[event, loading])
 
-  console.log(event.counterUpdates[event.time] === event.counterMax)
 
   return (
     <div className='CalendarEvent' style={{
