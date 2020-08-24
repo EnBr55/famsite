@@ -105,6 +105,12 @@ const AddEvent: React.FC<props> = ({setModal, user, boardId, moduleId}) => {
         <input type="time" onChange={(e) => {dispatch({localTime: e.target.value})}} />
         <br />
         <br />
+        Event Completion Requirements:
+        <input type="number" placeholder="0" min={0} onChange={(e) => {dispatch({counterMax: e.target.value})}} />
+        <br />
+        <i style={{fontSize: 'smaller'}}>A value of 1 will generate a checkbox; greater than 1 will generate a counter; 0 for nothing</i>
+        <br />
+        <br />
         Assign Users:
         <UserSearch callback={(users) => setSearchResults(users)}/>
         <br />
