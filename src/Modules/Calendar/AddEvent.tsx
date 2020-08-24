@@ -8,19 +8,8 @@ import FullscreenModal from '../../Components/FullscreenModal/FullscreenModal'
 import CalendarDisplay from './CalendarDisplay'
 import { UserContext } from '../../Contexts/UserContext'
 import { User } from '../../Models/Users'
-import { calendarEvent } from './Calendar'
+import { calendarEvent, defaultCalendarEvent } from './Calendar'
 import UserSearch from '../../Components/UserSearch/UserSearch'
-
-const defaultCalendarEvent = {
-  label: '',
-  creator: undefined,
-  assigned: [],
-  timeCreated: 0,
-  time: 1,
-  location: '',
-  description: '',
-  id: '',
-}
 
 const dayLength = 1000*60*60*24
 

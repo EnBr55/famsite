@@ -15,11 +15,12 @@ type props = {
   events: calendarEvent[]
   startTime: number
   endTime: number
+  moduleRef: firebase.firestore.CollectionReference
 }
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-const CalendarDisplay: React.FC<props> = ({events, startTime, endTime}) => {
+const CalendarDisplay: React.FC<props> = ({events, startTime, endTime, moduleRef}) => {
 
   const numCols = 7
 
@@ -51,6 +52,7 @@ const CalendarDisplay: React.FC<props> = ({events, startTime, endTime}) => {
   }
 
   const getCols = (): JSX.Element[] => {
+    console.log('called again')
     const cols: JSX.Element[] = []
     const eventArr = createEventsArr(events)
     for (let i=0; i < numCols; i++) {
@@ -61,7 +63,7 @@ const CalendarDisplay: React.FC<props> = ({events, startTime, endTime}) => {
           <div className='InnerColumn'>
             <div className='ColumnEventsWrapper'>
               <div className='ColumnEvents'>
-                { eventArr[i].map((event) => <CalendarEvent key={event.id} event={event} />) }
+                { eventArr[i].map((event) => <CalendarEvent key={event.id} event={event} moduleRef={moduleRef} />) }
               </div>
             </div>
           </div>

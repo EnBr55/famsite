@@ -20,6 +20,8 @@ export type calendarEvent = {
   time: number
   assigned: User[]
   id: string
+  counterMax?: number
+  counterUpdates: {[key: string]: number}
 }
 
 
@@ -28,7 +30,7 @@ type props = {
   moduleId: string
 }
 
-const defaultCalendarEvent = {
+export const defaultCalendarEvent = {
   label: '',
   creator: undefined,
   assigned: [],
@@ -37,6 +39,8 @@ const defaultCalendarEvent = {
   location: '',
   description: '',
   id: '',
+  counterMax: 0,
+  counterUpdates: {}
 }
 
 const dayLength = 1000*60*60*24
@@ -79,7 +83,6 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       .where("time", "<", getEndTime(startTime))
       .orderBy("time")
 
-    console.log('happening again')
     FirebaseRef.firestore()
       .collection('boards')
       .doc(boardId)
@@ -119,7 +122,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
           <ArrowForwardIcon/>
         </div>
       </div>
-      <CalendarDisplay events={events} startTime={startTime} endTime={getEndTime(startTime)}/>
+      <CalendarDisplay events={events} startTime={startTime} endTime={getEndTime(startTime)} moduleRef={ref} />
       <div className="add-event" onClick={() => setModal(<AddEvent boardId={boardId} moduleId={moduleId} setModal={setModal} user={user}/>)}>
         +
       </div>
