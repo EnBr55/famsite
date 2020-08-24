@@ -19,7 +19,10 @@
 }
 
 .Calendar {
-  height: 80%;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-flow: column;
 }
 
 .Calendar .TimeArrows {

@@ -1,17 +1,20 @@
 .CalendarDisplay {
-  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-flow: column;
 }
 
 .CalendarDisplay .Columns {
-  height: 100%;
   display: grid;
   overflow: auto;
+  margin: 1em;
+  flex: 1;
 }
 
-.CalendarDisplay .Column {
+.CalendarDisplay .Columns .Column {
   border: 1px solid black;
   border-radius: 0.4em;
-  height: 100%;
   margin: 0 0.5em;
   min-width: 10em;
+  overflow: auto;
 }
