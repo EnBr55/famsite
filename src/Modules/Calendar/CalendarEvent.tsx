@@ -124,8 +124,14 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
     modal && setModal(createModalContent())
   },[event, loading])
 
+  console.log(event.counterUpdates[event.time] === event.counterMax)
+
   return (
-    <div className='CalendarEvent'>
+    <div className='CalendarEvent' style={{
+      background: (event.counterUpdates[event.time] === event.counterMax) 
+        ? 'linear-gradient(to bottom right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 48%, red 48%, red 52%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0))'
+        : 'rgba(0, 0, 0, 0)'
+      }}>
       {modal && (
         <FullscreenModal element={modal} setModal={setModal} closeable={true} />
       )}
