@@ -25,6 +25,17 @@
   flex-flow: column;
 }
 
+.Calendar .Middle {
+  padding-top: 1em;
+  display: flex;
+  flex-flow: column;
+}
+
+.Calendar .WeekStarting {
+  font-size: larger;
+  font-weight: bold;
+}
+
 .Calendar .TimeArrows {
   display: flex;
   justify-content: space-around;

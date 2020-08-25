@@ -66,6 +66,7 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
   const [events, setEvents] = React.useState<calendarEvent[]>([])
   const [repeatingEvents, setRepeatingEvents] = React.useState<calendarEvent[]>([])
   const [title, setTitle] = React.useState('')
+  const [view, setView] = React.useState<'week' | 'assigned'>('week')
   const [modal, setModal] = React.useState<JSX.Element | undefined>(undefined)
 
   const [startTime, setStartTime] = React.useState(getClosestMonday().getTime())
@@ -163,7 +164,10 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
         <div className='Arrow' onClick={() => {setStartTime(startTime - dayLength * 7)}}>
           <ArrowBackIcon/>
         </div>
-        <h2>Week starting at {new Date(startTime).toDateString()} </h2>
+        <div className='Middle'>
+          <div className='WeekStarting'>{title}</div>
+          <div className='WeekStarting'>Week starting at {new Date(startTime).toDateString()}</div>
+        </div>
         <div className='Arrow' onClick={() => {setStartTime(startTime + dayLength * 7)}}>
           <ArrowForwardIcon/>
         </div>
