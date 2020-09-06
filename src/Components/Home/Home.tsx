@@ -8,6 +8,7 @@ import { BoardRef } from '../../Models/Boards'
 const getBookmarks = (user: User, setBoard: (board: BoardRef | undefined) => void) => {
   return (
     <div className='Bookmarks'>
+      <h2>Bookmarks</h2>
       { user.bookmarks.map(bookmark => <div key={bookmark.reference.module} className='Bookmark'>
         <h3 onClick={() => setBoard(bookmark.reference)}>{bookmark.name}</h3>
         </div>) }
