@@ -1,7 +1,13 @@
-import { Board } from './Boards'
+import { Board, BoardRef } from './Boards'
+
+export interface Bookmark {
+  name: string
+  reference: BoardRef
+}
 
 export interface User {
   boards: Board[]
+  bookmarks: Bookmark[]
   email: string
   name: string
   nameLower: string
@@ -13,6 +19,7 @@ export interface User {
 
 export const defaultUser: User = {
   boards: [],
+  bookmarks: [],
   email: '',
   name: '',
   nameLower: '',

@@ -13,6 +13,7 @@ import Boards from './Components/Boards/Boards'
 import { User, defaultUser } from './Models/Users'
 import { Board, BoardRef } from './Models/Boards'
 import LoadingBar from './Components/LoadingBar/LoadingBar'
+import Home from './Components/Home/Home'
 
 
 const App: React.FC = () => {
@@ -90,11 +91,11 @@ const App: React.FC = () => {
         case 'calendar':
           return <Calendar boardId={board.board} moduleId={board.module} />
         default:
-          return <div style={{marginTop: '5px'}}>No module selected</div>
+          return <Home />
       }
     }
     else {
-      return <div>No module selected(Open the sidebar)</div>
+      return <Home /> 
     }
   }
 
