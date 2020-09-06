@@ -21,15 +21,16 @@ const Boards: React.FC<props> = ({ setBoard }) => {
   const boards = user.boards
 
   const createBoard = (boardName: string) => {
-    firebaseRef.firestore().collection('boards').add({
+    const newBoard = {
       creator: user.id,
       members: [user.id],
       name: boardName,
       dateCreated: new Date().getTime()
-    }).then(board => firebaseRef.firestore()
+    }
+    firebaseRef.firestore().collection('boards').add(newBoard).then(board => firebaseRef.firestore()
       .collection('users').doc(user.id).update({
-      boards: firebase.firestore.FieldValue.arrayUnion(board.id)
-    })
+      boards: firebase.firestore.FieldValue.arrayUnion({...newBoard, id: board.id})
+      })
     )
   }
 

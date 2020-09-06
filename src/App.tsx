@@ -81,6 +81,19 @@ const App: React.FC = () => {
     return unsubscribe
   }, [user.id])
 
+  React.useEffect(() => {
+    if (!user.id) return
+    console.log('updating user context')
+    const unsubscribe = 
+      firebaseRef.firestore().collection('users').doc(user.id)
+      .onSnapshot(snapshot => {
+        console.log(snapshot.data())
+        setUser((oldUser) => {return {...oldUser, ...snapshot.data()}})
+      })
+    return unsubscribe
+  }, [user.id])
+
+
   const moduleSwitch = () => {
     if (board) {
       switch(board.moduleType) {

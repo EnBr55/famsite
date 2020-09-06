@@ -1,15 +1,18 @@
 import React from 'react'
+import firebase from 'firebase'
 import './BoardDisplay.css'
 import firebaseRef from '../../firebase'
 import UserSearch from '../UserSearch/UserSearch'
 import BoardSettings from '../BoardSettings/BoardSettings'
 import { SidebarContext } from '../../Contexts/SidebarContext'
 import { UserContext } from '../../Contexts/UserContext'
+import { User, Bookmark } from '../../Models/Users'
 import FullscreenModal from '../FullscreenModal/FullscreenModal'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import EditIcon from '@material-ui/icons/Edit'
-import { User } from '../../Models/Users'
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import StarIcon from '@material-ui/icons/Star';
 import { Board, BoardRef, Module } from '../../Models/Boards'
 
 type props = {
@@ -76,6 +79,10 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
       })
   }
 
+  const isBookmarked = (id: string) => {
+    return user.bookmarks.filter(bookmark => bookmark.reference.module === id).length
+  }
+
   const moduleList = modules.map((module) => (
     <div key={module.id} className="module-tag">
       <div className="type-label">[{module.type}]</div>
@@ -93,7 +100,37 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
           sidebar.setSidebar(undefined)
         }}
       >
-        {module.name}
+      {module.name}
+      <div className="bookmarker">
+        {isBookmarked(module.id) 
+        ? <StarIcon onClick={e => {
+          e.stopPropagation()
+          firebaseRef
+            .firestore()
+            .collection('users')
+            .doc(user.id)
+            .update({
+              bookmarks: firebase.firestore.FieldValue.arrayRemove({
+                name: module.name,
+                reference: {board: board.id, module: module.id, moduleType: module.type}
+              }),
+          }).catch(e => console.log(e))
+          }}/>
+        : <StarBorderIcon onClick={e => {
+          e.stopPropagation()
+          firebaseRef
+            .firestore()
+            .collection('users')
+            .doc(user.id)
+            .update({
+              bookmarks: firebase.firestore.FieldValue.arrayUnion({
+                name: module.name,
+                reference: {board: board.id, module: module.id, moduleType: module.type}
+              }),
+          }).catch(e => console.log(e))
+          }}/>
+          }
+      </div>
       </div>
       <div className="right">
         <DeleteForeverIcon
