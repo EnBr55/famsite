@@ -7,13 +7,17 @@ import BoardSettings from '../BoardSettings/BoardSettings'
 import { SidebarContext } from '../../Contexts/SidebarContext'
 import { UserContext } from '../../Contexts/UserContext'
 import { User, Bookmark } from '../../Models/Users'
+import { Board, BoardRef, Module } from '../../Models/Boards'
 import FullscreenModal from '../FullscreenModal/FullscreenModal'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import EditIcon from '@material-ui/icons/Edit'
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
-import { Board, BoardRef, Module } from '../../Models/Boards'
+import EventIcon from '@material-ui/icons/Event';
+import ChatIcon from '@material-ui/icons/Chat';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+
 
 type props = {
   setBoard(board: BoardRef | undefined): void
@@ -83,9 +87,22 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
     return user.bookmarks.filter(bookmark => bookmark.reference.module === id).length
   }
 
+  const getModuleIcon = (moduleType: string) => {
+    switch(moduleType) {
+      case 'todo':
+        return <ListAltIcon />
+      case 'calendar':
+        return <EventIcon />
+      case 'chat':
+        return <ChatIcon />
+      default:
+        return <></>
+    }
+  }
+
   const moduleList = modules.map((module) => (
     <div key={module.id} className="module-tag">
-      <div className="type-label">[{module.type}]</div>
+      <div className="type-label">{getModuleIcon(module.type)}</div>
       <div
         className="module"
         key={module.id}
