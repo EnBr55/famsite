@@ -91,11 +91,11 @@ const App: React.FC = () => {
         case 'calendar':
           return <Calendar boardId={board.board} moduleId={board.module} />
         default:
-          return <Home />
+          return <Home setBoard={setBoard}/>
       }
     }
     else {
-      return <Home /> 
+      return <Home setBoard={setBoard}/> 
     }
   }
 
