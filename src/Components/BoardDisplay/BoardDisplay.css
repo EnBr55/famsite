@@ -39,6 +39,11 @@
   margin-bottom: 1em;
 }
 
+.module .bookmarker {
+  position: absolute;
+  left: 1em;
+}
+
 .module-tag {
   display: flex;
   justify-content: space-between;
