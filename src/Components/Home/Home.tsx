@@ -10,7 +10,10 @@ const getBookmarks = (user: User, setBoard: (board: BoardRef | undefined) => voi
     <div className='Bookmarks'>
       <h2>Bookmarks</h2>
       { user.bookmarks.map(bookmark => <div key={bookmark.reference.module} className='Bookmark'>
-        <h3 onClick={() => setBoard(bookmark.reference)}>{bookmark.name}</h3>
+        <h3 onClick={() => {
+          setBoard(bookmark.reference)
+          localStorage.setItem('selectedBoard', JSON.stringify(bookmark.reference))
+        }}>{bookmark.name}</h3>
         </div>) }
     </div>
   )
