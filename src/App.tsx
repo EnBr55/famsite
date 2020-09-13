@@ -63,6 +63,7 @@ const App: React.FC = () => {
     })
 
   React.useEffect(() => {
+    if (!user.id) return
     const unsubscribe = 
       firebaseRef.firestore().collection('boards')
       .where('members', 'array-contains', user.id)
@@ -76,21 +77,20 @@ const App: React.FC = () => {
               dateCreated: doc.data().dateCreated
             })
         })
+        console.log(snapshotBoards)
         setUser((oldUser) => {return {...oldUser, boards: snapshotBoards}})
       })
-    return unsubscribe
+    const unsubscribe2 = 
+      firebaseRef.firestore().collection('users').doc(user.id)
+      .onSnapshot(snapshot => {
+        setUser((oldUser) => {return {...oldUser, ...snapshot.data()}})
+      })
+    return () => {unsubscribe();unsubscribe2()}
   }, [user.id])
 
   React.useEffect(() => {
     if (!user.id) return
-    console.log('updating user context')
-    const unsubscribe = 
-      firebaseRef.firestore().collection('users').doc(user.id)
-      .onSnapshot(snapshot => {
-        console.log(snapshot.data())
-        setUser((oldUser) => {return {...oldUser, ...snapshot.data()}})
-      })
-    return unsubscribe
+    //return unsubscribe
   }, [user.id])
 
 

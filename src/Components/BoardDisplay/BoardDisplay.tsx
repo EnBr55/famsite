@@ -79,7 +79,7 @@ const BoardDisplay: React.FC<props> = ({ setBoard, board, modules }) => {
         text: `${user.name} invited you to join the board, '${board.name}'.`,
         senderName: user.name,
         senderId: user.id,
-        boardJoinId: board.id,
+        boardJoinId: board,
       })
   }
 

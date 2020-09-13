@@ -2,20 +2,21 @@ import React from 'react'
 import firebaseRef from '../../firebase'
 import firebase from 'firebase'
 import { UserContext } from '../../Contexts/UserContext'
+import { Board } from '../../Models/Boards'
 
 type notification = {
   text: string
   id: string
   senderName?: string
   senderId?: string
-  boardJoinId: string
+  board: Board
 }
 
 const defaultNotification = {
   text: '',
   senderName: '',
   senderId: '',
-  boardJoinId: '',
+  board: {members: [], name: '', id: '', dateCreated: 0}
 }
 
 const Notifications: React.FC = () => {
@@ -46,7 +47,7 @@ const Notifications: React.FC = () => {
     firebaseRef
       .firestore()
       .collection('boards')
-      .doc(notification.boardJoinId)
+      .doc(notification.board.id)
       .update({ members: firebase.firestore.FieldValue.arrayUnion(user.id) })
       .then(() => {
         // TODO: check that user exists in database first
@@ -56,7 +57,7 @@ const Notifications: React.FC = () => {
           .doc(user.id)
           .update({
             boards: firebase.firestore.FieldValue.arrayUnion(
-              notification.boardJoinId,
+              notification.board,
             ),
           })
       })
