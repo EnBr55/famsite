@@ -2,6 +2,7 @@ import React from 'react'
 import './CalendarEvent.css'
 import { calendarEvent } from './Calendar'
 import FullscreenModal from '../../Components/FullscreenModal/FullscreenModal'
+import LoadingBar from '../../Components/LoadingBar/LoadingBar'
 import FirebaseRef from '../../firebase'
 import Delete from '@material-ui/icons/Delete'
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
@@ -34,7 +35,7 @@ const CalendarEvent: React.FC<props> = ({ event, moduleRef }) => {
         { event.assigned.length > 0 && <span>Assigned to: {event.assigned.map(user => <div key={user.id}>
             {user.name}
           </div>)}</span> }
-        { !loading && eventCounterInterface() }
+          <div className='CounterInterface'>{ loading ? <LoadingBar/> : eventCounterInterface() }</div>
           <br />
           <button style={{margin: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center'}} onClick={() => {
             setModal(<div>

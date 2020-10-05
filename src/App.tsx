@@ -77,7 +77,6 @@ const App: React.FC = () => {
               dateCreated: doc.data().dateCreated
             })
         })
-        console.log(snapshotBoards)
         setUser((oldUser) => {return {...oldUser, boards: snapshotBoards}})
       })
     const unsubscribe2 = 
