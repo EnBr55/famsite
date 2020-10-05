@@ -1,7 +1,7 @@
 import React from 'react'
 import './CalendarDisplay.css'
 
-import { calendarEvent } from './Calendar'
+import { calendarEvent, isDstObserved } from './Calendar'
 
 import CalendarEvent from './CalendarEvent'
 
@@ -59,7 +59,7 @@ const CalendarDisplay: React.FC<props> = ({events, startTime, endTime, numDays, 
     for (let i=0; i < numCols; i++) {
       cols.push(
         <div className='Column' key={i}>
-          <h2>{days[new Date(startTime + i*dayLength).getDay()]}</h2>
+          <h2>{days[new Date(startTime + i*dayLength + (isDstObserved(new Date().getTime()) ? 1000*60*60: 0)).getDay()]}</h2>
           <hr />
           <div className='InnerColumn'>
             <div className='ColumnEventsWrapper'>

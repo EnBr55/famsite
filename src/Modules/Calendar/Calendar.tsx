@@ -45,8 +45,22 @@ export const defaultCalendarEvent = {
   repeatInterval: 0
 }
 
-const dayLength = 1000*60*60*24
+// stack overflow copy + pasta thx
+
+const stdTimezoneOffset = function () {
+    var jan = new Date(new Date().getFullYear(), 0, 1);
+    var jul = new Date(new Date().getFullYear(), 6, 1);
+    return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+}
+
+export const isDstObserved = function (time: number) {
+    return new Date(time).getTimezoneOffset() < stdTimezoneOffset();
+}
+
+const hour = 1000*60*60
+const dayLength = hour*24
 const numDays = 7
+const isDst = isDstObserved(new Date().getTime())
 
 const getClosestMonday = (): Date => {
   const currentDay = new Date
@@ -71,8 +85,6 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
 
   const [startTime, setStartTime] = React.useState(getClosestMonday().getTime())
   let getEndTime = (start: number) => start + dayLength * 7 - 1
-
-
 
   let ref = FirebaseRef.firestore()
     .collection('boards')
@@ -142,11 +154,19 @@ const Calendar: React.FC<props> = ({ boardId, moduleId }) => {
       let dayStart = new Date(event.time).setHours(0, 0, 0, 0)
       let diff = event.time - dayStart
 
+      // daylight savings events lose an hour when it's not daylight savings
+      // non-daylight savings events gain an hour when it is daylight savings
+      let dstModifier = isDstObserved(new Date(event.time).getTime()) ? (isDst ? 0 : -hour) : (isDst ? hour : 0)
+      // same idea but for weeks -- if the week is in daylight savings and it's not daylight savings, move times back an hour
+      // if week is not in daylight savings and it is daylight savings, move times forward an hour
+      let dstWeekModifier = (isDstObserved(startTime) ? (isDst ? 0 : -hour) : (isDst ? hour : 0))
       for (let i = 0; i < numDays; i++) {
-        if ((startTime + i*dayLength - dayStart) % (event.repeatInterval*dayLength) === 0) {
+        // if it's daylight savings, we need to add one hour to non-daylight savings events
+        // otherwise, we need to subtract one hour from daylight savings events
+        if ((startTime + i*dayLength - dayStart + dstModifier) % (event.repeatInterval*dayLength) === 0) {
           combinedEvents.push({
             ...event,
-            time: startTime + i*dayLength + diff
+            time: startTime + i*dayLength + diff + dstWeekModifier
           })
         }
       }

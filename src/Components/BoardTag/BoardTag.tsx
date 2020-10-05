@@ -15,8 +15,6 @@ const BoardTag: React.FC<props> = ({ board, setBoard }) => {
   const [loading, setLoading] = React.useState(false)
   const sidebar = React.useContext(SidebarContext)
 
-  console.log(board)
-
   React.useEffect(() => {
     setLoading(true)
     const unsubscribe = firebaseRef

@@ -25,7 +25,6 @@ type props = {
 
 const Home: React.FC<props> = ({ setBoard }) => {
   const user = React.useContext(UserContext)
-  console.log(user)
   return (
     <div className='Home'>
       <h3>{user.id ? getBookmarks(user, setBoard) : 'Welcome. You are not currently logged in.'}</h3>
